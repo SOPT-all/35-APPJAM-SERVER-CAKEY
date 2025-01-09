@@ -1,0 +1,8 @@
+bootJar { enabled = false }
+jar { enabled = true }
+
+dependencies {
+    implementation project(':cakey-common')   // 공통 모듈 의존성
+    implementation project(':cakey-auth')     // 인증 모듈 의존성
+    implementation project(':cakey-external')     // 외부 모듈 의존성
+}
