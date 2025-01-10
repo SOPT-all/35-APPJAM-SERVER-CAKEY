@@ -1,0 +1,6 @@
+bootJar { enabled = false }
+jar { enabled = true }
+
+dependencies {
+    implementation project(':cakey-common')   // 공통 모듈 의존성
+}

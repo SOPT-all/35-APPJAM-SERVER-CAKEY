@@ -1,0 +1,20 @@
+plugins {
+    id 'org.springframework.boot' //api에 있는 springBootApplication으로 실행할 것이기 때문
+}
+
+dependencies {
+    implementation project(':cakey-common')   // 공통 모듈 의존성
+    implementation project(':cakey-domain')   // 도메인 모듈 의존성
+    implementation project(':cakey-auth')     // 인증 모듈 의존성
+    implementation project(':cakey-external')     // 외부 모듈 의존성
+
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+}
+
+// 실행가능한 jar로 생성하는 옵션, main이 없는 라이브러리에서는 false로 비활성화함
+bootJar { enabled = true }
+
+// 외부에서 의존하기 위한 jar로 생성하는 옵션, main이 없는 라이브러리에서는 true로 비활성화함
+jar { enabled = false }
