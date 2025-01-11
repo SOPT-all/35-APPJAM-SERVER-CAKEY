@@ -1,4 +1,4 @@
-package com.cakey.exception.user;
+package com.cakey.user.exception;
 
 import com.cakey.exception.UserBaseException;
 
