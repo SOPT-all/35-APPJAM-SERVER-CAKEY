@@ -33,6 +33,7 @@ public class BaseResponse<T> {
                 .build();
     }
 
+    //error 메시지 따로 넣어줄 때, 사용
     public static BaseResponse<?> of(final int code, final String message) {
         return BaseResponse.builder()
                 .code(code)

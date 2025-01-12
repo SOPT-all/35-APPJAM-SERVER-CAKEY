@@ -20,6 +20,7 @@ public class ApiResponseUtil {
                 .body(BaseResponse.of(errorCode));
     }
 
+    //따로 error message 넣어줄 때, 사용
     public static ResponseEntity<BaseResponse<?>> failure(final ErrorCode errorCode, final String message) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
