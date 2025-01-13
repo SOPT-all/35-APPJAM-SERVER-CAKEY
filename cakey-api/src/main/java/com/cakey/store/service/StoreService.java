@@ -1,5 +1,6 @@
 package com.cakey.store.service;
 
+import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreCoordianteDto;
 import com.cakey.store.dto.StoreCoordinate;
@@ -16,13 +17,7 @@ public class StoreService {
     private final StoreFacade storeFacade;
 
     public List<StoreCoordinate> getStoreCoordinateList(final Station station) {
-        final List<StoreCoordianteDto> storeCoordianteDtoList;
-
-        try {
-            storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
-        } catch (NotFoundException e) {
-            return null;
-        }
+        final List<StoreCoordianteDto> storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
 
         return storeCoordianteDtoList.stream()
                 .map(storeCoordianteDto -> StoreCoordinate.of(

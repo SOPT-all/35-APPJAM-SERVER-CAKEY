@@ -13,13 +13,7 @@ import java.util.List;
 public class StoreRetriever {
     private final StoreRepository storeRepository;
 
-    public List<StoreCoordianteDto> findAllCoordinates() {
-        return storeRepository.findAllStoreLocations();
-    }
-
     public List<StoreCoordianteDto> findCoordinateByStation(final Station station) {
         return storeRepository.findStoreCoordinatesByStation(station);
     }
-
-
 }

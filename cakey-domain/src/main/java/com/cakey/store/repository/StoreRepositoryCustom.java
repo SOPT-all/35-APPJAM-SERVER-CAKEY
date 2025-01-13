@@ -6,7 +6,5 @@ import com.cakey.store.dto.StoreCoordianteDto;
 import java.util.List;
 
 public interface StoreRepositoryCustom {
-    List<StoreCoordianteDto> findAllStoreLocations();
-    List<StoreCoordianteDto> findStoreCoordinatesByStation(Station station);
-
+    List<StoreCoordianteDto> findStoreCoordinatesByStation(final Station station);
 }

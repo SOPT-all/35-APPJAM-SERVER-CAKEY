@@ -15,6 +15,4 @@ public class StoreFacade {
     public List<StoreCoordianteDto> findCoordinatesByStation(final Station station) {
         return storeRetriever.findCoordinateByStation(station);
     }
-
-
 }

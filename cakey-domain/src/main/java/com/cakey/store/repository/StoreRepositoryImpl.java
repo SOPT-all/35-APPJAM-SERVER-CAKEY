@@ -14,21 +14,6 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    //모든 스토어 좌표 조회
-    @Override
-    public List<StoreCoordianteDto> findAllStoreLocations() {
-        QStore store = QStore.store;
-
-        return queryFactory
-                .select(new QStoreCoordianteDto(
-                        store.id,
-                        store.latitude,
-                        store.longitude
-                ))
-                .from(store)
-                .fetch();
-    }
-
     @Override
     public List<StoreCoordianteDto> findStoreCoordinatesByStation(final Station station) {
         QStore store = QStore.store;
@@ -41,7 +26,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 ))
                 .from(store)
                 .where(
-                        station == Station.ALL ? null : store.station.eq(station) // 조건 처리
+                        station == Station.ALL ? null : store.station.eq(station) // ALL이면 조건없이 들어가므로 전체조회
                 )
                 .fetch();
     }
