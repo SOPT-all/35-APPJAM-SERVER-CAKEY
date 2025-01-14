@@ -1,5 +1,7 @@
 package com.cakey.user.domain;
 
+import com.cakey.client.SocialType;
+import com.cakey.jwt.domain.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +22,7 @@ public class User {
 
     @Column(name = "user_role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole  role;
+    private UserRole role;
 
     @Column(name = "social_type", nullable = false)
     @Enumerated(EnumType.STRING)
