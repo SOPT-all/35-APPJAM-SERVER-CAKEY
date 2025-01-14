@@ -1,6 +1,5 @@
 package com.cakey.store.service;
 
-import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreCoordianteDto;
 import com.cakey.store.dto.StoreCoordinate;
@@ -21,9 +20,9 @@ public class StoreService {
 
         return storeCoordianteDtoList.stream()
                 .map(storeCoordianteDto -> StoreCoordinate.of(
-                        storeCoordianteDto.getId(),
-                        storeCoordianteDto.getLatitude(),
-                        storeCoordianteDto.getLongitude())
+                        storeCoordianteDto.id(),
+                        storeCoordianteDto.latitude(),
+                        storeCoordianteDto.longitude())
                 ).toList();
     }
 }
