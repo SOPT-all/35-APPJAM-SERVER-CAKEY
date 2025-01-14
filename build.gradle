@@ -1,7 +1,7 @@
 // plugin 이란 미리 구성해놓은 task 들의 모음이며, 특정 빌드과정에 필요한 기본정보를 포함함
 plugins {
 	id 'java'// 테스트, 번들링 기능과 함께 Java 컴파일을 추가해주며, 다른 JVM 언어 플러그인의 기반이 됨
-	id 'org.springframework.boot' version '3.2.1' // 실행가능한 jar 또는 war로 패키징하여 애플리케이션 실행이 가능하도록 하며, spring-boot-dependencies 기반의 의존성 관리를 사용함
+	id 'org.springframework.boot' version '3.2.7' // 실행가능한 jar 또는 war로 패키징하여 애플리케이션 실행이 가능하도록 하며, spring-boot-dependencies 기반의 의존성 관리를 사용함
 	id 'io.spring.dependency-management' version '1.1.4' // 자동으로 spring-boot-dependencies bom을 끌어와서 버전 관리를 해줌
 }
 

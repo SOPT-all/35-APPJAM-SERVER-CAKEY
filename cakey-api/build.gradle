@@ -5,11 +5,21 @@ plugins {
 dependencies {
     implementation project(':cakey-common')   // 공통 모듈 의존성
     implementation project(':cakey-domain')   // 도메인 모듈 의존성
-    implementation project(':cakey-auth')     // 인증 모듈 의존성
+    implementation project(':cakey-auth')    // 인증 모듈 의존성
     implementation project(':cakey-external')     // 외부 모듈 의존성
 
     implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.1' //redis
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0' //feign
+
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5' //jwt 의존성
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 }
 
