@@ -21,10 +21,21 @@ public class Cake {
         @Enumerated(EnumType.STRING)
         private DayCategory dayCategory;
 
-        public static Cake createCake(final long storeId, final DayCategory dayCategory) {
+        @Column(name = "image_url", nullable = false)
+        private String imageUrl;
+
+        @Column(name = "is_main_image", nullable = false)
+        private boolean isMainImage;
+
+        public static Cake createCake(final long storeId,
+                                      final DayCategory dayCategory,
+                                      final String imageUrl,
+                                      final boolean isMainImage) {
             return Cake.builder()
                     .storeId(storeId)
                     .dayCategory(dayCategory)
+                    .imageUrl(imageUrl)
+                    .isMainImage(isMainImage)
                     .build();
         }
 }
