@@ -1,20 +1,16 @@
 package com.cakey.store.repository;
 
-import com.cakey.cakeimage.domain.QCakeImages;
 import com.cakey.store.domain.QStore;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.*;
 import com.cakey.storelike.domain.QStoreLike;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 public class StoreRepositoryImpl implements StoreRepositoryCustom {

@@ -1,6 +1,6 @@
 package com.cakey.store.service;
 
-import com.cakey.cake.dto.CakeImageDto;
+import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.*;
@@ -19,7 +19,6 @@ public class StoreService {
 
     private final StoreFacade storeFacade;
     private final CakeFacade cakeFacade;
-    private final StoreRetriever storeRetriever;
 
     public List<StoreCoordinate> getStoreCoordinateList(final Station station) {
         final List<StoreCoordianteDto> storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
@@ -45,12 +44,12 @@ public class StoreService {
                 .map(StoreInfoDto::getStoreId)
                 .toList();
 
-        // 스토어 ID들로 대표 이미지(최대 4개)를 조회
-        final List<CakeImageDto> cakeImageDtos = cakeFacade.findMainImagesByStoreIds(storeIds);
+        // 스토어 ID들로 대표 이미지(4개)를 조회
+        final List<CakeMainImageDto> cakeMainImageDtos = cakeFacade.findMainImageByStoreIds(storeIds);
 
         // 이미지를 storeId 기준으로 그룹화
-        final Map<Long, List<CakeImageDto>> imageMap = cakeImageDtos.stream()
-                .collect(Collectors.groupingBy(CakeImageDto::getImageId));
+        final Map<Long, List<CakeMainImageDto>> imageMap = cakeMainImageDtos.stream()
+                .collect(Collectors.groupingBy(CakeMainImageDto::getStoreId));
 
         // StoreInfo 생성 및 이미지 매칭
         final List<StoreInfo> storeInfos = storeInfoDtos.stream()
