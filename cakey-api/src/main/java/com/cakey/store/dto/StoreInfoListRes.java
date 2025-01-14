@@ -7,11 +7,11 @@ import java.util.List;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record StoreInfoListRes(
-        int nextCursor,
+        int nextLikesCursor,
         long storeCount,
         List<StoreInfo> stores
 ) {
-    public static StoreInfoListRes of(final int nextCursor, final long storeCount, final List<StoreInfo> stores) {
-        return new StoreInfoListRes(nextCursor, storeCount, stores);
+    public static StoreInfoListRes of(final int nextLikesCursor, final long storeCount, final List<StoreInfo> stores) {
+        return new StoreInfoListRes(nextLikesCursor, storeCount, stores);
     }
 }

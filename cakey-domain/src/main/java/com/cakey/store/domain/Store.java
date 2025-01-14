@@ -1,5 +1,6 @@
 package com.cakey.store.domain;
 
+import com.cakey.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @Getter
 @Table(name = "stores")
 @Entity
-public class Store {
+public class Store extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")

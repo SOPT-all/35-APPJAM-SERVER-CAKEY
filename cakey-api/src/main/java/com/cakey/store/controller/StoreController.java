@@ -23,8 +23,7 @@ public class StoreController {
     public ResponseEntity<BaseResponse<?>> getStoreCoordinateList(
             @RequestParam(value = "station", required = true) final Station station
             ) {
-        final StoreCoordinateListRes response = StoreCoordinateListRes.from(storeService.getStoreCoordinateList(station));
-        return ApiResponseUtil.success(SuccessCode.OK, response);
+        return ApiResponseUtil.success(SuccessCode.OK, StoreCoordinateListRes.from(storeService.getStoreCoordinateList(station)));
     }
 
     //스토어 정보 리스트 조회(인기순)
@@ -36,6 +35,6 @@ public class StoreController {
             @RequestParam(value = "likesCursor", defaultValue = "0", required = false) final int likesCursor,
             @RequestParam(defaultValue = "10") final int size
     ) {
-        storeService.getStoreInfoListByStationAndLikes(userId, station, likesCursor, size);
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreInfoListByStationAndLikes(userId, station, likesCursor, size));
     }
 }
