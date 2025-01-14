@@ -30,13 +30,13 @@ public class StoreService {
                 ).toList();
     }
 
-
     public StoreInfoListRes getStoreInfoListByStationAndLikes(final Long userId,
                                                               final Station station,
                                                               final int likesCursor,
+                                                              final Long lastStoreId,
                                                               final int size) {
         // 커서 페이지 네이션: 사용자 ID와 역 정보를 기반으로 스토어 정보 조회
-        final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, size);
+        final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, lastStoreId, size);
 
         // 조회한 store들의 ID 추출
         final List<Long> storeIds = storeInfoDtos.stream()
@@ -80,13 +80,17 @@ public class StoreService {
         // 다음 커서 계산 (예: 마지막 likesCursor 기준으로 설정)
         final int nextLikesCursor = calculateNextCursor(storeInfoDtos);
 
+        final Long LastStoreId = calculateLastStoreId(storeInfoDtos);
+
         // StoreInfoListRes 반환
-        return StoreInfoListRes.of(nextLikesCursor, storeCount, storeInfos);
+        return StoreInfoListRes.of(nextLikesCursor, LastStoreId, storeCount, storeInfos);
     }
 
-    private int calculateNextCursor(List<StoreInfoDto> storeInfoDtos) {
-        // 커서 계산 로직 (예: 리스트의 마지막 요소의 nextCursor 값 사용)
-
+    private int calculateNextCursor(final List<StoreInfoDto> storeInfoDtos) {
         return storeInfoDtos.isEmpty() ? -1 : storeInfoDtos.get(storeInfoDtos.size() - 1).getStoreLikesCount();
+    }
+
+    private Long calculateLastStoreId(final List<StoreInfoDto> storeInfoDtos) {
+        return storeInfoDtos.isEmpty() ? null : storeInfoDtos.get(storeInfoDtos.size() - 1).getStoreId();
     }
 }

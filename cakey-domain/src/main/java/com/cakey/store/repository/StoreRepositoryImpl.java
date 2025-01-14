@@ -38,6 +38,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     public List<StoreInfoDto> findStoreInfoByStationAndLikes(final Long userId,
                                                              final Station station,
                                                              final int likesCursor,
+                                                             final Long lastStoreId,
                                                              final int size) {
         QStore store = QStore.store;
         QStoreLike storeLike = QStoreLike.storeLike;
@@ -53,7 +54,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         // 좋아요 커서 조건
         BooleanExpression cursorCondition = likesCursor > 0
                 ? storeLike.id.count().lt(likesCursor)
-                : null; // 기본 조건
+                .or(storeLike.id.count().eq(Long.valueOf(likesCursor)).and(store.id.lt(lastStoreId))) // storeId가 작아지는 순서
+                : null;
 
         // 역 조건
         BooleanExpression stationCondition = station != Station.ALL
@@ -75,7 +77,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .where(stationCondition) // 역 조건
                 .groupBy(store.id)
                 .having(likesCursor > 0 ? storeLike.id.count().lt(likesCursor) : null) // 조건 추가
-                .orderBy(storeLike.id.count().desc())
+                .orderBy(storeLike.id.count().desc(), store.id.desc()) // 좋아요 수 -> storeId순(최신순) 정렬
                 .limit(size)
                 .fetch();
     }
