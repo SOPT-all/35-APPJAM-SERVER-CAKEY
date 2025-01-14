@@ -30,12 +30,13 @@ public class StoreService {
                 ).toList();
     }
 
+    //스토어 리스트 조회(인기순) API
     public StoreInfoListRes getStoreInfoListByStationAndLikes(final Long userId,
                                                               final Station station,
                                                               final int likesCursor,
                                                               final Long lastStoreId,
                                                               final int size) {
-        // 커서 페이지 네이션: 사용자 ID와 역 정보를 기반으로 스토어 정보 조회
+
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, lastStoreId, size);
 
         // 조회한 store들의 ID 추출
@@ -72,12 +73,11 @@ public class StoreService {
                 })
                 .toList();
 
-        // 전체 스토어 개수 조회
+        //스토어 개수 조회
         final int storeCount = (station == Station.ALL)
                 ? storeFacade.countAllStores()
                 : storeFacade.countStoresByStation(station);
 
-        // 다음 커서 계산 (예: 마지막 likesCursor 기준으로 설정)
         final int nextLikesCursor = calculateNextCursor(storeInfoDtos);
 
         final Long LastStoreId = calculateLastStoreId(storeInfoDtos);
