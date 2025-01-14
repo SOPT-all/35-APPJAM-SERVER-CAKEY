@@ -40,11 +40,11 @@ public class Store {
     @Enumerated(EnumType.STRING)
     private Station station;
 
-    public static Store createStroe(final String name,
+    public static Store createStore(final String name,
                                     final String address,
                                     final String phone,
                                     final double latitude,
-                                    final double longititude,
+                                    final double longitude,
                                     final String taste,
                                     final String openKakaoUrl,
                                     final Station station) {
@@ -53,7 +53,7 @@ public class Store {
                 .address(address)
                 .phone(phone)
                 .latitude(latitude)
-                .longitude(longititude)
+                .longitude(longitude)
                 .taste(taste)
                 .openKakaoUrl(openKakaoUrl)
                 .station(station)
