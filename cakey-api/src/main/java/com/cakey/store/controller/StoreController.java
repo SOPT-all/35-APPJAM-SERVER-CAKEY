@@ -30,7 +30,7 @@ public class StoreController {
     @GetMapping()
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLikes(
             //todo: @UserId final Long userId //다음 피알에서 추가예정
-            @RequestHeader(value = "Authorization", required = true) final Long userId,
+            @RequestHeader(value = "Authorization", required = false) final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "likesCursor", defaultValue = "0", required = false) final int likesCursor,
             @RequestParam(defaultValue = "10") final int size

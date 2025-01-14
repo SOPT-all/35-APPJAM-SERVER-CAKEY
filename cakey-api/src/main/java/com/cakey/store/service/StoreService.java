@@ -89,6 +89,7 @@ public class StoreService {
 
     private int calculateNextCursor(List<StoreInfoDto> storeInfoDtos) {
         // 커서 계산 로직 (예: 리스트의 마지막 요소의 nextCursor 값 사용)
+
         return storeInfoDtos.isEmpty() ? -1 : storeInfoDtos.get(storeInfoDtos.size() - 1).getNextCursor();
     }
 }

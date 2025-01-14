@@ -7,12 +7,12 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // 외부에서 직접 모든 필드 받는 생성자 호출X
 @Builder(access = AccessLevel.PRIVATE) //외부에서 builder 사용 X
 @Getter
-@Table(name = "cake_likes")
+@Table(name = "store_likes")
 @Entity
 public class StoreLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cake_like_id")
+    @Column(name = "store_like_id")
     private Long id;
 
     @Column(name = "store_id", nullable = false)

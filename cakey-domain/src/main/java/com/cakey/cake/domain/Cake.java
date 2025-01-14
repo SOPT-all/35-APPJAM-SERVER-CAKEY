@@ -14,10 +14,11 @@ public class Cake {
         @Column(name = "cake_id")
         private Long id;
 
-        @Column(name = "store_name", nullable = false)
+        @Column(name = "store_id", nullable = false)
         private long storeId;
 
         @Column(name = "for_day_category", nullable = false)
+        @Enumerated(EnumType.STRING)
         private DayCategory dayCategory;
 
         public static Cake createCake(final long storeId, final DayCategory dayCategory) {

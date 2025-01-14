@@ -14,6 +14,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class StoreRepositoryImpl implements StoreRepositoryCustom {
@@ -37,8 +38,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .fetch();
     }
 
-    public List<StoreInfoDto> findStoreInfoByStationAndLikes(
-            final Long userId, final Station station, final int likesCursor, final int size) {
+    @Override
+    public List<StoreInfoDto> findStoreInfoByStationAndLikes(final Long userId,
+                                                             final Station station,
+                                                             final int likesCursor,
+                                                             final int size) {
         QStore store = QStore.store;
         QStoreLike storeLike = QStoreLike.storeLike;
 
@@ -55,26 +59,38 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 ? storeLike.id.count().lt(likesCursor)
                 : null;
 
+        // 역 조건
+        BooleanExpression stationCondition = station != Station.ALL
+                ? store.station.eq(station) // 특정 역 조건
+                : null; // ALL이면 조건 없이 전체 조회
+
+        // 최종 조건 결합
+        BooleanExpression finalCondition = combine(stationCondition, cursorCondition);
+
+        // 쿼리 실행
         return queryFactory
                 .select(new QStoreInfoDto(
                         store.id,
                         store.name,
-                        store.station.stringValue(),
+                        store.station.stringValue(), // 각 스토어의 station 값
                         store.address,
                         isLikedExpression,
-                        storeLike.id.count().intValue() // nextCursor
+                        storeLike.id.count().intValue() // 좋아요 개수 (nextCursor)
                 ))
                 .from(store)
                 .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
-                .where(
-                        (station != Station.ALL ? store.station.eq(station) : null)
-                                .and(cursorCondition)
-                )
+                .where(finalCondition)
                 .groupBy(store.id)
-                .orderBy(storeLike.id.count().desc())
+                .orderBy(storeLike.id.count().desc()) // 좋아요 많은 순서로 정렬
                 .limit(size)
                 .fetch();
     }
 
+    // 안전한 조건 결합 메서드
+    private BooleanExpression combine(BooleanExpression base, BooleanExpression additional) {
+        if (base == null) return additional;
+        if (additional == null) return base;
+        return base.and(additional);
+    }
 }
 
