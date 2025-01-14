@@ -33,7 +33,7 @@ public class StoreController {
             @RequestHeader(value = "Authorization", required = false) final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "likesCursor", defaultValue = "0", required = false) final int likesCursor,
-            @RequestParam(defaultValue = "10") final int size
+            @RequestParam(value = "size", defaultValue = "10") final int size
     ) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreInfoListByStationAndLikes(userId, station, likesCursor, size));
     }

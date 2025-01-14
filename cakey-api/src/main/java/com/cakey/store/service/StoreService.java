@@ -5,7 +5,6 @@ import com.cakey.cake.facade.CakeFacade;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.*;
 import com.cakey.store.facade.StoreFacade;
-import com.cakey.store.facade.StoreRetriever;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -64,8 +63,9 @@ public class StoreService {
                     return StoreInfo.of(
                             storeInfoDto.getStoreId(),
                             storeInfoDto.getName(),
-                            Station.valueOf(storeInfoDto.getStation()),
+                            Station.valueOf(String.valueOf(storeInfoDto.getStation())),
                             storeInfoDto.getAddress(),
+                            storeInfoDto.getStoreLikesCount(),
                             storeInfoDto.isLiked(),
                             images
                     );
@@ -82,12 +82,11 @@ public class StoreService {
 
         // StoreInfoListRes 반환
         return StoreInfoListRes.of(nextLikesCursor, storeCount, storeInfos);
-
     }
 
     private int calculateNextCursor(List<StoreInfoDto> storeInfoDtos) {
         // 커서 계산 로직 (예: 리스트의 마지막 요소의 nextCursor 값 사용)
 
-        return storeInfoDtos.isEmpty() ? -1 : storeInfoDtos.get(storeInfoDtos.size() - 1).getNextCursor();
+        return storeInfoDtos.isEmpty() ? -1 : storeInfoDtos.get(storeInfoDtos.size() - 1).getStoreLikesCount();
     }
 }

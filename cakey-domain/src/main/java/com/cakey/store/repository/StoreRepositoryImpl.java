@@ -53,31 +53,29 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         // 좋아요 커서 조건
         BooleanExpression cursorCondition = likesCursor > 0
                 ? storeLike.id.count().lt(likesCursor)
-                : null;
+                : null; // 기본 조건
 
         // 역 조건
         BooleanExpression stationCondition = station != Station.ALL
-                ? store.station.eq(station) // 특정 역 조건
-                : null; // ALL이면 조건 없이 전체 조회
-
-        // 최종 조건 결합
-        BooleanExpression finalCondition = combine(stationCondition, cursorCondition);
+                ? store.station.eq(station)
+                : null; // 기본 조건
 
         // 쿼리 실행
         return queryFactory
                 .select(new QStoreInfoDto(
                         store.id,
                         store.name,
-                        store.station.stringValue(), // 각 스토어의 station 값
+                        store.station,
                         store.address,
                         isLikedExpression,
-                        storeLike.id.count().intValue() // 좋아요 개수 (nextCursor)
+                        storeLike.id.count().intValue()
                 ))
                 .from(store)
                 .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
-                .where(finalCondition)
+                .where(stationCondition) // 역 조건
                 .groupBy(store.id)
-                .orderBy(storeLike.id.count().desc()) // 좋아요 많은 순서로 정렬
+                .having(likesCursor > 0 ? storeLike.id.count().lt(likesCursor) : null) // 조건 추가
+                .orderBy(storeLike.id.count().desc())
                 .limit(size)
                 .fetch();
     }

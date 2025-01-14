@@ -12,6 +12,7 @@ public record StoreInfo(
         String storeName,
         Station station,
         String address,
+        int storeLikesCount,
         boolean isLiked,
         List<StoreMainImage> images
 ) {
@@ -19,12 +20,15 @@ public record StoreInfo(
                                final String storeName,
                                final Station station,
                                final String address,
+                               final int storeLikesCount,
                                final boolean isLiked,
                                final List<StoreMainImage> images) {
         return StoreInfo.builder()
                 .storeId(storeId)
                 .storeName(storeName)
                 .address(address)
+                .station(station)
+                .storeLikesCount(storeLikesCount)
                 .isLiked(isLiked)
                 .images(images)
                 .build();
