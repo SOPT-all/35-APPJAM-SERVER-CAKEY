@@ -20,12 +20,12 @@ public class StoreInfoDto {
                         Station station,
                         String address,
                         boolean isLiked,
-                        int nextCursor) {
+                        int storeLikesCount) {
         this.storeId = storeId;
         this.name = name;
         this.station = station;
         this.address = address;
         this.isLiked = isLiked;
-        this.storeLikesCount = nextCursor;
+        this.storeLikesCount = storeLikesCount;
     }
 }
