@@ -28,7 +28,7 @@ public class StoreRetriever {
                                                              final int likesCursor,
                                                              final Long lastStoreId,
                                                              final int size) {
-        return storeRepository.findStoreInfoByStationAndLikes(userId, station, likesCursor, lastStoreId, size);
+        return storeRepository.findPopularitryStoreInfoByStation(userId, station, likesCursor, lastStoreId, size);
     }
 
     //스토어 조회(최신순)
@@ -36,14 +36,22 @@ public class StoreRetriever {
                                                               final Station station,
                                                               final Long storeIdCursor,
                                                               final int size) {
-        return storeRepository.findStoreInfoByStationAndLatest(userId, station, storeIdCursor, size);
+        return storeRepository.findLatestStoreInfoByStation(userId, station, storeIdCursor, size);
     }
 
     //찜한 스토어 조회(최신순)
     public List<StoreInfoDto> findStoresLikedByUser(final long userId,
                                                     final Long storeIdCursor,
                                                     final int size) {
-        return storeRepository.findStoresLikedByUser(userId, storeIdCursor, size);
+        return storeRepository.findLatestStoresLikedByUser(userId, storeIdCursor, size);
+    }
+
+    //찜한 스토어 조회(인기순)
+    public List<StoreInfoDto> findPopularityStoresLikedByUser(final long userId,
+                                                              final int likesCursor,
+                                                              final Long storeIdCursor,
+                                                              final int size) {
+        return storeRepository.findPopularityStoresLikedByUser(userId, likesCursor, storeIdCursor, size);
     }
 
     public int countAllStores() {

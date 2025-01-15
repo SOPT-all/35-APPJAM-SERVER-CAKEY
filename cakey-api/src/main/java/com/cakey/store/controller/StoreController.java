@@ -1,11 +1,9 @@
 package com.cakey.store.controller;
 
-import com.cakey.OrderBy;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.common.response.SuccessCode;
 import com.cakey.store.domain.Station;
-import com.cakey.store.dto.AllStationRes;
 import com.cakey.store.dto.StoreCoordinateListRes;
 import com.cakey.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +34,7 @@ public class StoreController {
             @RequestHeader(value = "Authorization", required = false) final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "likesCursor", defaultValue = "0", required = false) final int likesCursor,
-            @RequestParam(value = "lastStoreId", defaultValue = "0", required = false) final Long lastStoreId,
+            @RequestParam(value = "storeIdCursor", defaultValue = "0", required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
         return ApiResponseUtil.success(
@@ -45,7 +43,7 @@ public class StoreController {
                         userId,
                         station,
                         likesCursor,
-                        lastStoreId,
+                        storeIdCursor,
                         size));
     }
 

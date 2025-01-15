@@ -49,10 +49,10 @@ public class StoreService {
     public StoreInfoListBylikesRes getStoreInfoListByStationAndLikes(final Long userId,
                                                                      final Station station,
                                                                      final int likesCursor,
-                                                                     final Long lastStoreId,
+                                                                     final Long storeIdCursor,
                                                                      final int size) {
 
-        final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, lastStoreId, size);
+        final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, storeIdCursor, size);
 
         // 조회한 store들의 ID 추출
         final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
