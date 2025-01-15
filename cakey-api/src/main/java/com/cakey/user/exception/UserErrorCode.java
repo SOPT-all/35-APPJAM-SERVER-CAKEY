@@ -4,6 +4,7 @@ import com.cakey.ApiCode;
 import org.springframework.http.HttpStatus;
 
 public enum UserErrorCode implements ApiCode {
+
     ;
 
     @Override
