@@ -22,7 +22,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
     @Override
     public List<StoreCoordianteDto> findStoreCoordinatesByStation(final Station station) {
-        QStore store = QStore.store;
+        final QStore store = QStore.store;
 
         return queryFactory
                 .select(new QStoreCoordianteDto(
@@ -48,7 +48,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         final QStoreLike storeLike = QStoreLike.storeLike;
 
         // 좋아요 여부 서브쿼리
-        BooleanExpression isLikedExpression = userId != null
+        final BooleanExpression isLikedExpression = userId != null
                 ? JPAExpressions.selectOne()
                 .from(storeLike)
                 .where(storeLike.storeId.eq(store.id).and(storeLike.userId.eq(userId)))
@@ -56,13 +56,13 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 : Expressions.asBoolean(false);
 
         // 좋아요 커서 조건
-        BooleanExpression cursorCondition = likesCursor > 0
+        final BooleanExpression cursorCondition = likesCursor > 0
                 ? storeLike.id.count().lt(likesCursor)
                 .or(storeLike.id.count().eq(Long.valueOf(likesCursor)).and(store.id.lt(lastStoreId))) // storeId가 작아지는 순서
                 : null;
 
         // 역 조건
-        BooleanExpression stationCondition = station != Station.ALL
+        final BooleanExpression stationCondition = station != Station.ALL
                 ? store.station.eq(station)
                 : null; // 기본 조건
 
@@ -97,7 +97,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         final QStoreLike storeLike = QStoreLike.storeLike;
 
 
-        BooleanExpression isLikedExpression = userId != null
+        final BooleanExpression isLikedExpression = userId != null
                 ? JPAExpressions.selectOne()
                 .from(storeLike)
                 .where(storeLike.storeId.eq(store.id).and(storeLike.userId.eq(userId)))
@@ -127,17 +127,17 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     public List<StoreInfoDto> findLatestStoresLikedByUser(final long userId,
                                                     final Long storeIdCursor,
                                                     final int size) {
-        QStore store = QStore.store;
-        QStoreLike storeLike = QStoreLike.storeLike;
+        final QStore store = QStore.store;
+        final QStoreLike storeLike = QStoreLike.storeLike;
 
         // 좋아요 개수를 계산하는 서브쿼리
-        Expression<Integer> storeLikesCountSubQuery = JPAExpressions
+        final Expression<Integer> storeLikesCountSubQuery = JPAExpressions
                 .select(storeLike.id.count().intValue()) // 좋아요 개수를 Integer로 변환
                 .from(storeLike)
                 .where(storeLike.storeId.eq(store.id));
 
         // 커서 조건 처리
-        BooleanExpression cursorCondition = (storeIdCursor == null || storeIdCursor == 0)
+        final BooleanExpression cursorCondition = (storeIdCursor == null || storeIdCursor == 0)
                 ? null // 조건 없음
                 : store.id.lt(storeIdCursor); // 조건 추가
 
@@ -150,7 +150,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.address,
                         Expressions.asBoolean(true), // 좋아요 여부는 항상 true
                         storeLikesCountSubQuery,
-                        null// 서브쿼리를 활용한 좋아요 개수
+                        null
                 ))
                 .from(store)
                 .leftJoin(storeLike).on(storeLike.storeId.eq(store.id)) // LEFT JOIN 사용
@@ -170,17 +170,17 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
             final Long storeIdCursor, // 스토어 ID 기준 커서 (null 허용)
             final int size) {
 
-        QStore store = QStore.store;
-        QStoreLike storeLike = QStoreLike.storeLike;
+        final QStore store = QStore.store;
+        final QStoreLike storeLike = QStoreLike.storeLike;
 
         // 좋아요 개수를 계산하는 서브쿼리
-        Expression<Integer> storeLikesCountSubQuery = JPAExpressions
+        final Expression<Integer> storeLikesCountSubQuery = JPAExpressions
                 .select(storeLike.id.count().intValue()) // 좋아요 개수를 Integer로 변환
                 .from(storeLike)
                 .where(storeLike.storeId.eq(store.id));
 
         // 커서 조건 처리
-        BooleanExpression storeIdCursorCondition = (storeIdCursor == null || storeIdCursor == 0)
+        final BooleanExpression storeIdCursorCondition = (storeIdCursor == null || storeIdCursor == 0)
                 ? null
                 : store.id.gt(storeIdCursor); // storeIdCursor가 존재하면 store.id < storeIdCursor 조건 추가
 

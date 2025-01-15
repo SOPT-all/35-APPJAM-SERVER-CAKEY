@@ -2,6 +2,7 @@ package com.cakey.store.dto;
 
 import com.cakey.store.domain.Station;
 import com.querydsl.core.annotations.QueryProjection;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class StoreInfoDto {
     private final String address;
     private final boolean isLiked;
     private final int storeLikesCount;
+    @Nullable
     private Long storeIdCursor;
 
     @QueryProjection
