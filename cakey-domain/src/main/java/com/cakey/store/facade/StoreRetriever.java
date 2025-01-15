@@ -26,6 +26,13 @@ public class StoreRetriever {
         return storeRepository.findStoreInfoByStationAndLikes(userId, station, likesCursor, lastStoreId, size);
     }
 
+    public List<StoreInfoDto> findStoreInfoByStationAndLatest(final Long userId,
+                                                              final Station station,
+                                                              final Long storeIdCursor,
+                                                              final int size) {
+        return storeRepository.findStoreInfoByStationAndLatest(userId, station, storeIdCursor, size);
+    }
+
     public int countAllStores() {
         return storeRepository.countAllStores();
     }

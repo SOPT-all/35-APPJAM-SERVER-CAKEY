@@ -26,6 +26,16 @@ public class StoreFacade {
         return storeRetriever.findStoreInfoByStationAndLikes(userId, station, likesCursor, lastStoreId, size);
     }
 
+    public List<StoreInfoDto> findStoreInfoByStationAndLatest(final Long userId,
+                                                              final Station station,
+                                                              final Long storeCursorId,
+                                                              final int size) {
+
+        return storeRetriever.findStoreInfoByStationAndLatest(userId, station, storeCursorId, size);
+
+
+    }
+
     public int countAllStores() {
         return storeRetriever.countAllStores();
     }
