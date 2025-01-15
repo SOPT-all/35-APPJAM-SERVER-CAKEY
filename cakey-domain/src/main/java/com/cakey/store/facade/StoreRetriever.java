@@ -1,9 +1,13 @@
 package com.cakey.store.facade;
 
+import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
+import com.cakey.store.domain.Store;
 import com.cakey.store.dto.StoreCoordianteDto;
 import com.cakey.store.dto.StoreInfoDto;
+import com.cakey.store.dto.StoreKakaoLinkDto;
 import com.cakey.store.repository.StoreRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -48,5 +52,11 @@ public class StoreRetriever {
 
     public int countStoresByStation(final Station station) {
         return storeRepository.countStoresByStation(station);
+    }
+
+    public Store findById(final Long storeId) {
+        return storeRepository.findById(storeId)
+                .orElseThrow(() -> new NotFoundException());
+
     }
 }

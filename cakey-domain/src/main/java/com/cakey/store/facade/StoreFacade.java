@@ -1,8 +1,10 @@
 package com.cakey.store.facade;
 
 import com.cakey.store.domain.Station;
+import com.cakey.store.domain.Store;
 import com.cakey.store.dto.StoreCoordianteDto;
 import com.cakey.store.dto.StoreInfoDto;
+import com.cakey.store.dto.StoreKakaoLinkDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -63,9 +65,14 @@ public class StoreFacade {
         return storeRetriever.countStoresByStation(station);
     }
 
-    //마지막 스토어아이디 계싼
+    //마지막 스토어아이디 계산
     public Long calculateLastStoreId(final List<StoreInfoDto> storeInfoDtos) {
         return storeInfoDtos.isEmpty() ? null : storeInfoDtos.get(storeInfoDtos.size() - 1).getStoreId();
     }
 
+    //카카오 링크
+    public StoreKakaoLinkDto findById(final Long storeId) {
+        Store store = storeRetriever.findById(storeId);
+        return new StoreKakaoLinkDto(store.getOpenKakaoUrl());
+    }
 }
