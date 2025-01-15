@@ -7,7 +7,7 @@ public record StoreAllSizeAndTasteRes(
         List<SizeDto> sizeDtoList,
         String taste
 ) {
-    public static StoreAllSizeAndTasteRes of(List<SizeDto> sizeDtoList, String taste) {
+    public static StoreAllSizeAndTasteRes of(final List<SizeDto> sizeDtoList, final String taste) {
         return new StoreAllSizeAndTasteRes(sizeDtoList, taste);
     }
 }

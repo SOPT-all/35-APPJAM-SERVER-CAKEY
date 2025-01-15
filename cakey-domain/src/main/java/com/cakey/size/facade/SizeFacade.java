@@ -15,9 +15,8 @@ public class SizeFacade {
 
     public List<SizeDto> findSizeAllByStoreIdAndOrderByPriceAsc(final Long storeId) {
         List<Size> sizeList = sizeRetriever.findSizeAllByStoreIdAndOrderByPriceAsc(storeId);
-        List<SizeDto> sizeDtos = sizeList.stream().map(
+        return sizeList.stream().map(
                 size -> new SizeDto(size.getSizeName(), size.getPrice())
         ).collect(Collectors.toList());
-        return sizeDtos;
     }
 }
