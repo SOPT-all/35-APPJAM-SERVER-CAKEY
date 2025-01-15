@@ -150,7 +150,7 @@ public class StoreService {
         return new StoreKakaoLinkRes(storeKakaoLinkDto.kakaoLink());
     }
 
-    public StoreDetailAllDesignRes getStoreAllDesign(final Long storeId, final Long userId) {
+    public StoreDetailAllDesignRes getStoreAllDesign(final long storeId, final Long userId) {
         // 케이크 조회
         // 스토어 ID로 케이크 리스트 조회
         final List<Cake> cakes = cakeFacade.findAllByStoreId(storeId);
