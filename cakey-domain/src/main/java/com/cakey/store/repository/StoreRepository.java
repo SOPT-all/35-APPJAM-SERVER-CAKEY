@@ -17,6 +17,4 @@ public interface StoreRepository extends JpaRepository<Store, Long>, StoreReposi
     // 특정 지하철역의 스토어 개수
     @Query("SELECT COUNT(s) FROM Store s WHERE s.station = :stationName")
     int countStoresByStation(Station stationName);
-
-    Optional<Store> findById(Long storeId);
 }
