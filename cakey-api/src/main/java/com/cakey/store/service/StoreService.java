@@ -5,6 +5,8 @@ import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.facade.CakeLikesFacade;
 import com.cakey.common.exception.NotFoundException;
+import com.cakey.operationtime.dto.StoreOperationTimeDto;
+import com.cakey.operationtime.facade.StoreOperationTimeFacade;
 import com.cakey.size.domain.Size;
 import com.cakey.size.dto.SizeDto;
 import com.cakey.size.facade.SizeFacade;
@@ -12,6 +14,8 @@ import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
 import com.cakey.store.facade.StoreFacade;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,7 @@ public class StoreService {
     private final CakeFacade cakeFacade;
     private final CakeLikesFacade cakeLikesFacade;
     private final SizeFacade sizeFacade;
+    private final StoreOperationTimeFacade storeOperationTimeFacade;
 
     public List<StoreCoordinate> getStoreCoordinateList(final Station station) {
         final List<StoreCoordianteDto> storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
@@ -182,4 +187,36 @@ public class StoreService {
         final List<SizeDto> sizeList = sizeFacade.findSizeAllByStoreIdAndOrderByPriceAsc(storeId);
         return StoreAllSizeAndTasteRes.of(sizeList, storeFacade.findTaste(storeId).taste());
     }
+
+    public StoreDetailInfoRes getStoreDetailInfo(final long storeId) {
+        StoreDetailInfoDto storeDetailInfoDto;
+        StoreOperationTimeDto storeOperationTimeDto;
+        try {
+            storeDetailInfoDto = storeFacade.findStoreDetailInfo(storeId);
+            storeOperationTimeDto = storeOperationTimeFacade.findStoreOperationTimeByStoreId(storeId);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            return StoreDetailInfoRes.of(
+                    storeOperationTimeDto.monOpen().format(formatter),
+                    storeOperationTimeDto.monClose().format(formatter),
+                    storeOperationTimeDto.tueOpen().format(formatter),
+                    storeOperationTimeDto.tueClose().format(formatter),
+                    storeOperationTimeDto.wedOpen().format(formatter),
+                    storeOperationTimeDto.wedClose().format(formatter),
+                    storeOperationTimeDto.thuOpen().format(formatter),
+                    storeOperationTimeDto.thuClose().format(formatter),
+                    storeOperationTimeDto.friOpen().format(formatter),
+                    storeOperationTimeDto.friClose().format(formatter),
+                    storeOperationTimeDto.satOpen().format(formatter),
+                    storeOperationTimeDto.satClose().format(formatter),
+                    storeOperationTimeDto.sunOpen().format(formatter),
+                    storeOperationTimeDto.sunClose().format(formatter),
+                    storeDetailInfoDto.address(),
+                    storeDetailInfoDto.phone()
+            );
+        } catch (NotFoundException e) {
+            //todo: 추후 구체적인 예외처리
+            throw e;
+        }
+    }
+
 }
