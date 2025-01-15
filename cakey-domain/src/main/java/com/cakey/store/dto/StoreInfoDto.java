@@ -16,7 +16,6 @@ public class StoreInfoDto {
     private final String address;
     private final boolean isLiked;
     private final int storeLikesCount;
-    @Nullable
     private Long storeIdCursor;
 
     @QueryProjection

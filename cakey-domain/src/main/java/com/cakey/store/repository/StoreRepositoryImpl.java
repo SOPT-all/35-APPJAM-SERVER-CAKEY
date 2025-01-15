@@ -75,7 +75,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.address,
                         isLikedExpression,
                         storeLike.id.count().intValue(),
-                        null
+                        Expressions.nullExpression()
+
                 ))
                 .from(store)
                 .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
@@ -111,7 +112,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.address,
                         isLikedExpression,
                         storeLike.id.count().intValue(),
-                null
+                        Expressions.nullExpression()
+
                 ))
                 .from(store)
                 .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
@@ -150,7 +152,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.address,
                         Expressions.asBoolean(true), // 좋아요 여부는 항상 true
                         storeLikesCountSubQuery,
-                        null
+                        Expressions.nullExpression()
                 ))
                 .from(store)
                 .leftJoin(storeLike).on(storeLike.storeId.eq(store.id)) // LEFT JOIN 사용
