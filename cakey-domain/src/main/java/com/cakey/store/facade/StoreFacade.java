@@ -5,6 +5,7 @@ import com.cakey.store.domain.Store;
 import com.cakey.store.dto.StoreCoordianteDto;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.dto.StoreKakaoLinkDto;
+import com.cakey.store.dto.StoreTasteDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -74,5 +75,11 @@ public class StoreFacade {
     public StoreKakaoLinkDto findById(final Long storeId) {
         Store store = storeRetriever.findById(storeId);
         return new StoreKakaoLinkDto(store.getOpenKakaoUrl());
+    }
+
+    //스토어 맛
+    public StoreTasteDto findTaste(final Long storeId) {
+        Store store = storeRetriever.findById(storeId);
+        return new StoreTasteDto(store.getTaste());
     }
 }

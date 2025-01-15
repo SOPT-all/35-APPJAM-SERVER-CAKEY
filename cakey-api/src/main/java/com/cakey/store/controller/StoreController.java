@@ -87,4 +87,9 @@ public class StoreController {
                                                         @RequestHeader(required = false) final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreAllDesign(storeId, userId));
     }
+
+    @GetMapping("/{storeId}/size")
+    public ResponseEntity<BaseResponse<?>> getSizeAndTaste(@PathVariable("storeId") final Long storeId) {
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreSizeAndTaste(storeId));
+    }
 }
