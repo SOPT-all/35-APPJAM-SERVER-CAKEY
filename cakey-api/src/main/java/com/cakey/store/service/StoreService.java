@@ -3,11 +3,13 @@ package com.cakey.store.service;
 import com.cakey.cake.domain.Cake;
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
-import com.cakey.cake.repository.CakeRepository;
 import com.cakey.cakelike.facade.CakeLikesFacade;
-import com.cakey.cakelike.repository.CakeLikesRepository;
 import com.cakey.common.exception.NotFoundException;
+import com.cakey.size.domain.Size;
+import com.cakey.size.dto.SizeDto;
+import com.cakey.size.facade.SizeFacade;
 import com.cakey.store.domain.Station;
+import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
 import com.cakey.store.facade.StoreFacade;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class StoreService {
     private final StoreFacade storeFacade;
     private final CakeFacade cakeFacade;
     private final CakeLikesFacade cakeLikesFacade;
+    private final SizeFacade sizeFacade;
 
     public List<StoreCoordinate> getStoreCoordinateList(final Station station) {
         final List<StoreCoordianteDto> storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
@@ -172,5 +175,11 @@ public class StoreService {
                 .collect(Collectors.toList());
 
         return new StoreDetailAllDesignRes(designs);
+    }
+
+
+    public StoreAllSizeAndTasteRes getStoreSizeAndTaste(final long storeId) {
+        final List<SizeDto> sizeList = sizeFacade.findSizeAllByStoreIdAndOrderByPriceAsc(storeId);
+        return StoreAllSizeAndTasteRes.of(sizeList, storeFacade.findTaste(storeId).taste());
     }
 }
