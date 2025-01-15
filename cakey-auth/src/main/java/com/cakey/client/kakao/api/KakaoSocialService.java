@@ -1,7 +1,7 @@
 //package com.cakey.client.kakao.api;
 //
 //import com.cakey.client.dto.LoginReq;
-//import com.cakey.client.dto.UserInfoRes;
+//import com.cakey.client.dto.KakaoUserInfoRes;
 //import com.cakey.client.kakao.api.dto.KakaoAccessTokenRes;
 //import com.cakey.client.kakao.api.dto.KakaoUserRes;
 //import com.cakey.client.SocialType;
@@ -27,7 +27,7 @@
 //
 //    @Transactional
 //    @Override
-//    public UserInfoRes login(
+//    public KakaoUserInfoRes login(
 //            final String authorizationCode,
 //            final LoginReq loginReq
 //    ) {
@@ -63,12 +63,12 @@
 //        return kakaoApiClient.getUserInformation("Bearer " + accessToken, contentType);
 //    }
 //
-//    private UserInfoRes getLoginDto(
+//    private KakaoUserInfoRes getLoginDto(
 //            final SocialType socialType,
 //            final KakaoUserRes userResponse,
 //            final UserRole userRole
 //            ) {
-//        return UserInfoRes.of(
+//        return KakaoUserInfoRes.of(
 //                userResponse.id().toString(),
 //                userResponse.kakaoAccount().profile().nickname(),
 //                socialType,

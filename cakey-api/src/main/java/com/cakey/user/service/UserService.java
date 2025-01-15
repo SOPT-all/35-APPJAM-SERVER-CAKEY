@@ -1,7 +1,7 @@
-//package com.cakey.user.service;
-//
+package com.cakey.user.service;
+
 //import com.cakey.client.dto.LoginReq;
-//import com.cakey.client.dto.UserInfoRes;
+//import com.cakey.client.dto.KakaoUserInfoRes;
 //import com.cakey.client.kakao.api.KakaoSocialService;
 //import com.cakey.common.auth.JwtTokenProvider;
 //import com.cakey.common.auth.UserAuthentication;
@@ -11,16 +11,20 @@
 //import com.cakey.user.domain.User;
 //import com.cakey.user.dto.AccessTokenGetSuccess;
 //import com.cakey.user.dto.LoginSuccessRes;
-//import com.cakey.user.repository.UserRepository;
-//import lombok.RequiredArgsConstructor;
+import com.cakey.common.exception.NotFoundException;
+import com.cakey.exception.ErrorCode;
+import com.cakey.user.dto.UserInfoDto;
+import com.cakey.user.dto.UserInfoRes;
+import com.cakey.user.facade.UserFacade;
+import lombok.RequiredArgsConstructor;
 //import org.springframework.http.ResponseCookie;
-//import org.springframework.stereotype.Service;
-//
-//@Service
-//@RequiredArgsConstructor
-//public class UserService {
-//
-//    private final UserRepository userRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private final UserFacade userFacade;
 //    private final JwtTokenProvider jwtTokenProvider;
 //    private final TokenService tokenService;
 //    private final KakaoSocialService kakaoSocialService;
@@ -58,7 +62,7 @@
 //        return refreshCookie;
 //    }
 //
-//    public UserInfoRes getUserInfo(final String authorizationCode,
+//    public KakaoUserInfoRes getUserInfo(final String authorizationCode,
 //                                   final LoginReq loginReq
 //    ) {
 //        switch (loginReq.socialType()){
@@ -69,7 +73,7 @@
 //        }
 //    }
 //
-//    public Long createUser(final UserInfoRes userInfoRes) {
+//    public Long createUser(final KakaoUserInfoRes userInfoRes) {
 //        User user = User.createUser(
 //                userInfoRes.name(),
 //                UserRole.USER,
@@ -119,7 +123,7 @@
 //                refreshToken
 //        );
 //    }
-//    private LoginSuccessRes getTokenDto(final UserInfoRes userInfoRes) {
+//    private LoginSuccessRes getTokenDto(final KakaoUserInfoRes userInfoRes) {
 //        if(isExistingUser(userInfoRes.socialId(), userInfoRes.socialType())){
 //            return getTokenByUserId(getBySocialId(userInfoRes.socialId(), userInfoRes.socialType()).getId());
 //        }
@@ -128,5 +132,16 @@
 //            return getTokenByUserId(id);
 //        }
 //    }
-//
-//}
+    public UserInfoRes getUserInfo(final Long userId) {
+        final UserInfoDto userInfoDto;
+        try {
+            userInfoDto = userFacade.findById(userId);
+        } catch (NotFoundException e) {
+            //todo: 추후 구체적인 예외처리
+            throw e;
+        }
+        return UserInfoRes.from(userInfoDto);
+
+    }
+
+}
