@@ -41,20 +41,20 @@ public class StoreService {
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, lastStoreId, size);
 
         // 조회한 store들의 ID 추출
-        final List<Long> storeIds = getStoreIds(storeInfoDtos);
+        final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
 
         //메인 이미지 map
-        final Map<Long, List<CakeMainImageDto>> mainImageMap = getMainImageMap(storeIds);
+        final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
 
         //storInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
         //스토어 개수 조회
-        final int storeCount = getStoreCount(station);
+        final int storeCount = storeFacade.getStoreCountByStation(station);
 
         final int nextLikesCursor = calculateNextCursor(storeInfoDtos);
 
-        final Long LastStoreId = calculateLastStoreId(storeInfoDtos);
+        final Long LastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
         // StoreInfoListRes 반환
         return StoreInfoListBylikesRes.of(nextLikesCursor, LastStoreId, storeCount, storeInfos);
@@ -70,19 +70,19 @@ public class StoreService {
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLatest(userId, station, storeIdCursor, size);
 
         // 조회한 store들의 ID 추출
-        final List<Long> storeIds = getStoreIds(storeInfoDtos);
+        final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
 
         //메인 이미지 map
-        final Map<Long, List<CakeMainImageDto>> mainImageMap = getMainImageMap(storeIds);
+        final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
 
         //storInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
         //스토어 개수 조회
-        final int storeCount = getStoreCount(station);
+        final int storeCount = storeFacade.getStoreCountByStation(station);
 
         //마지막 storeID 조회
-        final Long LastStoreId = calculateLastStoreId(storeInfoDtos);
+        final Long LastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
         return StoreInfoListByLatest.of(LastStoreId, storeCount, storeInfos);
     }
@@ -102,25 +102,11 @@ public class StoreService {
         return storeInfoDtos.isEmpty() ? -1 : storeInfoDtos.get(storeInfoDtos.size() - 1).getStoreLikesCount();
     }
 
-    private Long calculateLastStoreId(final List<StoreInfoDto> storeInfoDtos) {
-        return storeInfoDtos.isEmpty() ? null : storeInfoDtos.get(storeInfoDtos.size() - 1).getStoreId();
-    }
-
     //스토어 id들 조회
     private List<Long> getStoreIds(final List<StoreInfoDto> storeInfoDtos) {
         return storeInfoDtos.stream()
                 .map(StoreInfoDto::getStoreId)
                 .toList();
-    }
-
-    //메인이미지 매핑
-    private Map<Long, List<CakeMainImageDto>> getMainImageMap(final List<Long> storeIds) {
-        //스토어 대표 이미지 조회
-        final List<CakeMainImageDto> cakeMainImageDtos1 = cakeFacade.findMainImageByStoreIds(storeIds);
-
-        // 이미지를 storeId 기준으로 그룹화
-        return cakeMainImageDtos1.stream()
-                .collect(Collectors.groupingBy(CakeMainImageDto::getStoreId));
     }
 
     //storeInfo 생성
@@ -145,12 +131,5 @@ public class StoreService {
                     );
                 })
                 .toList();
-    }
-
-    //스토어 개수 조회
-    private int getStoreCount(final Station station) {
-        return (station == Station.ALL)
-                ? storeFacade.countAllStores()
-                : storeFacade.countStoresByStation(station);
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public class CakeRetriever {
     private final CakeRepository cakeRepository;
 
-    public List<CakeMainImageDto> findMainImageByStoreIds(List<Long> storeIds) {
+    public List<CakeMainImageDto> findMainImageByStoreIds(final List<Long> storeIds) {
         return cakeRepository.findMainImageByStoreIds(storeIds);
     }
 
