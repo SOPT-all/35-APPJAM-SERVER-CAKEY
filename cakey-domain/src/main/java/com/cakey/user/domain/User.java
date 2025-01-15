@@ -31,15 +31,20 @@ public class User {
     @Column(name = "social_id", nullable = false)
     private String socialId;
 
+    @Column(name = "social_email", nullable = false)
+    private String socialEmail;
+
     public static User createUser(final String name,
                                   final UserRole role,
                                   final SocialType socialType,
-                                  final String socialId) {
+                                  final String socialId,
+                                  final String socialEmail) {
         return User.builder()
                 .name(name)
                 .role(role)
                 .socialType(socialType)
                 .socialId(socialId)
+                .socialEmail(socialEmail)
                 .build();
     }
 
