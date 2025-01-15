@@ -2,9 +2,12 @@ package com.cakey.store.service;
 
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
+import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.*;
 import com.cakey.store.facade.StoreFacade;
+import com.cakey.user.dto.UserInfoDto;
+import com.cakey.user.dto.UserInfoRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -131,5 +134,16 @@ public class StoreService {
                     );
                 })
                 .toList();
+    }
+
+    public StoreKakaoLinkRes getStoreKakaoLink(final Long storeId) {
+        final StoreKakaoLinkDto storeKakaoLinkDto;
+        try {
+            storeKakaoLinkDto = storeFacade.findById(storeId);
+        } catch (NotFoundException e) {
+            //todo: 추후 구체적인 예외처리
+            throw e;
+        }
+        return new StoreKakaoLinkRes(storeKakaoLinkDto.kakaoLink());
     }
 }

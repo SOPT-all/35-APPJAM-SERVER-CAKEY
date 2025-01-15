@@ -74,4 +74,10 @@ public class StoreController {
                 SuccessCode.OK,
                 storeService.getAllStation());
     }
+
+    @GetMapping("/{storeId}/kakaoLink")
+    public ResponseEntity<BaseResponse<?>> getKakaoLink(@PathVariable("storeId") final Long storeId) {
+        return ApiResponseUtil.success(SuccessCode.OK,
+                storeService.getStoreKakaoLink(storeId));
+    }
 }
