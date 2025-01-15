@@ -1,7 +1,9 @@
 package com.cakey.cake.facade;
 
 import com.cakey.cake.domain.Cake;
+import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakeMainImageDto;
+import com.cakey.store.domain.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CakeFacade {
     private final CakeRetriever cakeRetriever;
+
 
     //스토어 대표 이미지 조회
     public List<CakeMainImageDto> findMainImageByStoreIds(final List<Long> storeIds) {
@@ -27,6 +30,14 @@ public class CakeFacade {
         // 이미지를 storeId 기준으로 그룹화
         return cakeMainImageDtos.stream()
                 .collect(Collectors.groupingBy(CakeMainImageDto::getStoreId));
+    }
+
+    public int countCakesByStation(final Station station) {
+        return cakeRetriever.countCakesByStation(station);
+    }
+
+    public List<CakeInfoDto> findCakesByStation(final Long userId, final Station station, final Long cakeIdCursor, final int size) {
+        return cakeRetriever.findCakesByStation(userId, station, cakeIdCursor, size);
     }
 
     public List<Cake> findAllByStoreId(final Long storeId) {
