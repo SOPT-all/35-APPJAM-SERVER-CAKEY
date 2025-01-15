@@ -8,6 +8,7 @@ import com.cakey.store.facade.StoreFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -84,6 +85,17 @@ public class StoreService {
         final Long LastStoreId = calculateLastStoreId(storeInfoDtos);
 
         return StoreInfoListByLatest.of(LastStoreId, storeCount, storeInfos);
+    }
+
+    //전체 지하철역 조회
+    public List<AllStationRes.StationInfo> getAllStation() {
+        return Arrays.stream(Station.values())
+                .map(station -> AllStationRes.StationInfo.of(
+                        station.getStationName(),
+                        station.getLatitude(),
+                        station.getLongitude()
+                ))
+                .collect(Collectors.toList());
     }
 
     private int calculateNextCursor(final List<StoreInfoDto> storeInfoDtos) {
