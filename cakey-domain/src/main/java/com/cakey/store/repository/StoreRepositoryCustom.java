@@ -21,4 +21,7 @@ public interface StoreRepositoryCustom {
                                                        final Long storeIdCursor,
                                                        final int size);
 
+    List<StoreInfoDto> findStoresLikedByUser(final long userId,
+                                             final Long storeIdCursor,
+                                             final int size);
 }
