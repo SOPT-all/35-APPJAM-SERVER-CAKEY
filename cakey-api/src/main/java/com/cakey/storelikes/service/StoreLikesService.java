@@ -6,7 +6,8 @@ import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreInfo;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.facade.StoreFacade;
-import com.cakey.storelikes.dto.StoreLatestLikedByUser;
+import com.cakey.storelikes.dto.StoreLatestLikedByUserRes;
+import com.cakey.storelikes.dto.StorePopularityLikedByUserRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,10 @@ public class StoreLikesService {
     private final StoreFacade storeFacade;
     private final CakeFacade cakeFacade;
 
-    public StoreLatestLikedByUser getLatestStoreLikesByUser(final long userId,
-                                                            final Long storeIdCursor,
-                                                            final int size) {
+    //찜한 스토어 조회(최신순)
+    public StoreLatestLikedByUserRes getLatestStoreLikesByUser(final long userId,
+                                                               final Long storeIdCursor,
+                                                               final int size) {
 
         //페이지네이션으로 스토어 조회
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findLatestStoresLikedByUser(userId, storeIdCursor, size);
@@ -42,7 +44,40 @@ public class StoreLikesService {
         //마지막 스토어 아이디
         final Long lastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
-        return StoreLatestLikedByUser.fromStoreInfo(lastStoreId, storeCount, storeInfos);
+        return StoreLatestLikedByUserRes.fromStoreInfo(lastStoreId, storeCount, storeInfos);
+    }
+
+    //찜한 스토어 조회(인기순)
+    public StorePopularityLikedByUserRes getPopularityStoreByUserLikes(final long userId,
+                                                                       final int likesCursor,
+                                                                       final Long storeIdCursor,
+                                                                       final int size) {
+        final List<StoreInfoDto> storeInfoOrderByLikesDtos = storeFacade.findPopularityStoresLikedByUser(userId, likesCursor, storeIdCursor, size);
+
+
+        //조회한 store들의 id 추출
+        final List<Long> storeIds = storeFacade.getStoreIds(storeInfoOrderByLikesDtos);
+
+        //메인 이미지 매핑
+        final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
+
+        //storeInfo 생성
+        final List<StoreInfo> storeInfos = getStoreInfo(storeInfoOrderByLikesDtos, mainImageMap);
+
+        //스토어 개수 조회
+        final int storeCount = storeInfos.size();
+
+        final Long lastStoreId = storeInfoOrderByLikesDtos.isEmpty()
+                ? null // 스토어가 없으면 null 반환
+                : storeFacade.calculateLastStoreId(storeInfoOrderByLikesDtos);
+
+        // 7. 결과 DTO 조립 및 반환
+        return StorePopularityLikedByUserRes.of(
+                userId,
+                lastStoreId != null ? lastStoreId : 0L, // null이면 기본값 0L 설정
+                storeCount,
+                storeInfos
+        );
     }
 
 

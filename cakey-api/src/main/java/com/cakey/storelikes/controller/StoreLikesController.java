@@ -23,7 +23,18 @@ public class StoreLikesController {
         return ApiResponseUtil.success(
                 SuccessCode.OK,
                 storeLikesService.getLatestStoreLikesByUser(userId, storeIdCursor, size));
+    }
 
+    @GetMapping("/popularity")
+    public ResponseEntity<BaseResponse<?>> getPopularityStoreByUserLikes(
+            @RequestHeader(value = "userId", required = true) final long userId,
+            @RequestParam(value = "likesCursor", defaultValue = "0", required = false) final int likesCursor,
+            @RequestParam(value = "storeIdCursor", defaultValue = "0", required = false) final Long storeIdCursor,
+            @RequestParam(value = "size", defaultValue = "10", required = false) final int size
+    ) {
+        return ApiResponseUtil.success(
+                SuccessCode.OK,
+                storeLikesService.getPopularityStoreByUserLikes(userId, likesCursor, storeIdCursor, size));
     }
 
 }

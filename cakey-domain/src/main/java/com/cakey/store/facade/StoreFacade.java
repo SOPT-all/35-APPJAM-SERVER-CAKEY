@@ -35,11 +35,19 @@ public class StoreFacade {
 
         return storeRetriever.findStoreInfoByStationAndLatest(userId, station, storeCursorId, size);
     }
-    //찜한 스토어(최신순)
+    //찜한 스토어 조회(최신순)
     public List<StoreInfoDto> findLatestStoresLikedByUser(final Long userId,
                                                           final Long storeIdCursor,
                                                           final int size) {
         return storeRetriever.findStoresLikedByUser(userId, storeIdCursor, size);
+    }
+
+    //찜한 스토어 조회(인기순)
+    public List<StoreInfoDto> findPopularityStoresLikedByUser(final long userId,
+                                                                          final int likesCursor,
+                                                                          final Long storeIdCursor,
+                                                                          final int size) {
+        return storeRetriever.findPopularityStoresLikedByUser(userId, likesCursor, storeIdCursor, size);
     }
 
     // 조회한 store들의 ID 추출
