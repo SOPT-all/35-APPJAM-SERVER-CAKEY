@@ -3,6 +3,7 @@ package com.cakey.store.facade;
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
 import com.cakey.store.dto.StoreCoordianteDto;
+import com.cakey.store.dto.StoreDetailInfoDto;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.dto.StoreKakaoLinkDto;
 import com.cakey.store.dto.StoreTasteDto;
@@ -81,5 +82,11 @@ public class StoreFacade {
     public StoreTasteDto findTaste(final Long storeId) {
         Store store = storeRetriever.findById(storeId);
         return new StoreTasteDto(store.getTaste());
+    }
+
+    //스토어 상세정보
+    public StoreDetailInfoDto findStoreDetailInfo(final Long storeId) {
+        Store store = storeRetriever.findById(storeId);
+        return new StoreDetailInfoDto(store.getAddress(), store.getPhone());
     }
 }

@@ -92,4 +92,9 @@ public class StoreController {
     public ResponseEntity<BaseResponse<?>> getSizeAndTaste(@PathVariable("storeId") final Long storeId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreSizeAndTaste(storeId));
     }
+
+    @GetMapping("/{storeId}/information")
+    public ResponseEntity<BaseResponse<?>> getStoreInformation(@PathVariable("storeId") final Long storeId) {
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreDetailInfo(storeId));
+    }
 }
