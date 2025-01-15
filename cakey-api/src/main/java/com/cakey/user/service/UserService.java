@@ -137,6 +137,7 @@ public class UserService {
         try {
             userInfoDto = userFacade.findById(userId);
         } catch (NotFoundException e) {
+            //todo: 추후 구체적인 예외처리
             throw e;
         }
         return UserInfoRes.from(userInfoDto);
