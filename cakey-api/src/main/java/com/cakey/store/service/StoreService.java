@@ -7,15 +7,13 @@ import com.cakey.cakelike.facade.CakeLikesFacade;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.operationtime.dto.StoreOperationTimeDto;
 import com.cakey.operationtime.facade.StoreOperationTimeFacade;
-import com.cakey.size.domain.Size;
 import com.cakey.size.dto.SizeDto;
 import com.cakey.size.facade.SizeFacade;
 import com.cakey.store.domain.Station;
-import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
 import com.cakey.store.facade.StoreFacade;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -68,17 +66,18 @@ public class StoreService {
 
         final int nextLikesCursor = calculateNextCursor(storeInfoDtos);
 
-        final Long LastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
-
+        //마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
+        final long lastStoreId = storeInfoDtos.get(size - 1).getStoreIdCursor() == null ? -1 : storeInfoDtos.get(size - 1).getStoreIdCursor();
+        
         // StoreInfoListRes 반환
-        return StoreInfoListBylikesRes.of(nextLikesCursor, LastStoreId, storeCount, storeInfos);
+        return StoreInfoListBylikesRes.of(nextLikesCursor, lastStoreId, storeCount, storeInfos);
     }
 
     //스토어 리스트 조회(최신순)
-    public StoreInfoListByLatest getStoreInfoListByStationAndLatest(final Long userId,
-                                                                    final Station station,
-                                                                    final Long storeIdCursor,
-                                                                    final int size) {
+    public StoreInfoListByLatestRes getStoreInfoListByStationAndLatest(final Long userId,
+                                                                       final Station station,
+                                                                       final Long storeIdCursor,
+                                                                       final int size) {
 
         //커서 페이지네이션
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLatest(userId, station, storeIdCursor, size);
@@ -98,7 +97,7 @@ public class StoreService {
         //마지막 storeID 조회
         final Long LastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
-        return StoreInfoListByLatest.of(LastStoreId, storeCount, storeInfos);
+        return StoreInfoListByLatestRes.of(LastStoreId, storeCount, storeInfos);
     }
 
     //전체 지하철역 조회
