@@ -182,7 +182,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         // 커서 조건 처리
         BooleanExpression storeIdCursorCondition = (storeIdCursor == null || storeIdCursor == 0)
                 ? null
-                : store.id.lt(storeIdCursor); // storeIdCursor가 존재하면 store.id < storeIdCursor 조건 추가
+                : store.id.gt(storeIdCursor); // storeIdCursor가 존재하면 store.id < storeIdCursor 조건 추가
 
         // 기본 쿼리 생성
         JPQLQuery<StoreInfoDto> query = queryFactory

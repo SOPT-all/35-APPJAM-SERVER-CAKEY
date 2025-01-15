@@ -6,6 +6,7 @@ import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreInfo;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.facade.StoreFacade;
+import com.cakey.storelike.facade.StoreLikeFacade;
 import com.cakey.storelikes.dto.StoreLatestLikedByUserRes;
 import com.cakey.storelikes.dto.StorePopularityLikedByUserRes;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class StoreLikesService {
 
     private final StoreFacade storeFacade;
     private final CakeFacade cakeFacade;
+    private final StoreLikeFacade storeLikeFacade;
 
     //찜한 스토어 조회(최신순)
     public StoreLatestLikedByUserRes getLatestStoreLikesByUser(final long userId,
@@ -38,8 +40,8 @@ public class StoreLikesService {
         //storeInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
-        //스토어 개수 조회
-        final int storeCount = storeInfos.size();
+        //찜한 스토어 개수 조회
+        final int storeCount = storeLikeFacade.countAllLikedStoreByUserId(userId);
 
         //마지막 스토어 아이디
         final Long lastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
@@ -64,8 +66,8 @@ public class StoreLikesService {
         //storeInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoOrderByLikesDtos, mainImageMap);
 
-        //스토어 개수 조회
-        final int storeCount = storeInfos.size();
+        //찜한 스토어 개수 조회
+        final int storeCount = storeLikeFacade.countAllLikedStoreByUserId(userId);
 
         final Long lastStoreId = storeInfoOrderByLikesDtos.isEmpty()
                 ? null // 스토어가 없으면 null 반환
