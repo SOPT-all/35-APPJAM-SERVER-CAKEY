@@ -218,7 +218,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         }
 
         // 정렬 조건 및 페이징 처리
-        query.orderBy(storeLike.count().desc(), store.id.desc()) // 좋아요 개수 내림차순 -> storeId 내림차순
+        query.orderBy(storeLike.count().desc(), store.id.asc()) // 좋아요 개수 내림차순 -> storeId 내림차순
                 .limit(size + 1); // limit + 1개 조회
 
         // 쿼리 실행
