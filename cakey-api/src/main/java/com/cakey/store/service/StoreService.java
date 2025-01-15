@@ -1,13 +1,15 @@
 package com.cakey.store.service;
 
+import com.cakey.cake.domain.Cake;
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
+import com.cakey.cake.repository.CakeRepository;
+import com.cakey.cakelike.facade.CakeLikesFacade;
+import com.cakey.cakelike.repository.CakeLikesRepository;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.*;
 import com.cakey.store.facade.StoreFacade;
-import com.cakey.user.dto.UserInfoDto;
-import com.cakey.user.dto.UserInfoRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class StoreService {
 
     private final StoreFacade storeFacade;
     private final CakeFacade cakeFacade;
+    private final CakeLikesFacade cakeLikesFacade;
 
     public List<StoreCoordinate> getStoreCoordinateList(final Station station) {
         final List<StoreCoordianteDto> storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
@@ -145,5 +148,29 @@ public class StoreService {
             throw e;
         }
         return new StoreKakaoLinkRes(storeKakaoLinkDto.kakaoLink());
+    }
+
+    public StoreDetailAllDesignRes getStoreAllDesign(final long storeId, final Long userId) {
+        // 케이크 조회
+        // 스토어 ID로 케이크 리스트 조회
+        final List<Cake> cakes = cakeFacade.findAllByStoreId(storeId);
+
+        //좋아요 상태 설정
+        List<StoreDetailDesign> designs = cakes.stream()
+                .map(cake -> {
+                    boolean isLiked = false;
+                    if (userId != null) {
+                        // userId가 null이 아니면 좋아요 상태 조회
+                        isLiked = cakeLikesFacade.existsCakeLikesByCakeIdAndUserId(cake.getId(), userId);
+                    } else {
+                        //userId 없으면 좋아요 전체 false
+                        isLiked = false;
+                    }
+                    // StoreDetailDesign 생성
+                    return StoreDetailDesign.of(cake.getId(), cake.getImageUrl(), isLiked);
+                })
+                .collect(Collectors.toList());
+
+        return new StoreDetailAllDesignRes(designs);
     }
 }

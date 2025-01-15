@@ -75,9 +75,16 @@ public class StoreController {
                 storeService.getAllStation());
     }
 
+    //스토어 카카오 오픈채팅 링크 조회
     @GetMapping("/{storeId}/kakaoLink")
     public ResponseEntity<BaseResponse<?>> getKakaoLink(@PathVariable("storeId") final Long storeId) {
         return ApiResponseUtil.success(SuccessCode.OK,
                 storeService.getStoreKakaoLink(storeId));
+    }
+
+    @GetMapping("/{storeId}/design")
+    public ResponseEntity<BaseResponse<?>> getAllDesign(@PathVariable("storeId") final Long storeId,
+                                                        @RequestHeader(required = false) final Long userId) {
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreAllDesign(storeId, userId));
     }
 }
