@@ -15,4 +15,10 @@ public interface StoreRepositoryCustom {
                                                       final int likesCursor,
                                                       final Long lastStoreId,
                                                       final int size);
+
+    List<StoreInfoDto> findStoreInfoByStationAndLatest(final Long userId,
+                                                       final Station station,
+                                                       final Long storeIdCursor,
+                                                       final int size);
+
 }

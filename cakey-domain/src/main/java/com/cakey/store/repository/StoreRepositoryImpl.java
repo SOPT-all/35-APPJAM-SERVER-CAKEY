@@ -7,6 +7,7 @@ import com.cakey.storelike.domain.QStoreLike;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -40,8 +41,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                                              final int likesCursor,
                                                              final Long lastStoreId,
                                                              final int size) {
-        QStore store = QStore.store;
-        QStoreLike storeLike = QStoreLike.storeLike;
+        final QStore store = QStore.store;
+        final QStoreLike storeLike = QStoreLike.storeLike;
 
         // 좋아요 여부 서브쿼리
         BooleanExpression isLikedExpression = userId != null
@@ -82,11 +83,58 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .fetch();
     }
 
-    // 안전한 조건 결합 메서드
-    private BooleanExpression combine(BooleanExpression base, BooleanExpression additional) {
-        if (base == null) return additional;
-        if (additional == null) return base;
-        return base.and(additional);
+    @Override
+    public List<StoreInfoDto> findStoreInfoByStationAndLatest(final Long userId,
+                                                              final Station station,
+                                                              final Long storeIdCursor,
+                                                              final int size) {
+        final QStore store = QStore.store;
+        final QStoreLike storeLike = QStoreLike.storeLike;
+
+
+        BooleanExpression isLikedExpression = userId != null
+                ? JPAExpressions.selectOne()
+                .from(storeLike)
+                .where(storeLike.storeId.eq(store.id).and(storeLike.userId.eq(userId)))
+                .exists()
+                : Expressions.asBoolean(false);
+
+        return queryFactory.select(new QStoreInfoDto(
+                        store.id,
+                        store.name,
+                        store.station,
+                        store.address,
+                        isLikedExpression,
+                        storeLike.id.count().intValue()
+                ))
+                .from(store)
+                .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
+                .where(storeIdCursorCondition(storeIdCursor), stationCondition(station))
+                .groupBy(store.id)
+                .orderBy(store.id.desc())
+                .limit(size)
+                .fetch();
+    }
+
+    private BooleanExpression storeIdCursorCondition(Long storeIdCursor) {
+        if (storeIdCursor == null || storeIdCursor == 0) {
+            return null;
+        }
+        return QStore.store.id.lt(storeIdCursor);
+    }
+
+    private BooleanExpression stationCondition(Station station) {
+        if (station == null || station == Station.ALL) {
+            return null;
+        }
+        return QStore.store.station.eq(station);
+    }
+
+    private BooleanExpression isLikedExpression(Long userId, QStoreLike storeLike) {
+        if (userId == null) {
+            return Expressions.asBoolean(false).isTrue();
+        }
+        return storeLike.userId.eq(userId).and(storeLike.id.isNotNull());
     }
 }
 

@@ -27,7 +27,7 @@ public class StoreController {
     }
 
     //스토어 정보 리스트 조회(인기순)
-    @GetMapping()
+    @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLikes(
             //todo: @UserId final Long userId //다음 피알에서 추가예정
             @RequestHeader(value = "Authorization", required = false) final Long userId,
@@ -37,5 +37,17 @@ public class StoreController {
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreInfoListByStationAndLikes(userId, station, likesCursor, lastStoreId, size));
+    }
+
+    //스토어 정보 리스트 조회(최신순)
+    @GetMapping("/latest")
+    public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLatest(
+            //todo: @UserId final Long userId //다음 피알에서 추가예정
+            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @RequestParam(value = "station", required = true) final Station station,
+            @RequestParam(value = "storeIdCursor", defaultValue = "0", required = false) final Long storeIdCursor,
+            @RequestParam(value = "size", defaultValue = "10", required = false) final int size
+    ) {
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreInfoListByStationAndLatest(userId, station, storeIdCursor, size));
     }
 }
