@@ -68,10 +68,11 @@ public class StoreService {
 
         final int nextLikesCursor = calculateNextCursor(storeInfoDtos);
 
-        final Long LastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
-
+        //마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
+        final long lastStoreId = storeInfoDtos.get(size - 1).getStoreIdCursor() == null ? -1 : storeInfoDtos.get(size - 1).getStoreIdCursor();
+        
         // StoreInfoListRes 반환
-        return StoreInfoListBylikesRes.of(nextLikesCursor, LastStoreId, storeCount, storeInfos);
+        return StoreInfoListBylikesRes.of(nextLikesCursor, lastStoreId, storeCount, storeInfos);
     }
 
     //스토어 리스트 조회(최신순)
