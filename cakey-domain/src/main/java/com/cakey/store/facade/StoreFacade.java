@@ -22,9 +22,9 @@ public class StoreFacade {
     public List<StoreInfoDto> findStoreInfoByStationAndLikes(final Long userId,
                                                              final Station station,
                                                              final int likesCursor,
-                                                             final Long lastStoreId,
+                                                             final Long storeIdCursor,
                                                              final int size) {
-        return storeRetriever.findStoreInfoByStationAndLikes(userId, station, likesCursor, lastStoreId, size);
+        return storeRetriever.findStoreInfoByStationAndLikes(userId, station, likesCursor, storeIdCursor, size);
     }
 
     //스토어 조회(최신순)

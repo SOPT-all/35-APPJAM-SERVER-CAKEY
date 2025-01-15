@@ -11,7 +11,7 @@ public interface StoreRepositoryCustom {
 
     List<StoreInfoDto> findPopularitryStoreInfoByStation(final Long userId,
                                                          final Station station,
-                                                         final int likesCursor,
+                                                         final Integer likesCursor,
                                                          final Long lastStoreId,
                                                          final int size);
 
