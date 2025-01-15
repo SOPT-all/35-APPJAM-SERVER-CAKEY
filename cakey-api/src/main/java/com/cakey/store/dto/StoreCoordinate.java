@@ -1,8 +1,9 @@
 package com.cakey.store.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 public record StoreCoordinate(
         long storeId,
         double latitude,
