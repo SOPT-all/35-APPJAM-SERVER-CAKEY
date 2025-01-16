@@ -39,4 +39,11 @@ public class CakeRetriever {
         return cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
     }
 
+    //찜한 디자인(케이크) 조회(최신순)
+    List<CakeInfoDto> findLatestLikedCakesByUser(final Long userId,
+                                                 final Long cakeIdCursor,
+                                                 final int size) {
+        return cakeRepository.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
+    }
+
 }
