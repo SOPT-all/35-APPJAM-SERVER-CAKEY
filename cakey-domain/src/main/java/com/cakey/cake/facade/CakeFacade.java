@@ -54,8 +54,8 @@ public class CakeFacade {
         return cakeRetriever.findAllByStoreId(storeId);
     }
 
-    public List<CakeByPopularityDto> findCakeByLank(final Long userId) {
-        return cakeRetriever.findCakesByLank(userId);
+    public List<CakeByPopularityDto> findCakeByRank(final Long userId) {
+        return cakeRetriever.findCakesByRank(userId);
     }
 
     public Cake findById(final Long cakeId) {
@@ -66,11 +66,6 @@ public class CakeFacade {
                                                         final Long cakeIdCursor,
                                                         final int size) {
         return cakeRetriever.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
-    }
-
-    public List<CakeByPopularityDto> findCakeByPopularity(final Long userId) {
-        return cakeRetriever.findCakesByPopularity(userId);
-
     }
 
     //찜한 디자인(케이크) 조회(인기순)

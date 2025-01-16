@@ -11,11 +11,9 @@ import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.domain.CakeLikes;
 import com.cakey.cakelike.facade.CakeLikesFacade;
 import com.cakey.common.exception.NotFoundException;
-import com.cakey.exception.CakeyApiException;
 import com.cakey.store.domain.Station;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.digester.AbstractObjectCreationFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -99,8 +97,8 @@ public class CakeService {
         return CakesPopularByStationStoreRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
     }
 
-    public CakeListByPopularityRes getCakeByLank(final Long userId) {
-        List<CakeByPopularityDto> cakeByPopularityDtos = cakeFacade.findCakeByLank(userId);
+    public CakeListByPopularityRes getCakeByRank(final Long userId) {
+        List<CakeByPopularityDto> cakeByPopularityDtos = cakeFacade.findCakeByRank(userId);
         return new CakeListByPopularityRes(cakeByPopularityDtos);
     }
 

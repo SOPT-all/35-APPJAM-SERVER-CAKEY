@@ -39,8 +39,8 @@ public class CakeController {
     }
 
     @GetMapping("/lank")
-    public ResponseEntity<BaseResponse<?>> getLankCakesByStationStore(@RequestHeader(required = false) final Long userId) {
-        return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakeByLank(userId));
+    public ResponseEntity<BaseResponse<?>> getRankCakesByStationStore(@RequestHeader(required = false) final Long userId) {
+        return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakeByRank(userId));
     }
 
     @PostMapping("/likes/{cakeId}")
