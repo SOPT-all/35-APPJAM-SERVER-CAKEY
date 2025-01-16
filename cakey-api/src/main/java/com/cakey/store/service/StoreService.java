@@ -218,4 +218,8 @@ public class StoreService {
         }
     }
 
+    public StoreListByPopularityRes getStoreByPopularity() {
+        List<StoreByPopularityDto> storeByPopularityDtoList = storeFacade.findStoreListByPopularity();
+        return new StoreListByPopularityRes(storeByPopularityDtoList);
+    }
 }

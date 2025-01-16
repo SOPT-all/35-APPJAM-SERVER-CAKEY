@@ -2,11 +2,13 @@ package com.cakey.store.facade;
 
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
+import com.cakey.store.dto.StoreByPopularityDto;
 import com.cakey.store.dto.StoreCoordianteDto;
 import com.cakey.store.dto.StoreDetailInfoDto;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.dto.StoreKakaoLinkDto;
 import com.cakey.store.dto.StoreTasteDto;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -96,5 +98,9 @@ public class StoreFacade {
     public StoreDetailInfoDto findStoreDetailInfo(final Long storeId) {
         Store store = storeRetriever.findById(storeId);
         return new StoreDetailInfoDto(store.getAddress(), store.getPhone());
+    }
+
+    public List<StoreByPopularityDto> findStoreListByPopularity() {
+        return storeRetriever.findStoreListByPopularity();
     }
 }

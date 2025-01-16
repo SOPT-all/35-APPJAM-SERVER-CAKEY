@@ -1,6 +1,6 @@
 package com.cakey.storelike.facade;
 
-import com.cakey.storelike.StoreLikeRepository;
+import com.cakey.storelike.repository.StoreLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
