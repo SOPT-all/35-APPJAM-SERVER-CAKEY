@@ -88,23 +88,24 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .where(store.station.eq(station)
                         .and(cursorCondition)) // 역 조건 및 커서 조건 추가
                 .orderBy(cake.id.desc()) // 케이크 아이디 내림차순 정렬
-                .limit(size);
+                .limit(size + 1);
 
-        // 쿼리 실행
+        /// 쿼리 실행
         List<CakeInfoDto> cakes = query.fetch();
 
         if(cakes.isEmpty()) {
             throw new NotFoundException();
         }
 
-        // 결과 반환
+        ///마지막 데이터
+        if(cakes.size() > size) {
+            cakes = cakes.subList(0, size); /// limit 수만큼 자르기
+        } else {
+            final CakeInfoDto lastItem = cakes.get(cakes.size() - 1);
+            lastItem.setLastData(true);
+        }
         return cakes;
     }
-
-
-
-
-
 
     //해당역 디자인(케이크) 조회(인기순)
     @Override
@@ -193,12 +194,12 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         } else if (likesCursor != null && likesCursor > 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 5. 좋아요커서가 0보다 크고, 아이디커서가 0보다 클 때
             query.having(
-                    cakeLikesOrderExpression.eq(likesCursor).and(cakeIdCursorCondition) // 좋아요 수가 likesCursor와 같고, cakeIdCursor보다 큰 케이크
+                    cakeLikesOrderExpression.eq(likesCursor).and(cakeIdCursorCondition) /// 좋아요 수가 likesCursor와 같고, cakeIdCursor보다 큰 케이크
                             .or(cakeLikesOrderExpression.lt(likesCursor)) /// 이후 좋아요 수가 likesCursor보다 작은 케이크
             );
             query.orderBy(
-                    cakeLikesOrderExpression.desc(), // 케이크 좋아요 내림차순
-                    cake.id.asc() // 같은 좋아요 개수면 ID 오름차순
+                    cakeLikesOrderExpression.desc(), /// 케이크 좋아요 내림차순
+                    cake.id.asc() /// 같은 좋아요 개수면 ID 오름차순
             );
         }
 
@@ -262,5 +263,4 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             return Expressions.asBoolean(false);
         }
     }
-
 }

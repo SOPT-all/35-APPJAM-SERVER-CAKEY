@@ -19,16 +19,20 @@ import java.util.stream.Collectors;
 public class CakeService {
     private final CakeFacade cakeFacade;
 
-    //해당역 스토어의 케이크들 조회
+    //해당역 스토어의 케이크들 조회(최신순)
     public CakesLatestByStationStoreRes getLatestCakesByStationStore(final Long userId,
                                                                      final Station station,
                                                                      final Long cakeIdCursor,
                                                                      final int size) {
-        //커서 페이지네이션 데이터조회
+        ///커서 페이지네이션 데이터조회
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findLatestCakesByStation(userId, station, cakeIdCursor, size);
 
-        //해당역 케이크 개수
+        ///해당역 케이크 개수
         final int cakeCountByStation = cakeFacade.countCakesByStation(station);
+
+        ///마지막 데이터 여부
+        final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+        final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
 
         final List<CakeInfo> cakes = cakeInfoDtos.stream()
                 .map(cakeInfoDto -> CakeInfo.of(
@@ -47,7 +51,7 @@ public class CakeService {
                 ? -1
                 : cakeInfoDtos.get(cakes.size() - 1).getCakeId();
 
-        return CakesLatestByStationStoreRes.from(nextCursor, cakeCountByStation, cakes);
+        return CakesLatestByStationStoreRes.from(nextCursor, cakeCountByStation, isLastData, cakes);
     }
 
     //해당역 디자인(케이크) 조회(인기순)
