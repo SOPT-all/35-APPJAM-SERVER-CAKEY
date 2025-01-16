@@ -27,10 +27,10 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     final QStoreLike storeLike = QStoreLike.storeLike;
 
     @Override
-    public List<StoreCoordianteDto> findStoreCoordinatesByStation(final Station station) {
-        final List<StoreCoordianteDto> dtos =
+    public List<StoreCoordinatesDto> findStoreCoordinatesByStation(final Station station) {
+        final List<StoreCoordinatesDto> dtos =
                 queryFactory
-                        .select(new QStoreCoordianteDto(
+                        .select(new QStoreCoordinatesDto(
                                 store.id,
                                 store.latitude,
                                 store.longitude
@@ -75,19 +75,19 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         // 쿼리 실행
         JPQLQuery<StoreInfoDto> query =
                 queryFactory.select(new QStoreInfoDto(
-                        store.id,
-                        store.name,
-                        store.station,
-                        store.address,
-                        isLikedExpression,
-                        storeLikesCountSubQuery,
-                        store.id, // Cursor로 사용할 storeId
-                        Expressions.asBoolean(false)
-                ))
-                .from(store)
-                .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
-                .where(stationCondition) // 역 조건
-                .groupBy(store.id);
+                                store.id,
+                                store.name,
+                                store.station,
+                                store.address,
+                                isLikedExpression,
+                                storeLikesCountSubQuery,
+                                store.id, // Cursor로 사용할 storeId
+                                Expressions.asBoolean(false)
+                        ))
+                        .from(store)
+                        .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
+                        .where(stationCondition) // 역 조건
+                        .groupBy(store.id);
 
         /// likesCursor 조건 추가
         if (likesCursor != null) {
@@ -158,7 +158,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                 storeLike.id.count().intValue(),
                                 Expressions.nullExpression(),
                                 Expressions.asBoolean(false)
-                                ))
+                        ))
                         .from(store)
                         .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
                         .where(storeIdCursorCondition(storeIdCursor), stationCondition(station))
@@ -334,7 +334,20 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return stores;
     }
 
-
+    //찜한 스토어 좌표 조회
+    @Override
+    public List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId) {
+        return queryFactory
+                .select(new QStoreCoordinatesDto(
+                        store.id,
+                        store.latitude,
+                        store.longitude
+                ))
+                .from(store)
+                .join(storeLike).on(store.id.eq(storeLike.storeId))
+                .where(storeLike.userId.eq(userId))
+                .fetch();
+    }
 
     //좋아요 여부 서브쿼리
     private BooleanExpression isLikedExpression(final Long userId) {

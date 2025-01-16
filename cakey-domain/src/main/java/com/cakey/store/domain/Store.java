@@ -26,10 +26,10 @@ public class Store extends BaseTimeEntity {
     private String phone;
 
     @Column(name = "latitude", nullable = false)
-    private Double latitude;
+    private double latitude;
 
     @Column(name = "longitude", nullable = false)
-    private Double longitude;
+    private double longitude;
 
     @Column(name = "taste", nullable = false)
     private String taste;

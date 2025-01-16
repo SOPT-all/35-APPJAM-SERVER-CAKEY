@@ -3,10 +3,7 @@ package com.cakey.store.facade;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
-import com.cakey.store.dto.StoreByPopularityDto;
-import com.cakey.store.dto.StoreCoordianteDto;
-import com.cakey.store.dto.StoreInfoDto;
-import com.cakey.store.dto.StoreKakaoLinkDto;
+import com.cakey.store.dto.*;
 import com.cakey.store.repository.StoreRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +16,7 @@ import java.util.List;
 public class StoreRetriever {
     private final StoreRepository storeRepository;
 
-    public List<StoreCoordianteDto> findCoordinateByStation(final Station station) {
+    public List<StoreCoordinatesDto> findCoordinateByStation(final Station station) {
         return storeRepository.findStoreCoordinatesByStation(station);
     }
 
@@ -54,6 +51,11 @@ public class StoreRetriever {
                                                               final int size) {
         return storeRepository.findPopularityStoresLikedByUser(userId, likesCursor, storeIdCursor, size);
     }
+    //찜한 스토어 좌표 조회
+    public List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId) {
+        return storeRepository.findLikedStoreCoordinatesByUserId(userId);
+    }
+
 
     public int countAllStores() {
         return storeRepository.countAllStores();

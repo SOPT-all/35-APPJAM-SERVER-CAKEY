@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 
-public interface StoreRepository extends JpaRepository<Store, Long>, StoreRepositoryCustom {
+public interface StoreRepository extends JpaRepository<Store, Long>, StoreRepositoryCustom  {
 
     // 전체 스토어 개수
     @Query("SELECT COUNT(s) FROM Store s")

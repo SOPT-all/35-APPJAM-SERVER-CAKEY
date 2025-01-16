@@ -1,13 +1,13 @@
 package com.cakey.store.repository;
 
 import com.cakey.store.domain.Station;
-import com.cakey.store.dto.StoreCoordianteDto;
+import com.cakey.store.dto.StoreCoordinatesDto;
 import com.cakey.store.dto.StoreInfoDto;
 
 import java.util.List;
 
 public interface StoreRepositoryCustom {
-    List<StoreCoordianteDto> findStoreCoordinatesByStation(final Station station);
+    List<StoreCoordinatesDto> findStoreCoordinatesByStation(final Station station);
 
     //지하철역 스토어 조회(인기순)
     List<StoreInfoDto> findPopularitryStoreInfoByStation(final Long userId,
@@ -32,4 +32,7 @@ public interface StoreRepositoryCustom {
                                                       final Integer likesCursor,
                                                       final Long storeIdCursor,
                                                       final int size);
+
+    //찜한 스토어 좌표 조회
+    List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId);
 }
