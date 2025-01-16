@@ -22,4 +22,9 @@ public interface CakeRepositoryCustom {
                                                 final Long cakeIdCursor,
                                                 final int size);
 
+    //찜한 케이크 조회(최신순)
+    List<CakeInfoDto> findLatestLikedCakesByUser(final Long userId,
+                                                 final Long cakeIdCursor,
+                                                 final int size);
+
 }

@@ -60,5 +60,16 @@ public class CakeFacade {
 
     public Cake findById(final Long cakeId) {
         return cakeRetriever.findById(cakeId);
+
+    //찜한 디자인(케이크) 조회(최신순)
+    public List<CakeInfoDto> findLatestLikedCakesByUser(final Long userId,
+                                                        final Long cakeIdCursor,
+                                                        final int size) {
+        return cakeRetriever.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
+    }
+  
+    public List<CakeByPopularityDto> findCakeByPopularity(final Long userId) {
+        return cakeRetriever.findCakesByPopularity(userId);
+
     }
 }

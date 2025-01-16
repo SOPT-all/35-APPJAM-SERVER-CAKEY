@@ -16,4 +16,8 @@ public class CakeLikesFacade {
     public void saveCakeLikes(CakeLikes cakeLikes) {
         cakeLikesRetriever.saveCakeLikes(cakeLikes);
     }
+  
+    public int countByUserId(final Long userId) {
+        return cakeLikesRetriever.countByUserId(userId);
+    }
 }
