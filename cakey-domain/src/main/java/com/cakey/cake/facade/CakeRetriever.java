@@ -41,8 +41,8 @@ public class CakeRetriever {
         return cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
     }
 
-    public List<CakeByPopularityDto> findCakesByPopularity(final Long userId) {
-        return cakeRepository.findCakesByPopularity(userId);
+    public List<CakeByPopularityDto> findCakesByLank(final Long userId) {
+        return cakeRepository.findCakesByLank(userId);
     }
 
     public Cake findById(final Long cakeId) {

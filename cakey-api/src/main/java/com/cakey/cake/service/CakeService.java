@@ -99,8 +99,8 @@ public class CakeService {
         return CakesPopularByStationStoreRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
     }
 
-    public CakeListByPopularityRes getCakeByPopularity(final Long userId) {
-        List<CakeByPopularityDto> cakeByPopularityDtos = cakeFacade.findCakeByPopularity(userId);
+    public CakeListByPopularityRes getCakeByLank(final Long userId) {
+        List<CakeByPopularityDto> cakeByPopularityDtos = cakeFacade.findCakeByLank(userId);
         return new CakeListByPopularityRes(cakeByPopularityDtos);
     }
 

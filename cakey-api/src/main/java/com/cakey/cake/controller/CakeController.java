@@ -40,7 +40,7 @@ public class CakeController {
 
     @GetMapping("/lank")
     public ResponseEntity<BaseResponse<?>> getLankCakesByStationStore(@RequestHeader(required = false) final Long userId) {
-        return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakeByPopularity(userId));
+        return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakeByLank(userId));
     }
 
     @PostMapping("/likes/{cakeId}")

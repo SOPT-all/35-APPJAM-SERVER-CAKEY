@@ -100,7 +100,7 @@ public class StoreFacade {
         return new StoreDetailInfoDto(store.getAddress(), store.getPhone());
     }
 
-    public List<StoreByPopularityDto> findStoreListByPopularity() {
-        return storeRetriever.findStoreListByPopularity();
+    public List<StoreByPopularityDto> findStoreListByLank() {
+        return storeRetriever.findStoreListByLank();
     }
 }

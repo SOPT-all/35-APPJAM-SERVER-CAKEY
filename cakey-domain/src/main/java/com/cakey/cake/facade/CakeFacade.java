@@ -54,8 +54,8 @@ public class CakeFacade {
         return cakeRetriever.findAllByStoreId(storeId);
     }
 
-    public List<CakeByPopularityDto> findCakeByPopularity(final Long userId) {
-        return cakeRetriever.findCakesByPopularity(userId);
+    public List<CakeByPopularityDto> findCakeByLank(final Long userId) {
+        return cakeRetriever.findCakesByLank(userId);
     }
 
     public Cake findById(final Long cakeId) {
