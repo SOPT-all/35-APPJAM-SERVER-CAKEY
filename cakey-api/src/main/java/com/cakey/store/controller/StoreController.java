@@ -27,14 +27,14 @@ public class StoreController {
                 StoreCoordinateListRes.from(storeService.getStoreCoordinateList(station)));
     }
 
-    //스토어 정보 리스트 조회(인기순)
+    //지하철역 스토어 리스트 조회(인기순)
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLikes(
             //todo: @UserId final Long userId //다음 피알에서 추가예정
             @RequestHeader(value = "Authorization", required = false) final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
-            @RequestParam(value = "likesCursor", defaultValue = "0", required = false) final int likesCursor,
-            @RequestParam(value = "storeIdCursor", defaultValue = "0", required = false) final Long storeIdCursor,
+            @RequestParam(value = "likesCursor", required = false) final Integer likesCursor,
+            @RequestParam(value = "storeIdCursor", required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
         return ApiResponseUtil.success(
@@ -47,13 +47,13 @@ public class StoreController {
                         size));
     }
 
-    //스토어 정보 리스트 조회(최신순)
+    //지하철역 스토어 리스트 조회(최신순)
     @GetMapping("/latest")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLatest(
             //todo: @UserId final Long userId //다음 피알에서 추가예정
             @RequestHeader(value = "Authorization", required = false) final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
-            @RequestParam(value = "storeIdCursor", defaultValue = "0", required = false) final Long storeIdCursor,
+            @RequestParam(value = "storeIdCursor", required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
         return ApiResponseUtil.success(

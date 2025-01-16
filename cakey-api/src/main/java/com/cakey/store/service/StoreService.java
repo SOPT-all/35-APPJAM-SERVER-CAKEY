@@ -43,61 +43,68 @@ public class StoreService {
                 ).toList();
     }
 
-    //스토어 리스트 조회(인기순)
+    //지하철역 스토어 리스트 조회(인기순)
     public StoreInfoListBylikesRes getStoreInfoListByStationAndLikes(final Long userId,
                                                                      final Station station,
-                                                                     final int likesCursor,
+                                                                     final Integer likesCursor,
                                                                      final Long storeIdCursor,
                                                                      final int size) {
 
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, storeIdCursor, size);
 
-        // 조회한 store들의 ID 추출
+        /// 조회한 store들의 ID 추출
         final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
 
-        //메인 이미지 map
+        ///메인 이미지 map
         final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
 
-        //storInfo 생성
+        ///storInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
-        //스토어 개수 조회
+        ///스토어 개수 조회
         final int storeCount = storeFacade.getStoreCountByStation(station);
 
-        final int nextLikesCursor = calculateNextCursor(storeInfoDtos);
 
-        //마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
-        final long lastStoreId = storeInfoDtos.get(size - 1).getStoreIdCursor() == null ? -1 : storeInfoDtos.get(size - 1).getStoreIdCursor();
+        ///커서 업데이트
+        final int lastStoreInfoDtosIndex = storeInfoDtos.size() - 1;
+        final int nextLikesCursor = storeInfoDtos.get(lastStoreInfoDtosIndex).getStoreLikesCount();
+        final Long nextCakeIdCursor = storeInfoDtos.get(lastStoreInfoDtosIndex).getStoreIdCursor();
+        final boolean isLastData = storeInfoDtos.get(lastStoreInfoDtosIndex).isLastData();
         
-        // StoreInfoListRes 반환
-        return StoreInfoListBylikesRes.of(nextLikesCursor, lastStoreId, storeCount, storeInfos);
+        ///StoreInfoListRes 반환
+        return StoreInfoListBylikesRes.of(nextLikesCursor, nextCakeIdCursor, storeCount, isLastData, storeInfos);
     }
 
-    //스토어 리스트 조회(최신순)
+    //지하철역 스토어 리스트 조회(최신순)
     public StoreInfoListByLatestRes getStoreInfoListByStationAndLatest(final Long userId,
                                                                        final Station station,
                                                                        final Long storeIdCursor,
                                                                        final int size) {
 
-        //커서 페이지네이션
+        ///커서 페이지네이션
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLatest(userId, station, storeIdCursor, size);
 
-        // 조회한 store들의 ID 추출
+        /// 조회한 store들의 ID 추출
         final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
 
-        //메인 이미지 map
+        ///메인 이미지 map
         final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
 
-        //storInfo 생성
+        ///storInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
-        //스토어 개수 조회
+        ///스토어 개수 조회
         final int storeCount = storeFacade.getStoreCountByStation(station);
 
-        //마지막 storeID 조회
+        ///마지막 데이터 여부
+        ///마지막 데이터 여부
+        final int lastStoreInfoDtos = storeInfoDtos.size() - 1;
+        final boolean isLastData = storeInfoDtos.get(lastStoreInfoDtos).isLastData();
+
+        ///마지막 storeID 조회
         final Long LastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
-        return StoreInfoListByLatestRes.of(LastStoreId, storeCount, storeInfos);
+        return StoreInfoListByLatestRes.of(LastStoreId, storeCount, isLastData, storeInfos);
     }
 
     //전체 지하철역 조회

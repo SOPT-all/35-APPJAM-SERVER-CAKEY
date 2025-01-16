@@ -19,7 +19,9 @@ public record CakeInfo(
                               final String storeName,
                               final Station station,
                               final boolean isLiked,
-                              final String imageUrl) {
+                              final String imageUrl,
+                              final int cakeLikeCount
+    ) {
         return CakeInfo.builder()
                 .cakeId(cakeId)
                 .storeId(storeId)
@@ -27,6 +29,7 @@ public record CakeInfo(
                 .station(station)
                 .isLiked(isLiked)
                 .imageUrl(imageUrl)
+                .cakeLikeCount(cakeLikeCount)
                 .build();
     }
 }

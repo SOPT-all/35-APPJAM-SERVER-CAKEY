@@ -32,11 +32,20 @@ public class CakeFacade {
                 .collect(Collectors.groupingBy(CakeMainImageDto::getStoreId));
     }
 
+    //해당역 스토어의 디자인 조회
+    public List<CakeInfoDto> findPopularCakesByStation(final Long userId,
+                                                       final Station station,
+                                                       final Integer likesCursor,
+                                                       final Long cakeIdCursor,
+                                                       final int size) {
+        return cakeRetriever.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
+    }
+
     public int countCakesByStation(final Station station) {
         return cakeRetriever.countCakesByStation(station);
     }
 
-    public List<CakeInfoDto> findCakesByStation(final Long userId, final Station station, final Long cakeIdCursor, final int size) {
+    public List<CakeInfoDto> findLatestCakesByStation(final Long userId, final Station station, final Long cakeIdCursor, final int size) {
         return cakeRetriever.findCakesByStation(userId, station, cakeIdCursor, size);
     }
 
