@@ -103,4 +103,8 @@ public class StoreFacade {
     public List<StoreByPopularityDto> findStoreListByLank() {
         return storeRetriever.findStoreListByLank();
     }
+
+    public Store findStoreById(final Long storeId) {
+        return storeRetriever.findById(storeId);
+    }
 }
