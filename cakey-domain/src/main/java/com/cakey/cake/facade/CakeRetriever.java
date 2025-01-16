@@ -49,16 +49,12 @@ public class CakeRetriever {
     public Cake findById(final Long cakeId) {
         return cakeRepository.findById(cakeId)
                 .orElseThrow(() -> new NotFoundException());
-      
+    }
     //찜한 디자인(케이크) 조회(최신순)
-    List<CakeInfoDto> findLatestLikedCakesByUser(final Long userId,
-                                                 final Long cakeIdCursor,
-                                                 final int size) {
+    public List<CakeInfoDto> findLatestLikedCakesByUser (final Long userId,
+                                                         final Long cakeIdCursor,
+                                                         final int size) {
         return cakeRepository.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
     }
-      
-    public List<CakeByPopularityDto> findCakesByPopularity(final Long userId) {
-        return cakeRepository.findCakesByPopularity(userId);
-    }
 
-}
+    }
