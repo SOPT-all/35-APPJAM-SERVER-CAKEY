@@ -37,4 +37,9 @@ public class CakeController {
     ) {
         return ApiResponseUtil.success(SuccessCode.OK, cakeService.getPopularCakesByStationStore(userId, station, cakeLikesCursor,cakeIdCursor, size));
     }
+
+    @GetMapping("/lank")
+    public ResponseEntity<BaseResponse<?>> getLankCakesByStationStore(@RequestHeader(required = false) final Long userId) {
+        return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakeByPopularity(userId));
+    }
 }

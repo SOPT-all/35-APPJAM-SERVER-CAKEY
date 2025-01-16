@@ -1,7 +1,9 @@
 package com.cakey.cake.service;
 
+import com.cakey.cake.dto.CakeByPopularityDto;
 import com.cakey.cake.dto.CakeInfo;
 import com.cakey.cake.dto.CakeInfoDto;
+import com.cakey.cake.dto.CakeListByPopularityRes;
 import com.cakey.cake.dto.CakesLatestByStationStoreRes;
 import com.cakey.cake.dto.CakesPopularByStationStoreRes;
 import com.cakey.cake.facade.CakeFacade;
@@ -89,5 +91,10 @@ public class CakeService {
                 .toList();
 
         return CakesPopularByStationStoreRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
+    }
+
+    public CakeListByPopularityRes getCakeByPopularity(final Long userId) {
+        List<CakeByPopularityDto> cakeByPopularityDtos = cakeFacade.findCakeByPopularity(userId);
+        return new CakeListByPopularityRes(cakeByPopularityDtos);
     }
 }
