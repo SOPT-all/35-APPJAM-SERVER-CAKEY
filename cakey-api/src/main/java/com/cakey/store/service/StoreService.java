@@ -10,6 +10,7 @@ import com.cakey.operationtime.facade.StoreOperationTimeFacade;
 import com.cakey.size.dto.SizeDto;
 import com.cakey.size.facade.SizeFacade;
 import com.cakey.store.domain.Station;
+import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
 import com.cakey.store.facade.StoreFacade;
 import java.time.format.DateTimeFormatter;
@@ -225,8 +226,13 @@ public class StoreService {
         }
     }
 
-    public StoreListByPopularityRes getStoreByPopularity() {
-        final List<StoreByPopularityDto> storeByPopularityDtoList = storeFacade.findStoreListByPopularity();
+    public StoreListByPopularityRes getStoreByLank() {
+        final List<StoreByPopularityDto> storeByPopularityDtoList = storeFacade.findStoreListByLank();
         return new StoreListByPopularityRes(storeByPopularityDtoList);
+    }
+
+    public StoreSelectedCoordinateRes getStoreSelectedCoordinate(final long storeId) {
+        Store store = storeFacade.findStoreById(storeId);
+        return StoreSelectedCoordinateRes.of(storeId, store.getLatitude(), store.getLongitude());
     }
 }

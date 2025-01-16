@@ -1,5 +1,6 @@
 package com.cakey.cake.service;
 
+import com.cakey.cake.domain.Cake;
 import com.cakey.cake.dto.CakeByPopularityDto;
 import com.cakey.cake.dto.CakeInfo;
 import com.cakey.cake.dto.CakeInfoDto;
@@ -7,8 +8,12 @@ import com.cakey.cake.dto.CakeListByPopularityRes;
 import com.cakey.cake.dto.CakesLatestByStationStoreRes;
 import com.cakey.cake.dto.CakesPopularByStationStoreRes;
 import com.cakey.cake.facade.CakeFacade;
+import com.cakey.cakelike.domain.CakeLikes;
+import com.cakey.cakelike.facade.CakeLikesFacade;
 import com.cakey.common.exception.NotFoundException;
+import com.cakey.exception.CakeyApiException;
 import com.cakey.store.domain.Station;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.digester.AbstractObjectCreationFactory;
 import org.springframework.stereotype.Service;
@@ -20,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CakeService {
     private final CakeFacade cakeFacade;
+    private final CakeLikesFacade cakeLikesFacade;
 
     //해당역 스토어의 케이크들 조회(최신순)
     public CakesLatestByStationStoreRes getLatestCakesByStationStore(final Long userId,
@@ -93,8 +99,20 @@ public class CakeService {
         return CakesPopularByStationStoreRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
     }
 
-    public CakeListByPopularityRes getCakeByPopularity(final Long userId) {
-        List<CakeByPopularityDto> cakeByPopularityDtos = cakeFacade.findCakeByPopularity(userId);
+    public CakeListByPopularityRes getCakeByLank(final Long userId) {
+        List<CakeByPopularityDto> cakeByPopularityDtos = cakeFacade.findCakeByLank(userId);
         return new CakeListByPopularityRes(cakeByPopularityDtos);
+    }
+
+    @Transactional
+    public void postCakeLike(final Long cakeId, final Long userId) {
+        Cake cake = cakeFacade.findById(cakeId);
+        if (!cakeLikesFacade.existsCakeLikesByCakeIdAndUserId(cakeId, userId)) {
+            CakeLikes cakeLikes = CakeLikes.createCakeLikes(cakeId, userId);
+            cakeLikesFacade.saveCakeLikes(cakeLikes);
+        } else {
+            //todo: 추후 구체적인 예외 처리
+            throw new RuntimeException("Cake like already exists");
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.cakey.cake.dto.CakeByPopularityDto;
 import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.repository.CakeRepository;
+import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -40,10 +41,19 @@ public class CakeRetriever {
         return cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
     }
 
+
+    public List<CakeByPopularityDto> findCakesByLank(final Long userId) {
+        return cakeRepository.findCakesByLank(userId);
+    }
+
+    public Cake findById(final Long cakeId) {
+        return cakeRepository.findById(cakeId)
+                .orElseThrow(() -> new NotFoundException());
+    }
     //찜한 디자인(케이크) 조회(최신순)
-    List<CakeInfoDto> findLatestLikedCakesByUser(final Long userId,
-                                                 final Long cakeIdCursor,
-                                                 final int size) {
+    public List<CakeInfoDto> findLatestLikedCakesByUser (final Long userId,
+                                                         final Long cakeIdCursor,
+                                                         final int size) {
         return cakeRepository.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
     }
 

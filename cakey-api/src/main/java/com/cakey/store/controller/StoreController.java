@@ -97,7 +97,12 @@ public class StoreController {
     }
 
     @GetMapping("/lank")
-    public ResponseEntity<BaseResponse<?>> getStorePopularity(){
-        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreByPopularity());
+    public ResponseEntity<BaseResponse<?>> getStoreByLank(){
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreByLank());
+    }
+
+    @GetMapping("/{storeId}/select/coordinate")
+    public ResponseEntity<BaseResponse<?>> getStoreSelectedCoordinate(@PathVariable final Long storeId) {
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreSelectedCoordinate(storeId));
     }
 }
