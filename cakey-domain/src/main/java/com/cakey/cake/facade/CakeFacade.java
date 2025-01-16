@@ -1,6 +1,7 @@
 package com.cakey.cake.facade;
 
 import com.cakey.cake.domain.Cake;
+import com.cakey.cake.dto.CakeByPopularityDto;
 import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.store.domain.Station;
@@ -58,5 +59,10 @@ public class CakeFacade {
                                                         final Long cakeIdCursor,
                                                         final int size) {
         return cakeRetriever.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
+    }
+  
+    public List<CakeByPopularityDto> findCakeByPopularity(final Long userId) {
+        return cakeRetriever.findCakesByPopularity(userId);
+
     }
 }
