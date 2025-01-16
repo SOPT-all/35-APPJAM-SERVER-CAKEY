@@ -34,11 +34,11 @@ public class StoreService {
     private final StoreOperationTimeFacade storeOperationTimeFacade;
 
     public List<StoreCoordinate> getStoreCoordinateList(final Station station) {
-        final List<StoreCoordianteDto> storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
+        final List<StoreCoordinatesDto> storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
 
         return storeCoordianteDtoList.stream()
                 .map(storeCoordianteDto -> StoreCoordinate.of(
-                        storeCoordianteDto.id(),
+                        storeCoordianteDto.storeId(),
                         storeCoordianteDto.latitude(),
                         storeCoordianteDto.longitude())
                 ).toList();
@@ -188,7 +188,6 @@ public class StoreService {
 
         return new StoreDetailAllDesignRes(designs);
     }
-
 
     public StoreAllSizeAndTasteRes getStoreSizeAndTaste(final long storeId) {
         final List<SizeDto> sizeList = sizeFacade.findSizeAllByStoreIdAndOrderByPriceAsc(storeId);

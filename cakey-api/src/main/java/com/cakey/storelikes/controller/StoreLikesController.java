@@ -3,6 +3,7 @@ package com.cakey.storelikes.controller;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.common.response.SuccessCode;
+import com.cakey.store.dto.StoreLikedCoordinateRes;
 import com.cakey.storelikes.service.StoreLikesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,16 @@ public class StoreLikesController {
         return ApiResponseUtil.success(
                 SuccessCode.OK,
                 storeLikesService.getPopularityStoreByUserLikes(userId, likesCursor, storeIdCursor, size));
+    }
+
+    //찜한 스토어 좌표 조회
+    @GetMapping("/coordinate")
+    public ResponseEntity<BaseResponse<?>> getStoreLikedCoordinate(
+            @RequestHeader(value = "Authorization", required = true) final long userId
+    ) {
+        return ApiResponseUtil.success(
+                SuccessCode.OK,
+                StoreLikedCoordinateRes.of(storeLikesService.getLikedStoreCoordinatesByUserId(userId)));
     }
 
 }

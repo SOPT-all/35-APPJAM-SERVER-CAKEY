@@ -4,6 +4,8 @@ import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
+import com.cakey.store.dto.StoreCoordinate;
+import com.cakey.store.dto.StoreCoordinatesDto;
 import com.cakey.store.dto.StoreInfo;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.facade.StoreFacade;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -121,6 +124,15 @@ public class StoreLikesService {
                     );
                 })
                 .toList();
+    }
+
+    //찜한 스토어 좌표 조회
+    public List<StoreCoordinate> getLikedStoreCoordinatesByUserId(final Long userId) {
+        final List<StoreCoordinatesDto> storeCoordinatesDtos = storeFacade.findLikedStoreCoordinatesByUserId(userId);
+        return storeCoordinatesDtos.stream()
+                .map(
+                        storeCoordinatesDto -> StoreCoordinate.of(storeCoordinatesDto.storeId(), storeCoordinatesDto.latitude(), storeCoordinatesDto.longitude())
+                ).collect(Collectors.toList());
     }
 
 }
