@@ -68,7 +68,7 @@ public class StoreRetriever {
                 .orElseThrow(() -> new NotFoundException());
     }
 
-    public List<StoreByPopularityDto> findStoreListByPopularity(){
+    public List<StoreByPopularityDto> findStoreListByLank(){
         return storeRepository.findStoresByLikeCount();
     }
 }

@@ -25,5 +25,5 @@ public interface CakeRepository extends JpaRepository<Cake, Long>, CakeRepositor
             "JOIN Store s ON c.storeId = s.id " +
             "GROUP BY c.id, c.storeId, c.imageUrl, s.name, s.station " +
             "ORDER BY COUNT(cl.id) DESC, c.id ASC LIMIT 10")
-    List<CakeByPopularityDto> findCakesByPopularity(@Param("userId") Long userId);
+    List<CakeByPopularityDto> findCakesByLank(@Param("userId") Long userId);
 }

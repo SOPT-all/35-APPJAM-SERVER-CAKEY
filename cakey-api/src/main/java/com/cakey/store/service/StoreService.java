@@ -225,8 +225,8 @@ public class StoreService {
         }
     }
 
-    public StoreListByPopularityRes getStoreByPopularity() {
-        final List<StoreByPopularityDto> storeByPopularityDtoList = storeFacade.findStoreListByPopularity();
+    public StoreListByPopularityRes getStoreByLank() {
+        final List<StoreByPopularityDto> storeByPopularityDtoList = storeFacade.findStoreListByLank();
         return new StoreListByPopularityRes(storeByPopularityDtoList);
     }
 }
