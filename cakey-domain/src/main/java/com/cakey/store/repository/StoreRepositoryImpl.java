@@ -182,37 +182,47 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                                           final Long storeIdCursor,
                                                           final int size) {
 
-        // 좋아요 개수를 계산하는 서브쿼리
+        /// 좋아요 개수를 계산하는 서브쿼리
         final Expression<Integer> storeLikesCountSubQuery = getStoreLikesCountSubQuery();
 
         // 커서 조건 처리
         final BooleanExpression cursorCondition = (storeIdCursor == null || storeIdCursor == 0)
                 ? null // 조건 없음
-                : store.id.lt(storeIdCursor); // storeIdCursor가 존재하면 store.id > storeIdCursor 조건 추가
+                : store.id.lt(storeIdCursor); /// storeIdCursor가 존재하면 store.id > storeIdCursor 조건 추가
 
-        // 메인 쿼리
+        /// 메인 쿼리
         List<StoreInfoDto> storeInfoDtos = queryFactory
                 .select(new QStoreInfoDto(
                         store.id,
                         store.name,
                         store.station,
                         store.address,
-                        Expressions.asBoolean(true), // 좋아요 여부는 항상 true
+                        Expressions.asBoolean(true), /// 좋아요 여부는 항상 true
                         storeLikesCountSubQuery,
                         Expressions.nullExpression(),
                         Expressions.asBoolean(false)
                 ))
                 .from(store)
-                .leftJoin(storeLike).on(storeLike.storeId.eq(store.id)) // LEFT JOIN 사용
+                .leftJoin(storeLike).on(storeLike.storeId.eq(store.id)) /// LEFT JOIN 사용
                 .where(storeLike.userId.eq(userId)
-                        .and(cursorCondition)) // 동적 조건 적용
-                .groupBy(store.id, store.name, store.station, store.address) // GROUP BY로 데이터 그룹화
-                .orderBy(store.id.desc()) // 최신 순 정렬
-                .limit(size)
+                        .and(cursorCondition)) /// 동적 조건 적용
+                .groupBy(store.id, store.name, store.station, store.address) /// GROUP BY로 데이터 그룹화
+                .orderBy(store.id.desc()) /// 최신 순 정렬
+                .limit(size + 1)
                 .fetch();
+
         if(storeInfoDtos.isEmpty()) {
             throw new NotFoundException();
         }
+
+        if (storeInfoDtos.size() > size) {
+            storeInfoDtos = storeInfoDtos.subList(0, size); ///limit 수만큼 자름
+        } else {
+            final StoreInfoDto lastItem = storeInfoDtos.get(storeInfoDtos.size() - 1);
+            lastItem.setLastData(true);
+        }
+
+
         return storeInfoDtos;
     }
 

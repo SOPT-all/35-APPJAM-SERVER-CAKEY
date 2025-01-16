@@ -44,10 +44,14 @@ public class StoreLikesService {
         ///찜한 스토어 개수 조회
         final int storeCount = storeLikeFacade.countAllLikedStoreByUserId(userId);
 
+        ///마지막 데이터인지 판별
+        final int lastCakeInfoDtosIndex = storeInfoDtos.size() - 1;
+        final boolean isLastData = storeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
+
         ///마지막 스토어 아이디
         final Long lastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
-        return StoreLatestLikedByUserRes.fromStoreInfo(lastStoreId, storeCount, storeInfos);
+        return StoreLatestLikedByUserRes.fromStoreInfo(lastStoreId, storeCount, isLastData, storeInfos);
     }
 
     //찜한 스토어 조회(인기순)
