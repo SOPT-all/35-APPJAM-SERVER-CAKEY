@@ -31,8 +31,8 @@ public class CakeController {
     public ResponseEntity<BaseResponse<?>> getPopularCakesByStationStore(
             @RequestHeader(value = "Authorization", required = false) final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
-            @RequestParam(value = "cakeLikesCursor", defaultValue = "0", required = false) final Integer cakeLikesCursor,
-            @RequestParam(value = "cakeIdCursor", defaultValue = "0", required = false) final Long cakeIdCursor,
+            @RequestParam(value = "cakeLikesCursor", required = false) final Integer cakeLikesCursor,
+            @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
         return ApiResponseUtil.success(SuccessCode.OK, cakeService.getPopularCakesByStationStore(userId, station, cakeLikesCursor,cakeIdCursor, size));

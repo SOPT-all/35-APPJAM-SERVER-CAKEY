@@ -103,24 +103,28 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         // 좋아요 여부 서브쿼리
         final BooleanExpression isLikedExpression = getIsLikedExpression(userId);
 
-        // 커서 조건 처리
-        final BooleanExpression cakeIdCursorCondition = (cakeIdCursor == null || cakeIdCursor == 0)
-                ? null
-                : cake.id.gt(cakeIdCursor);
-
-        // 좋아요 커서 조건
-        final BooleanExpression likesCursorCondition = (likesCursor != null && likesCursor > 0)
-                ? JPAExpressions
-                .select(cakeLikes.count().intValue())
-                .from(cakeLikes)
-                .where(cakeLikes.cakeId.eq(cake.id))
-                .lt(likesCursor)
-                : null;
-
         // 역 조건
         final BooleanExpression stationCondition = station != Station.ALL
                 ? store.station.eq(station)
                 : null;
+
+        // 좋아요 커서 조건 처리
+        final BooleanExpression likesCursorCondition = (likesCursor != null && likesCursor > 0)
+                ? cakeLikesCountSubQuery.lt(likesCursor)
+                : null;
+
+        // cakeIdCursor 조건 처리
+        final BooleanExpression cakeIdCursorCondition = (cakeIdCursor != null && cakeIdCursor > 0)
+                ? cake.id.gt(cakeIdCursor)
+                : null;
+
+        // 정렬 가능한 숫자 표현식으로 변환
+        final NumberExpression<Integer> cakeLikesOrderExpression = Expressions.asNumber(
+                JPAExpressions
+                        .select(cakeLikes.count().intValue())
+                        .from(cakeLikes)
+                        .where(cakeLikes.cakeId.eq(cake.id))
+        );
 
         // 쿼리 실행
         JPQLQuery<CakeInfoDto> query = queryFactory
@@ -140,24 +144,41 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .where(stationCondition) // 역 조건
                 .groupBy(cake.id);
 
-        // 좋아요 커서 조건 추가
-        if (likesCursorCondition != null) {
-            query.having(likesCursorCondition);
-        }
-        if (cakeIdCursorCondition != null) {
-            query.having(cake.id.gt(cakeIdCursor));
+        // 조건 처리
+        if (likesCursor == null && cakeIdCursor == null) {
+            // 1. 아이디커서와 좋아요커서 둘 다 없을 때
+            query.orderBy(
+                    cakeLikesOrderExpression.desc(), // 케이크 좋아요 내림차순
+                    cake.id.asc() // 같은 좋아요 개수면 ID 오름차순
+            );
+        } else if (likesCursor != null && likesCursor == 0 && cakeIdCursor != null && cakeIdCursor > 0) {
+            // 2. 좋아요커서가 0이고, 아이디커서가 0보다 클 때
+            query.having(cakeLikesOrderExpression.eq(0).and(cakeIdCursorCondition));
+            query.orderBy(cake.id.asc()); // 아이디 오름차순
+        } else if (likesCursor != null && likesCursor == 0 && (cakeIdCursor == null || cakeIdCursor <= 0)) {
+            // 3. 좋아요커서가 0이고, 아이디커서가 없거나 0 이하일 때 (예외 처리)
+            throw new IllegalArgumentException("Invalid cursor combination: likesCursor=0 and cakeIdCursor=0 or null");
+        } else if (likesCursor != null && likesCursor > 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
+            // 4. 좋아요커서가 0보다 크고, 아이디커서가 없을 때
+            query.having(likesCursorCondition); // 좋아요 수가 likesCursor보다 작은 케이크 조회
+            query.orderBy(
+                    cakeLikesOrderExpression.desc(), // 케이크 좋아요 내림차순
+                    cake.id.asc() // 같은 좋아요 개수면 ID 오름차순
+            );
+        } else if (likesCursor != null && likesCursor > 0 && cakeIdCursor != null && cakeIdCursor > 0) {
+            // 5. 좋아요커서가 0보다 크고, 아이디커서가 0보다 클 때
+            query.having(
+                    cakeLikesOrderExpression.eq(likesCursor).and(cakeIdCursorCondition) // 좋아요 수가 likesCursor와 같고, cakeIdCursor보다 큰 케이크
+                            .or(cakeLikesOrderExpression.lt(likesCursor)) // 이후 좋아요 수가 likesCursor보다 작은 케이크
+            );
+            query.orderBy(
+                    cakeLikesOrderExpression.desc(), // 케이크 좋아요 내림차순
+                    cake.id.asc() // 같은 좋아요 개수면 ID 오름차순
+            );
         }
 
-        // 정렬 및 제한
-        query.orderBy(
-                Expressions.asNumber(
-                        JPAExpressions
-                                .select(cakeLikes.count().intValue())
-                                .from(cakeLikes)
-                                .where(cakeLikes.cakeId.eq(cake.id))
-                ).desc(), // 좋아요 개수 기준 내림차순 정렬
-                cake.id.asc() // 좋아요 개수가 같을 경우 cakeId 기준 오름차순 정렬
-        ).limit(size + 1); // limit + 1개 조회
+        // 제한 조건 설정
+        query.limit(size + 1);
 
         // 쿼리 실행
         List<CakeInfoDto> cakes = query.fetch();
@@ -182,6 +203,11 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         }
         return cakes;
     }
+
+
+
+
+
 
 
 
