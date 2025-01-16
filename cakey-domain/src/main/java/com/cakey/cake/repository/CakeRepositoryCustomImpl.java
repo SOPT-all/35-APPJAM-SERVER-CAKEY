@@ -29,6 +29,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     QStore store = QStore.store;
     QCakeLikes cakeLikes = QCakeLikes.cakeLikes;
 
+    //가게 메인이미지 조회
     @Override
     public List<CakeMainImageDto> findMainImageByStoreIds(List<Long> storeIds) {
         return queryFactory.select(Projections.constructor(CakeMainImageDto.class,
@@ -48,40 +49,58 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                                                       final Long cakeIdCursor,
                                                       final int size) {
 
+        QCake cake = QCake.cake;
+        QStore store = QStore.store;
+        QCakeLikes cakeLikes = QCakeLikes.cakeLikes;
+
         // 서브쿼리: 좋아요 개수 계산
-        final Expression<Integer> likeCountSubQuery = getCakeLikesCountSubQuery();
+        final Expression<Integer> likeCountSubQuery = JPAExpressions
+                .select(cakeLikes.count().intValue())
+                .from(cakeLikes)
+                .where(cakeLikes.cakeId.eq(cake.id));
 
         // 커서 조건
         final BooleanExpression cursorCondition = (cakeIdCursor != null && cakeIdCursor > 0)
-                ? cake.id.lt(cakeIdCursor)
+                ? cake.id.lt(cakeIdCursor) // 아이디커서보다 작은 아이디인 케이크 조회
                 : null;
 
         // 좋아요 여부 조건
-        final BooleanExpression likeCondition = userId != null ? cakeLikes.userId.eq(userId) : null;
+        final BooleanExpression likeCondition = userId != null
+                ? cakeLikes.userId.eq(userId) // 유저 ID가 있을 때만 좋아요 조건 추가
+                : null;
 
         // 메인 쿼리
-        return queryFactory.select(new QCakeInfoDto(
-                        cake.id,
-                        store.id,
-                        store.name,
-                        store.station,
-                        isLikedExpression(userId, cake.id), // 유저 ID가 있을 때만 좋아요 여부 확인
-                        cake.imageUrl,
-                        likeCountSubQuery, // 서브쿼리로 계산된 좋아요 개수
-                        Expressions.nullExpression()))
+        JPQLQuery<CakeInfoDto> query = queryFactory.selectDistinct( // 중복 제거를 위해 selectDistinct 추가
+                        new QCakeInfoDto(
+                                cake.id,
+                                store.id,
+                                store.name,
+                                store.station,
+                                isLikedExpression(userId, cake.id), // 유저의 좋아요 여부 확인
+                                cake.imageUrl,
+                                likeCountSubQuery, // 좋아요 개수 서브쿼리
+                                Expressions.nullExpression())) // 추가 데이터는 없으므로 null로 처리
                 .from(cake)
                 .join(store).on(cake.storeId.eq(store.id))
                 .leftJoin(cakeLikes).on(cakeLikes.cakeId.eq(cake.id).and(likeCondition)) // 좋아요 조건 추가
                 .where(store.station.eq(station)
-                        .and(cursorCondition))
-                .orderBy(cake.id.desc()) // 동적 정렬 적용
-                .limit(size)
-                .fetch();
+                        .and(cursorCondition)) // 역 조건 및 커서 조건 추가
+                .orderBy(cake.id.desc()) // 케이크 아이디 내림차순 정렬
+                .limit(size);
+
+        // 쿼리 실행
+        List<CakeInfoDto> cakes = query.fetch();
+
+        // 결과 반환
+        return cakes;
     }
 
 
 
 
+
+
+    //해당역 디자인(케이크) 조회(인기순)
     @Override
     public List<CakeInfoDto> findPopularCakesByStation(final Long userId,
                                                        final Station station,
