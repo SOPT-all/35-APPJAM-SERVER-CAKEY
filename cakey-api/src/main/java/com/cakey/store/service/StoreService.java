@@ -46,7 +46,7 @@ public class StoreService {
     //지하철역 스토어 리스트 조회(인기순)
     public StoreInfoListBylikesRes getStoreInfoListByStationAndLikes(final Long userId,
                                                                      final Station station,
-                                                                     final int likesCursor,
+                                                                     final Integer likesCursor,
                                                                      final Long storeIdCursor,
                                                                      final int size) {
 
@@ -64,13 +64,15 @@ public class StoreService {
         ///스토어 개수 조회
         final int storeCount = storeFacade.getStoreCountByStation(station);
 
-        final int nextLikesCursor = calculateNextCursor(storeInfoDtos);
 
-        ///마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
-        final long lastStoreId = storeInfoDtos.get(size - 1).getStoreIdCursor() == null ? -1 : storeInfoDtos.get(size - 1).getStoreIdCursor();
+        ///커서 업데이트
+        final int lastStoreInfoDtosIndex = storeInfoDtos.size() - 1;
+        final int nextLikesCursor = storeInfoDtos.get(lastStoreInfoDtosIndex).getStoreLikesCount();
+        final Long nextCakeIdCursor = storeInfoDtos.get(lastStoreInfoDtosIndex).getStoreIdCursor();
+        final boolean isLastData = storeInfoDtos.get(lastStoreInfoDtosIndex).isLastData();
         
         ///StoreInfoListRes 반환
-        return StoreInfoListBylikesRes.of(nextLikesCursor, lastStoreId, storeCount, storeInfos);
+        return StoreInfoListBylikesRes.of(nextLikesCursor, nextCakeIdCursor, storeCount, isLastData, storeInfos);
     }
 
     //지하철역 스토어 리스트 조회(최신순)

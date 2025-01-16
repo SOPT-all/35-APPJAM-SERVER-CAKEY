@@ -25,7 +25,7 @@ public class StoreFacade {
     //스토어 조회(인기순)
     public List<StoreInfoDto> findStoreInfoByStationAndLikes(final Long userId,
                                                              final Station station,
-                                                             final int likesCursor,
+                                                             final Integer likesCursor,
                                                              final Long storeIdCursor,
                                                              final int size) {
         return storeRetriever.findStoreInfoByStationAndLikes(userId, station, likesCursor, storeIdCursor, size);

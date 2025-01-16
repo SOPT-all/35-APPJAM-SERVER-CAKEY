@@ -25,7 +25,7 @@ public class StoreRetriever {
     //스토어 조회(인기순)
     public List<StoreInfoDto> findStoreInfoByStationAndLikes(final Long userId,
                                                              final Station station,
-                                                             final int likesCursor,
+                                                             final Integer likesCursor,
                                                              final Long lastStoreId,
                                                              final int size) {
         return storeRepository.findPopularitryStoreInfoByStation(userId, station, likesCursor, lastStoreId, size);

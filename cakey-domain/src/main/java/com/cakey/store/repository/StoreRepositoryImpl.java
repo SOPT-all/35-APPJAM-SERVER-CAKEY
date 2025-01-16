@@ -67,20 +67,14 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 ? null
                 : store.id.gt(storeIdCursor); // storeIdCursor가 존재하면 store.id > storeIdCursor 조건 추가
 
-        // 좋아요 커서 조건
-        final BooleanExpression cursorCondition = likesCursor > 0
-                ? storeLike.id.count().lt(likesCursor)
-                .or(storeLike.id.count().eq(Long.valueOf(likesCursor)).and(store.id.lt(storeIdCursor))) // storeId가 작아지는 순서
-                : null;
-
         // 역 조건
         final BooleanExpression stationCondition = station != Station.ALL
                 ? store.station.eq(station)
                 : null; // 기본 조건
 
         // 쿼리 실행
-        JPQLQuery<StoreInfoDto> query = queryFactory
-                .select(new QStoreInfoDto(
+        JPQLQuery<StoreInfoDto> query =
+                queryFactory.select(new QStoreInfoDto(
                         store.id,
                         store.name,
                         store.station,
@@ -95,27 +89,27 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .where(stationCondition) // 역 조건
                 .groupBy(store.id);
 
-        // likesCursor 조건 추가
+        /// likesCursor 조건 추가
         if (likesCursor != null) {
             if (likesCursor == 0) {
                 // likesCursor가 0이면 처음부터 조회 (조건 없이 정렬만 적용)
                 System.out.println("likesCursor가 0이므로 전체중 좋아요가 많은 순서로 조회합니다.");
             } else {
                 query.having(
-                        storeLike.count().lt(likesCursor) // 좋아요 수가 likesCursor보다 작은 데이터
+                        storeLike.count().lt(likesCursor) /// 좋아요 수가 likesCursor보다 작은 데이터
                                 .or(storeLike.count().intValue().eq(likesCursor))
-                                .and(storeIdCursorCondition) // 좋아요 수가 같으면 storeId로 페이징
+                                .and(storeIdCursorCondition) /// 좋아요 수가 같으면 storeId로 페이징
                 );
             }
         } else if (storeIdCursorCondition != null) {
-            // likesCursor가 없고 storeIdCursor만 존재하면
+            /// likesCursor가 없고 storeIdCursor만 존재하면
             System.out.println("예외처리 추가"); //todo:likesCursor없이 storeIdCursor만 있으면 예외처리
         }
 
-        query.orderBy(storeLike.id.count().desc(), store.id.asc()) // 좋아요 수 -> storeId순(최신순) 정렬
-                .limit(size + 1); // limit + 1개 조회
+        query.orderBy(storeLike.id.count().desc(), store.id.asc()) /// 좋아요 수 -> storeId순(최신순) 정렬
+                .limit(size + 1); /// limit + 1개 조회
 
-        // 쿼리 실행
+        /// 쿼리 실행
         List<StoreInfoDto> stores = query.fetch();
 
         ///비어있는 리스트
@@ -123,21 +117,23 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
             throw new NotFoundException();
         }
 
-        // 좋아요 수 비교 및 Cursor 설정
+        /// 좋아요 수 비교 및 Cursor 설정
         if (stores.size() > size) {
-            StoreInfoDto lastItem = stores.get(size - 1); // limit번째 데이터
-            StoreInfoDto extraItem = stores.get(size);    // limit + 1번째 데이터
+            StoreInfoDto lastItem = stores.get(size - 1); /// limit번째 데이터
+            StoreInfoDto extraItem = stores.get(size);    /// limit + 1번째 데이터
 
             if (lastItem.getStoreLikesCount() == extraItem.getStoreLikesCount()) {
-                // 좋아요 수가 같으면 limit번째 데이터의 storeId를 Cursor로 설정
+                /// 좋아요 수가 같으면 limit번째 데이터의 storeId를 Cursor로 설정
                 stores.get(size - 1).setStoreIdCursor(lastItem.getStoreId());
             } else {
-                // 좋아요 수가 다르면 Cursor를 null로 설정
+                /// 좋아요 수가 다르면 Cursor를 null로 설정
                 stores.get(size - 1).setStoreIdCursor(null);
             }
-            stores = stores.subList(0, size); // limit 수만큼 자르기
+            stores = stores.subList(0, size); /// limit 수만큼 자르기
+        } else {
+            final StoreInfoDto lastItem = stores.get(stores.size() - 1);
+            lastItem.setLastData(true);
         }
-
         return stores;
     }
 
