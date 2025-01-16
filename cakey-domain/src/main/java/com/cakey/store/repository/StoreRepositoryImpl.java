@@ -30,16 +30,16 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     public List<StoreCoordianteDto> findStoreCoordinatesByStation(final Station station) {
         final List<StoreCoordianteDto> dtos =
                 queryFactory
-                .select(new QStoreCoordianteDto(
-                        store.id,
-                        store.latitude,
-                        store.longitude
-                ))
-                .from(store)
-                .where(
-                        station == Station.ALL ? null : store.station.eq(station) // ALL이면 조건없이 들어가므로 전체조회
-                )
-                .fetch();
+                        .select(new QStoreCoordianteDto(
+                                store.id,
+                                store.latitude,
+                                store.longitude
+                        ))
+                        .from(store)
+                        .where(
+                                station == Station.ALL ? null : store.station.eq(station) // ALL이면 조건없이 들어가므로 전체조회
+                        )
+                        .fetch();
 
         if (dtos.isEmpty()) {
             throw new NotFoundException();
@@ -87,7 +87,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.address,
                         isLikedExpression,
                         storeLikesCountSubQuery,
-                        store.id // Cursor로 사용할 storeId
+                        store.id, // Cursor로 사용할 storeId
+                        Expressions.asBoolean(false)
                 ))
                 .from(store)
                 .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
@@ -112,7 +113,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         }
 
         query.orderBy(storeLike.id.count().desc(), store.id.asc()) // 좋아요 수 -> storeId순(최신순) 정렬
-              .limit(size + 1); // limit + 1개 조회
+                .limit(size + 1); // limit + 1개 조회
 
         // 쿼리 실행
         List<StoreInfoDto> stores = query.fetch();
@@ -150,23 +151,25 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         final BooleanExpression isLikedExpression = isLikedExpression(userId);
 
-        List<StoreInfoDto> storeInfoDtos = queryFactory.select(new QStoreInfoDto(
-                        store.id,
-                        store.name,
-                        store.station,
-                        store.address,
-                        isLikedExpression,
-                        storeLike.id.count().intValue(),
-                        Expressions.nullExpression()
-
-                ))
-                .from(store)
-                .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
-                .where(storeIdCursorCondition(storeIdCursor), stationCondition(station))
-                .groupBy(store.id)
-                .orderBy(store.id.desc())
-                .limit(size)
-                .fetch();
+        List<StoreInfoDto> storeInfoDtos =
+                queryFactory
+                        .select(new QStoreInfoDto(
+                                store.id,
+                                store.name,
+                                store.station,
+                                store.address,
+                                isLikedExpression,
+                                storeLike.id.count().intValue(),
+                                Expressions.nullExpression(),
+                                Expressions.asBoolean(false)
+                                ))
+                        .from(store)
+                        .leftJoin(storeLike).on(storeLike.storeId.eq(store.id))
+                        .where(storeIdCursorCondition(storeIdCursor), stationCondition(station))
+                        .groupBy(store.id)
+                        .orderBy(store.id.desc())
+                        .limit(size)
+                        .fetch();
         if(storeInfoDtos.isEmpty()){
             throw new NotFoundException();
         }
@@ -176,8 +179,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     //찜한 스토어 조회(최신순)
     @Override
     public List<StoreInfoDto> findLatestStoresLikedByUser(final long userId,
-                                                    final Long storeIdCursor,
-                                                    final int size) {
+                                                          final Long storeIdCursor,
+                                                          final int size) {
 
         // 좋아요 개수를 계산하는 서브쿼리
         final Expression<Integer> storeLikesCountSubQuery = getStoreLikesCountSubQuery();
@@ -196,7 +199,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.address,
                         Expressions.asBoolean(true), // 좋아요 여부는 항상 true
                         storeLikesCountSubQuery,
-                        Expressions.nullExpression()
+                        Expressions.nullExpression(),
+                        Expressions.asBoolean(false)
                 ))
                 .from(store)
                 .leftJoin(storeLike).on(storeLike.storeId.eq(store.id)) // LEFT JOIN 사용
@@ -237,7 +241,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 : null;
 
         /// 기본 쿼리 생성
-        JPQLQuery<StoreInfoDto> query = queryFactory
+        final JPQLQuery<StoreInfoDto> query = queryFactory
                 .select(new QStoreInfoDto(
                         store.id,
                         store.name,
@@ -245,8 +249,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.address,
                         Expressions.asBoolean(true), /// 좋아요 여부는 항상 true
                         storeLikesOrderExpression, /// 좋아요 개수
-                        store.id /// Cursor로 사용할 storeId
-                ))
+                        store.id, /// Cursor로 사용할 storeId
+                        Expressions.asBoolean(false)))
                 .from(storeLike)
                 .join(store).on(store.id.eq(storeLike.storeId)) /// store와 storeLike를 조인
                 .where(storeLike.userId.eq(userId)) /// 해당 사용자가 좋아요 누른 스토어만 조회
@@ -311,9 +315,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
             stores = stores.subList(0, size); // limit 수만큼 자르기
         } else { ///마지막 데이터 조회했을때
             final StoreInfoDto lastItem = stores.get(stores.size() - 1);
-            lastItem.setStoreIdCursor(null);
+            lastItem.setLastData(true);
         }
-
         return stores;
     }
 

@@ -2,6 +2,7 @@ package com.cakey.storelikes.service;
 
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
+import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreInfo;
 import com.cakey.store.dto.StoreInfoDto;
@@ -56,8 +57,6 @@ public class StoreLikesService {
                                                                        final int size) {
         final List<StoreInfoDto> storeInfoOrderByLikesDtos = storeFacade.findPopularityStoresLikedByUser(userId, likesCursor, storeIdCursor, size);
 
-
-
         ///조회한 store들의 id 추출
         final List<Long> storeIds = getStoreIds(storeInfoOrderByLikesDtos);
 
@@ -70,24 +69,23 @@ public class StoreLikesService {
         ///찜한 스토어 개수 조회
         final int storeCount = storeLikeFacade.countAllLikedStoreByUserId(userId);
 
-        final int storeLikesCursor;
-        final Long lastStoreId;
 
-        ///커서 업데이트
         if(storeInfoOrderByLikesDtos.isEmpty()) {
-            storeLikesCursor = 0;
-            lastStoreId = null;
-        } else {
-            final int lastCakeInfoDtosIndex = storeInfoOrderByLikesDtos.size() - 1;
-            storeLikesCursor = storeInfoOrderByLikesDtos.get(lastCakeInfoDtosIndex).getStoreLikesCount();
-            lastStoreId = storeInfoOrderByLikesDtos.get(lastCakeInfoDtosIndex).getStoreIdCursor();
+            throw new NotFoundException();
         }
 
-        /// 7. 결과 DTO 조립 및 반환
+        ///커서 업데이트
+        final int lastCakeInfoDtosIndex = storeInfoOrderByLikesDtos.size() - 1;
+        final int storeLikesCursor = storeInfoOrderByLikesDtos.get(lastCakeInfoDtosIndex).getStoreLikesCount();
+        final Long lastStoreId = storeInfoOrderByLikesDtos.get(lastCakeInfoDtosIndex).getStoreIdCursor();
+        final boolean isLastData = storeInfoOrderByLikesDtos.get(lastCakeInfoDtosIndex).isLastData();
+
+        ///결과 DTO 조립 및 반환
         return StorePopularityLikedByUserRes.of(
                 storeLikesCursor,
                 lastStoreId,
                 storeCount,
+                isLastData,
                 storeInfos
         );
     }

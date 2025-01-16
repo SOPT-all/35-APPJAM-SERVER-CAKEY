@@ -17,6 +17,7 @@ public class StoreInfoDto {
     private final boolean isLiked;
     private final int storeLikesCount;
     private Long storeIdCursor;
+    private boolean isLastData;
 
     @QueryProjection
     public StoreInfoDto(Long storeId,
@@ -25,7 +26,8 @@ public class StoreInfoDto {
                         String address,
                         boolean isLiked,
                         int storeLikesCount,
-                        Long storeIdCursor) {
+                        Long storeIdCursor,
+                        boolean isLastData) {
         this.storeId = storeId;
         this.name = name;
         this.station = station;
@@ -33,5 +35,6 @@ public class StoreInfoDto {
         this.isLiked = isLiked;
         this.storeLikesCount = storeLikesCount;
         this.storeIdCursor = storeIdCursor;
+        this.isLastData = isLastData;
     }
 }

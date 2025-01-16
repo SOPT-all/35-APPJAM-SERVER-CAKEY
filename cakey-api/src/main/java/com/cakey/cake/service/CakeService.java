@@ -63,11 +63,11 @@ public class CakeService {
         //커서페이지네이션으로 케이크 조회
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularCakesByStation(userId, station, cakeLikesCursor, cakeIdCursor, size);
 
-        ///커서 업데이트
         if(cakeInfoDtos.isEmpty()) {
             throw new NotFoundException();
         }
 
+        ///커서 업데이트
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
         final int nextLikesCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeLikeCount();
         final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
