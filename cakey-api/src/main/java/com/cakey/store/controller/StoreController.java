@@ -95,4 +95,9 @@ public class StoreController {
     public ResponseEntity<BaseResponse<?>> getStoreInformation(@PathVariable("storeId") final Long storeId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreDetailInfo(storeId));
     }
+
+    @GetMapping("/lank")
+    public ResponseEntity<BaseResponse<?>> getStorePopularity(){
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreByPopularity());
+    }
 }

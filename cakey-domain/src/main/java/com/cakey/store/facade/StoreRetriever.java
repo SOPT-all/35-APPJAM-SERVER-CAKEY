@@ -3,6 +3,7 @@ package com.cakey.store.facade;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
+import com.cakey.store.dto.StoreByPopularityDto;
 import com.cakey.store.dto.StoreCoordianteDto;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.dto.StoreKakaoLinkDto;
@@ -65,6 +66,9 @@ public class StoreRetriever {
     public Store findById(final Long storeId) {
         return storeRepository.findById(storeId)
                 .orElseThrow(() -> new NotFoundException());
+    }
 
+    public List<StoreByPopularityDto> findStoreListByPopularity(){
+        return storeRepository.findStoresByLikeCount();
     }
 }
