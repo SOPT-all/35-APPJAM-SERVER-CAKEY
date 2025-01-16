@@ -42,4 +42,13 @@ public class CakeController {
     public ResponseEntity<BaseResponse<?>> getLankCakesByStationStore(@RequestHeader(required = false) final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakeByPopularity(userId));
     }
+
+    @PostMapping("/likes/{cakeId}")
+    public ResponseEntity<BaseResponse<?>> postCakeLike(
+            @PathVariable(value = "cakeId") final Long cakeId,
+            @RequestHeader final Long userId
+    ) {
+        cakeService.postCakeLike(cakeId, userId);
+        return ApiResponseUtil.success(SuccessCode.OK);
+    }
 }

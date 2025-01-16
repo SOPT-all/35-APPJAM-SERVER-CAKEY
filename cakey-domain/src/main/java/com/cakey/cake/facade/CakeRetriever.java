@@ -5,6 +5,7 @@ import com.cakey.cake.dto.CakeByPopularityDto;
 import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.repository.CakeRepository;
+import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,11 @@ public class CakeRetriever {
 
     public List<CakeByPopularityDto> findCakesByPopularity(final Long userId) {
         return cakeRepository.findCakesByPopularity(userId);
+    }
+
+    public Cake findById(final Long cakeId) {
+        return cakeRepository.findById(cakeId)
+                .orElseThrow(() -> new NotFoundException());
     }
 
 }

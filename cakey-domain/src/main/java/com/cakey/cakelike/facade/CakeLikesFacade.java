@@ -1,5 +1,6 @@
 package com.cakey.cakelike.facade;
 
+import com.cakey.cakelike.domain.CakeLikes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,5 +11,9 @@ public class CakeLikesFacade {
 
     public boolean existsCakeLikesByCakeIdAndUserId(Long cakeId, Long userId) {
         return cakeLikesRetriever.existsCakeLikesByCakeIdAndUserId(cakeId, userId);
+    }
+
+    public void saveCakeLikes(CakeLikes cakeLikes) {
+        cakeLikesRetriever.saveCakeLikes(cakeLikes);
     }
 }
