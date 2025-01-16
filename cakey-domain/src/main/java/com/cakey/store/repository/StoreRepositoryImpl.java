@@ -168,10 +168,18 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         .where(storeIdCursorCondition(storeIdCursor), stationCondition(station))
                         .groupBy(store.id)
                         .orderBy(store.id.desc())
-                        .limit(size)
+                        .limit(size + 1)
                         .fetch();
-        if(storeInfoDtos.isEmpty()){
+
+        if (storeInfoDtos.isEmpty()){
             throw new NotFoundException();
+        }
+
+        if (storeInfoDtos.size() > size) {
+            storeInfoDtos = storeInfoDtos.subList(0, size); ///limit 수만큼 자름
+        } else {
+            final StoreInfoDto lastItem = storeInfoDtos.get(storeInfoDtos.size() - 1);
+            lastItem.setLastData(true);
         }
         return storeInfoDtos;
     }

@@ -27,7 +27,7 @@ public class StoreController {
                 StoreCoordinateListRes.from(storeService.getStoreCoordinateList(station)));
     }
 
-    //스토어 정보 리스트 조회(인기순)
+    //지하철역 스토어 리스트 조회(인기순)
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLikes(
             //todo: @UserId final Long userId //다음 피알에서 추가예정
@@ -47,7 +47,7 @@ public class StoreController {
                         size));
     }
 
-    //스토어 정보 리스트 조회(최신순)
+    //지하철역 스토어 리스트 조회(최신순)
     @GetMapping("/latest")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLatest(
             //todo: @UserId final Long userId //다음 피알에서 추가예정

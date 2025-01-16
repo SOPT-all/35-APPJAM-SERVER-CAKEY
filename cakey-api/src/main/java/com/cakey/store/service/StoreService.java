@@ -43,7 +43,7 @@ public class StoreService {
                 ).toList();
     }
 
-    //스토어 리스트 조회(인기순)
+    //지하철역 스토어 리스트 조회(인기순)
     public StoreInfoListBylikesRes getStoreInfoListByStationAndLikes(final Long userId,
                                                                      final Station station,
                                                                      final int likesCursor,
@@ -73,7 +73,7 @@ public class StoreService {
         return StoreInfoListBylikesRes.of(nextLikesCursor, lastStoreId, storeCount, storeInfos);
     }
 
-    //스토어 리스트 조회(최신순)
+    //지하철역 스토어 리스트 조회(최신순)
     public StoreInfoListByLatestRes getStoreInfoListByStationAndLatest(final Long userId,
                                                                        final Station station,
                                                                        final Long storeIdCursor,
@@ -94,10 +94,15 @@ public class StoreService {
         ///스토어 개수 조회
         final int storeCount = storeFacade.getStoreCountByStation(station);
 
+        ///마지막 데이터 여부
+        ///마지막 데이터 여부
+        final int lastStoreInfoDtos = storeInfoDtos.size() - 1;
+        final boolean isLastData = storeInfoDtos.get(lastStoreInfoDtos).isLastData();
+
         ///마지막 storeID 조회
         final Long LastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
-        return StoreInfoListByLatestRes.of(LastStoreId, storeCount, storeInfos);
+        return StoreInfoListByLatestRes.of(LastStoreId, storeCount, isLastData, storeInfos);
     }
 
     //전체 지하철역 조회
