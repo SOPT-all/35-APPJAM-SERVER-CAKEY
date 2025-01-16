@@ -48,7 +48,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                                                 final int size) {
 
         // 좋아요 개수를 계산하는 서브쿼리
-        final Expression<Integer> storeLikesCountSubQuery = getStoreLikesCountSubQuery(userId);
+        final Expression<Integer> storeLikesCountSubQuery = getStoreLikesCountSubQuery();
 
         // 좋아요 여부 서브쿼리
         final BooleanExpression isLikedExpression = isLikedExpression(userId);
@@ -89,7 +89,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         if (likesCursor != null) {
             if (likesCursor == 0) {
                 // likesCursor가 0이면 처음부터 조회 (조건 없이 정렬만 적용)
-                System.out.println("likesCursor가 0이므로 내가 찜한 스토어 중 좋아요가 많은 순서로 조회합니다.");
+                System.out.println("likesCursor가 0이므로 전체중 좋아요가 많은 순서로 조회합니다.");
             } else {
                 query.having(
                         storeLike.count().lt(likesCursor) // 좋아요 수가 likesCursor보다 작은 데이터
@@ -162,12 +162,12 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                                     final int size) {
 
         // 좋아요 개수를 계산하는 서브쿼리
-        final Expression<Integer> storeLikesCountSubQuery = getStoreLikesCountSubQuery(userId);
+        final Expression<Integer> storeLikesCountSubQuery = getStoreLikesCountSubQuery();
 
         // 커서 조건 처리
         final BooleanExpression cursorCondition = (storeIdCursor == null || storeIdCursor == 0)
                 ? null // 조건 없음
-                : store.id.lt(storeIdCursor); // storeIdCursor가 존재하면 store.id < storeIdCursor 조건 추가
+                : store.id.lt(storeIdCursor); // storeIdCursor가 존재하면 store.id > storeIdCursor 조건 추가
 
         // 메인 쿼리
         return queryFactory
@@ -199,7 +199,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
             final int size) {
 
         // 좋아요 개수를 계산하는 서브쿼리
-        final Expression<Integer> storeLikesCountSubQuery = getStoreLikesCountSubQuery(userId);
+        final Expression<Integer> storeLikesCountSubQuery = getStoreLikesCountSubQuery();
 
         // 커서 조건 처리
         final BooleanExpression storeIdCursorCondition = (storeIdCursor == null || storeIdCursor == 0)
@@ -277,7 +277,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     }
 
     //좋아요 개수 서브쿼리
-    private Expression<Integer> getStoreLikesCountSubQuery(final Long userId) {
+    private Expression<Integer> getStoreLikesCountSubQuery() {
         return JPAExpressions
                 .select(storeLike.id.count().intValue()) // 좋아요 개수를 Integer로 변환
                 .from(storeLike)

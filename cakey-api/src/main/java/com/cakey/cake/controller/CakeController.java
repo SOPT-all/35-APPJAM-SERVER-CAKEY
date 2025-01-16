@@ -15,14 +15,26 @@ import org.springframework.web.bind.annotation.*;
 public class CakeController {
     private final CakeService cakeService;
 
-    //해당역 스토어들의 디자인 조회
+    //해당역 스토어들의 디자인 조회(최신순)
     @GetMapping("/latest")
-    public ResponseEntity<BaseResponse<?>> getCakesByStationStore(
+    public ResponseEntity<BaseResponse<?>> getLatestCakesByStationStore(
         @RequestHeader(value = "Authorization", required = false) final Long userId,
         @RequestParam(value = "station", required = true) final Station station,
         @RequestParam(value = "cakeIdCursor", defaultValue = "0", required = false) final Long cakeIdCursor,
         @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
-       return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakesByStationStore(userId, station, cakeIdCursor, size));
+       return ApiResponseUtil.success(SuccessCode.OK, cakeService.getLatestCakesByStationStore(userId, station, cakeIdCursor, size));
+    }
+
+    //해당역 스토어들의 디자인 조회(인기순)
+    @GetMapping("/popularity")
+    public ResponseEntity<BaseResponse<?>> getPopularCakesByStationStore(
+            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @RequestParam(value = "station", required = true) final Station station,
+            @RequestParam(value = "cakeLikesCursor", defaultValue = "0", required = false) final Integer cakeLikesCursor,
+            @RequestParam(value = "cakeIdCursor", defaultValue = "0", required = false) final Long cakeIdCursor,
+            @RequestParam(value = "size", defaultValue = "10", required = false) final int size
+    ) {
+        return ApiResponseUtil.success(SuccessCode.OK, cakeService.getPopularCakesByStationStore(userId, station, cakeLikesCursor,cakeIdCursor, size));
     }
 }
