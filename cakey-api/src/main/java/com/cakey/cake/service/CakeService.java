@@ -5,8 +5,10 @@ import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakesLatestByStationStoreRes;
 import com.cakey.cake.dto.CakesPopularByStationStoreRes;
 import com.cakey.cake.facade.CakeFacade;
+import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.digester.AbstractObjectCreationFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,18 +59,15 @@ public class CakeService {
         //커서페이지네이션으로 케이크 조회
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularCakesByStation(userId, station, cakeLikesCursor, cakeIdCursor, size);
 
-        final Integer nextLikesCursor;
-        final Long nextCakeIdCursor;
-
         ///커서 업데이트
         if(cakeInfoDtos.isEmpty()) {
-            nextLikesCursor = 0;
-            nextCakeIdCursor = null;
-        } else {
-            final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
-            nextLikesCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeLikeCount();
-            nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+            throw new NotFoundException();
         }
+
+        final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+        final int nextLikesCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeLikeCount();
+        final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+        final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
 
         /// 전체 케이크 수 계산
         final int totalCakeCount = cakeFacade.countCakesByStation(station);
@@ -85,6 +84,6 @@ public class CakeService {
                 ))
                 .toList();
 
-        return CakesPopularByStationStoreRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, cakes);
+        return CakesPopularByStationStoreRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
     }
 }

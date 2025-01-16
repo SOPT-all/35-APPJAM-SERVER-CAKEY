@@ -70,13 +70,12 @@ public class StoreLikesService {
         ///찜한 스토어 개수 조회
         final int storeCount = storeLikeFacade.countAllLikedStoreByUserId(userId);
 
-        final Integer storeLikesCursor;
+        final int storeLikesCursor;
         final Long lastStoreId;
-
 
         ///커서 업데이트
         if(storeInfoOrderByLikesDtos.isEmpty()) {
-            storeLikesCursor = null;
+            storeLikesCursor = 0;
             lastStoreId = null;
         } else {
             final int lastCakeInfoDtosIndex = storeInfoOrderByLikesDtos.size() - 1;
@@ -84,14 +83,7 @@ public class StoreLikesService {
             lastStoreId = storeInfoOrderByLikesDtos.get(lastCakeInfoDtosIndex).getStoreIdCursor();
         }
 
-        ///스토어좋아요 커서값
-//        final int storeLikesCursor = storeInfoOrderByLikesDtos.get(storeInfoOrderByLikesDtos.size() - 1).getStoreLikesCount();
-//
-//
-//        ///마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
-//        final long lastStoreId = storeInfoOrderByLikesDtos.get(storeInfoOrderByLikesDtos.size() - 1).getStoreIdCursor() == null ? -1 : storeInfoOrderByLikesDtos.get(storeInfoOrderByLikesDtos.size() - 1).getStoreIdCursor();
-
-        // 7. 결과 DTO 조립 및 반환
+        /// 7. 결과 DTO 조립 및 반환
         return StorePopularityLikedByUserRes.of(
                 storeLikesCursor,
                 lastStoreId,

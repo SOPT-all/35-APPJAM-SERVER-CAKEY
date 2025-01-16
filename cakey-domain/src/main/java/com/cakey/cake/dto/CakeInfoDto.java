@@ -15,7 +15,8 @@ public class CakeInfoDto {
     private boolean isLiked;
     private String imageUrl;
     private int cakeLikeCount;
-    Long cakeIdCursor;
+    private Long cakeIdCursor;
+    private boolean isLastData;
 
     @QueryProjection
     public CakeInfoDto(long cakeId,
@@ -25,7 +26,8 @@ public class CakeInfoDto {
                        boolean isLiked,
                        String imageUrl,
                        int cakeLikeCount,
-                       Long cakeIdCursor) {
+                       Long cakeIdCursor,
+                       boolean isLastData) {
         this.cakeId = cakeId;
         this.storeId = storeId;
         this.storeName = storeName;
@@ -34,5 +36,6 @@ public class CakeInfoDto {
         this.imageUrl = imageUrl;
         this.cakeLikeCount = cakeLikeCount;
         this.cakeIdCursor = cakeIdCursor;
+        this.isLastData = isLastData;
     }
 }
