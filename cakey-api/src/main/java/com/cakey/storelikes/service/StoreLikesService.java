@@ -28,22 +28,22 @@ public class StoreLikesService {
                                                                final Long storeIdCursor,
                                                                final int size) {
 
-        //페이지네이션으로 스토어 조회
+        ///페이지네이션으로 스토어 조회
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findLatestStoresLikedByUser(userId, storeIdCursor, size);
 
-        //조회한 store들의 id 추출
+        ///조회한 store들의 id 추출
         final List<Long> storeIds = getStoreIds(storeInfoDtos);
 
-        //메인 이미지 매핑
+        ///메인 이미지 매핑
         final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
 
-        //storeInfo 생성
+        ///storeInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
-        //찜한 스토어 개수 조회
+        ///찜한 스토어 개수 조회
         final int storeCount = storeLikeFacade.countAllLikedStoreByUserId(userId);
 
-        //마지막 스토어 아이디
+        ///마지막 스토어 아이디
         final Long lastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
         return StoreLatestLikedByUserRes.fromStoreInfo(lastStoreId, storeCount, storeInfos);
@@ -57,24 +57,39 @@ public class StoreLikesService {
         final List<StoreInfoDto> storeInfoOrderByLikesDtos = storeFacade.findPopularityStoresLikedByUser(userId, likesCursor, storeIdCursor, size);
 
 
-        //조회한 store들의 id 추출
+
+        ///조회한 store들의 id 추출
         final List<Long> storeIds = getStoreIds(storeInfoOrderByLikesDtos);
 
-        //메인 이미지 매핑
+        ///메인 이미지 매핑
         final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
 
-        //storeInfo 생성
+        ///storeInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoOrderByLikesDtos, mainImageMap);
 
-        //찜한 스토어 개수 조회
+        ///찜한 스토어 개수 조회
         final int storeCount = storeLikeFacade.countAllLikedStoreByUserId(userId);
 
-        //스토어좋아요 커서값
-        final int storeLikesCursor = storeInfoOrderByLikesDtos.get(size - 1).getStoreLikesCount();
+        final Integer storeLikesCursor;
+        final Long lastStoreId;
 
 
-        //마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
-        final long lastStoreId = storeInfoOrderByLikesDtos.get(size - 1).getStoreIdCursor() == null ? -1 : storeInfoOrderByLikesDtos.get(size - 1).getStoreIdCursor();
+        ///커서 업데이트
+        if(storeInfoOrderByLikesDtos.isEmpty()) {
+            storeLikesCursor = null;
+            lastStoreId = null;
+        } else {
+            final int lastCakeInfoDtosIndex = storeInfoOrderByLikesDtos.size() - 1;
+            storeLikesCursor = storeInfoOrderByLikesDtos.get(lastCakeInfoDtosIndex).getStoreLikesCount();
+            lastStoreId = storeInfoOrderByLikesDtos.get(lastCakeInfoDtosIndex).getStoreIdCursor();
+        }
+
+        ///스토어좋아요 커서값
+//        final int storeLikesCursor = storeInfoOrderByLikesDtos.get(storeInfoOrderByLikesDtos.size() - 1).getStoreLikesCount();
+//
+//
+//        ///마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
+//        final long lastStoreId = storeInfoOrderByLikesDtos.get(storeInfoOrderByLikesDtos.size() - 1).getStoreIdCursor() == null ? -1 : storeInfoOrderByLikesDtos.get(storeInfoOrderByLikesDtos.size() - 1).getStoreIdCursor();
 
         // 7. 결과 DTO 조립 및 반환
         return StorePopularityLikedByUserRes.of(

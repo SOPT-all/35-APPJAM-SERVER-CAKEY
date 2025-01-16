@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class StoreLikesController {
     private final StoreLikesService storeLikesService;
 
+    //찜한 스토어 조회(최신순)
     @GetMapping("/latest")
     public ResponseEntity<BaseResponse<?>> getLatestStoreByUserLikes(
             @RequestHeader(value = "userId", required = true) final long userId,
-            @RequestParam(value = "storeIdCursor", defaultValue = "0", required = false) final Long storeIdCursor,
+            @RequestParam(value = "storeIdCursor", required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
         return ApiResponseUtil.success(
@@ -25,11 +26,12 @@ public class StoreLikesController {
                 storeLikesService.getLatestStoreLikesByUser(userId, storeIdCursor, size));
     }
 
+    //찜한 스토어 조회(인기순)
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getPopularityStoreByUserLikes(
             @RequestHeader(value = "userId", required = true) final long userId,
-            @RequestParam(value = "likesCursor", defaultValue = "0", required = false) final int likesCursor,
-            @RequestParam(value = "storeIdCursor", defaultValue = "0", required = false) final Long storeIdCursor,
+            @RequestParam(value = "likesCursor", required = false) final Integer likesCursor,
+            @RequestParam(value = "storeIdCursor",  required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
         return ApiResponseUtil.success(

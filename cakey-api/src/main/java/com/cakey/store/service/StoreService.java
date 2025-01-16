@@ -52,24 +52,24 @@ public class StoreService {
 
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, storeIdCursor, size);
 
-        // 조회한 store들의 ID 추출
+        /// 조회한 store들의 ID 추출
         final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
 
-        //메인 이미지 map
+        ///메인 이미지 map
         final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
 
-        //storInfo 생성
+        ///storInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
-        //스토어 개수 조회
+        ///스토어 개수 조회
         final int storeCount = storeFacade.getStoreCountByStation(station);
 
         final int nextLikesCursor = calculateNextCursor(storeInfoDtos);
 
-        //마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
+        ///마지막 조회 데이터와 그 다음 데이터의 스토어좋아요 개수가 같을 경우에, 스토어아이디커서 내려줌
         final long lastStoreId = storeInfoDtos.get(size - 1).getStoreIdCursor() == null ? -1 : storeInfoDtos.get(size - 1).getStoreIdCursor();
         
-        // StoreInfoListRes 반환
+        ///StoreInfoListRes 반환
         return StoreInfoListBylikesRes.of(nextLikesCursor, lastStoreId, storeCount, storeInfos);
     }
 
@@ -79,22 +79,22 @@ public class StoreService {
                                                                        final Long storeIdCursor,
                                                                        final int size) {
 
-        //커서 페이지네이션
+        ///커서 페이지네이션
         final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLatest(userId, station, storeIdCursor, size);
 
-        // 조회한 store들의 ID 추출
+        /// 조회한 store들의 ID 추출
         final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
 
-        //메인 이미지 map
+        ///메인 이미지 map
         final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
 
-        //storInfo 생성
+        ///storInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
-        //스토어 개수 조회
+        ///스토어 개수 조회
         final int storeCount = storeFacade.getStoreCountByStation(station);
 
-        //마지막 storeID 조회
+        ///마지막 storeID 조회
         final Long LastStoreId = storeFacade.calculateLastStoreId(storeInfoDtos);
 
         return StoreInfoListByLatestRes.of(LastStoreId, storeCount, storeInfos);

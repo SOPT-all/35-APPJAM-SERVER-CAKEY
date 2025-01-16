@@ -8,7 +8,7 @@ public record CakesPopularByStationStoreRes(
         int cakeCount,
         List<CakeInfo> cakes
 ) {
-    public static CakesPopularByStationStoreRes from(final int cakeLikesCursor,
+    public static CakesPopularByStationStoreRes from(final Integer cakeLikesCursor,
                                                      final Long cakeIdCursor,
                                                      final int cakeCount,
                                                      final List<CakeInfo> cakes) {

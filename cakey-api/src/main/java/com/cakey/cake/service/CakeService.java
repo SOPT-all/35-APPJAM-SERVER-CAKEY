@@ -57,13 +57,20 @@ public class CakeService {
         //커서페이지네이션으로 케이크 조회
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularCakesByStation(userId, station, cakeLikesCursor, cakeIdCursor, size);
 
-        final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+        final Integer nextLikesCursor;
+        final Long nextCakeIdCursor;
 
-        // 커서 업데이트
-        final int nextLikesCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeLikeCount();
-        final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor() == null ? -1 : cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+        ///커서 업데이트
+        if(cakeInfoDtos.isEmpty()) {
+            nextLikesCursor = 0;
+            nextCakeIdCursor = null;
+        } else {
+            final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+            nextLikesCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeLikeCount();
+            nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+        }
 
-        // 전체 케이크 수 계산
+        /// 전체 케이크 수 계산
         final int totalCakeCount = cakeFacade.countCakesByStation(station);
 
         final List<CakeInfo> cakes = cakeInfoDtos.stream()

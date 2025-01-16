@@ -196,29 +196,28 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             );
         }
 
-        // 제한 조건 설정
+        /// 제한 조건 설정
         query.limit(size + 1);
 
-        // 쿼리 실행
+        /// 쿼리 실행
         List<CakeInfoDto> cakes = query.fetch();
 
-        // 좋아요 수 비교 및 Cursor 설정
+        /// 좋아요 수 비교 및 Cursor 설정
         if (cakes.size() > size) {
-            final CakeInfoDto lastItem = cakes.get(size - 1); // limit번째 데이터
-            final CakeInfoDto extraItem = cakes.get(size);    // limit + 1번째 데이터
+            final CakeInfoDto lastItem = cakes.get(size - 1); /// limit번째 데이터
+            final CakeInfoDto extraItem = cakes.get(size);    /// limit + 1번째 데이터
 
             if (lastItem.getCakeLikeCount() == (extraItem.getCakeLikeCount())) {
-                // 좋아요 수가 같으면 limit번째 데이터의 cakeId를 Cursor로 설정
+                /// 좋아요 수가 같으면 limit번째 데이터의 cakeId를 Cursor로 설정
                 lastItem.setCakeIdCursor(lastItem.getCakeId());
             } else {
-                // 좋아요 수가 다르면 Cursor를 null로 설정
+                /// 좋아요 수가 다르면 Cursor를 null로 설정
                 lastItem.setCakeIdCursor(null);
             }
-            cakes = cakes.subList(0, size); // limit 수만큼 자르기
-        } else {
-            if (!cakes.isEmpty()) {
-                cakes.get(cakes.size() - 1).setCakeIdCursor(null);
-            }
+            cakes = cakes.subList(0, size); /// limit 수만큼 자르기
+        } else { ///마지막 데이터 조회했을때
+            final CakeInfoDto lastItem = cakes.get(cakes.size() - 1);
+            lastItem.setCakeIdCursor(null);
         }
         return cakes;
     }

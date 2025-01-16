@@ -8,13 +8,13 @@ import java.util.List;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record StorePopularityLikedByUserRes(
-        long nextLikesCursor,
+        Integer nextLikesCursor,
         Long nexStoreId,
         long storeCount,
         List<StoreInfo> stores
 ) {
-    public static StorePopularityLikedByUserRes of(final long nextLikesCursor,
-                                                   final long nexStoreId,
+    public static StorePopularityLikedByUserRes of(final Integer nextLikesCursor,
+                                                   final Long nexStoreId,
                                                    final long storeCount,
                                                    final List<StoreInfo> stores) {
         return StorePopularityLikedByUserRes.builder()
