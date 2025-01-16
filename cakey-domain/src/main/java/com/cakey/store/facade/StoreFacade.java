@@ -2,12 +2,8 @@ package com.cakey.store.facade;
 
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
-import com.cakey.store.dto.StoreByPopularityDto;
-import com.cakey.store.dto.StoreCoordianteDto;
-import com.cakey.store.dto.StoreDetailInfoDto;
-import com.cakey.store.dto.StoreInfoDto;
-import com.cakey.store.dto.StoreKakaoLinkDto;
-import com.cakey.store.dto.StoreTasteDto;
+import com.cakey.store.dto.*;
+
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +16,7 @@ public class StoreFacade {
 
     private final StoreRetriever storeRetriever;
 
-    public List<StoreCoordianteDto> findCoordinatesByStation(final Station station) {
+    public List<StoreCoordinatesDto> findCoordinatesByStation(final Station station) {
         return storeRetriever.findCoordinateByStation(station);
     }
 
@@ -61,6 +57,11 @@ public class StoreFacade {
         return storeInfoDtos.stream()
                 .map(StoreInfoDto::getStoreId)
                 .toList();
+    }
+
+    //찜한 스토어 좌표 조회
+    public List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId) {
+        return storeRetriever.findLikedStoreCoordinatesByUserId(userId);
     }
 
     //스토어 개수 조회
