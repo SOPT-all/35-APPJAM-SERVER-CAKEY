@@ -11,4 +11,8 @@ public class CakeLikesFacade {
     public boolean existsCakeLikesByCakeIdAndUserId(Long cakeId, Long userId) {
         return cakeLikesRetriever.existsCakeLikesByCakeIdAndUserId(cakeId, userId);
     }
+
+    public int countByUserId(final Long userId) {
+        return cakeLikesRetriever.countByUserId(userId);
+    }
 }

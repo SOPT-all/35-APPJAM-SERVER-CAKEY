@@ -12,4 +12,9 @@ public class CakeLikesRetriever {
     public boolean existsCakeLikesByCakeIdAndUserId(Long cakeId, Long userId) {
         return cakeLikesRepository.existsByCakeIdAndUserId(cakeId, userId);
     }
+
+    public int countByUserId(final Long userId) {
+        return cakeLikesRepository.countByUserId(userId);
+    }
+
 }

@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CakeLikesRepository extends JpaRepository<CakeLikes, Long> {
     boolean existsByCakeIdAndUserId(final Long cakeId, final Long userId);
+
+
+    int countByUserId(final Long userId);
+
 }

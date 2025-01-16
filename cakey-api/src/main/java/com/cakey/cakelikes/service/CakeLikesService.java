@@ -1,0 +1,57 @@
+package com.cakey.cakelikes.service;
+
+import com.cakey.cake.dto.CakeInfo;
+import com.cakey.cake.dto.CakeInfoDto;
+import com.cakey.cake.facade.CakeFacade;
+import com.cakey.cakelike.facade.CakeLikesFacade;
+import com.cakey.cakelike.facade.CakeLikesRetriever;
+import com.cakey.cakelikes.dto.CakeLikedLatestRes;
+import com.cakey.common.exception.NotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class CakeLikesService {
+
+    private final CakeFacade cakeFacade;
+    private final CakeLikesFacade cakeLikesFacade;
+
+    public CakeLikedLatestRes getLatestCakeLikedByUser(final long userId,
+                                                       final Long cakeIdCursor,
+                                                       final Integer size) {
+
+        // 페이지네이션 조회
+        final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
+
+        //마지막 데이터인지
+        final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+        final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
+
+        //찜한 전체 디자인 개수
+        final int allCakesUserLikedCount = cakeLikesFacade.countByUserId(userId);
+
+        //마지막 cakeId
+        final long lastCakeId = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeId();
+
+        //데이터변환
+        final List<CakeInfo> cakes = cakeInfoDtos.stream()
+                .map(cakeInfoDto -> CakeInfo.of(
+                        cakeInfoDto.getCakeId(),
+                        cakeInfoDto.getStoreId(),
+                        cakeInfoDto.getStoreName(),
+                        cakeInfoDto.getStation(),
+                        cakeInfoDto.isLiked(),
+                        cakeInfoDto.getImageUrl(),
+                        cakeInfoDto.getCakeLikeCount()
+                ))
+                .collect(Collectors.toList());
+
+        return CakeLikedLatestRes.from(lastCakeId, allCakesUserLikedCount, isLastData, cakes);
+    }
+
+
+}
