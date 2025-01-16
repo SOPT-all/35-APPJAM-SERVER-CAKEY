@@ -5,16 +5,16 @@ import com.cakey.cake.dto.CakeInfo;
 import java.util.List;
 
 public record CakeLikedLatestRes(
-        Long cakeIdCursor,
+        Long nextCakeIdCursor,
         int cakeCount,
         boolean isLastData,
         List<CakeInfo> cakes
 ) {
-    public static CakeLikedLatestRes from(final Long cakeIdCursor,
+    public static CakeLikedLatestRes from(final Long nextCakeIdCursor,
                                           final int cakeCount,
                                           final boolean isLastData,
                                           final List<CakeInfo> cakes) {
-        return new CakeLikedLatestRes(cakeIdCursor, cakeCount, isLastData, cakes);
+        return new CakeLikedLatestRes(nextCakeIdCursor, cakeCount, isLastData, cakes);
     }
 }
 
