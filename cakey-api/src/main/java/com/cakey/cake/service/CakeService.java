@@ -10,13 +10,11 @@ import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreBySelectedCakeDto;
-import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.facade.StoreFacade;
 import com.cakey.store.service.StoreService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.context.Theme;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,10 +28,10 @@ public class CakeService {
     private final StoreFacade storeFacade;
 
     //해당역 스토어의 케이크들 조회(최신순)
-    public CakesLatestByStationStoreRes getLatestCakesByStationStore(final Long userId,
-                                                                     final Station station,
-                                                                     final Long cakeIdCursor,
-                                                                     final int size) {
+    public CakesLatestListRes getLatestCakesByStationStore(final Long userId,
+                                                           final Station station,
+                                                           final Long cakeIdCursor,
+                                                           final int size) {
         ///커서 페이지네이션 데이터조회
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findLatestCakesByStation(userId, station, cakeIdCursor, size);
 
@@ -61,15 +59,15 @@ public class CakeService {
                 ? -1
                 : cakeInfoDtos.get(cakes.size() - 1).getCakeId();
 
-        return CakesLatestByStationStoreRes.from(nextCursor, cakeCountByStation, isLastData, cakes);
+        return CakesLatestListRes.from(nextCursor, cakeCountByStation, isLastData, cakes);
     }
 
     //해당역 디자인(케이크) 조회(인기순)
-    public CakesPopularByStationStoreRes getPopularCakesByStationStore(final Long userId,
-                                                                       final Station station,
-                                                                       final Integer cakeLikesCursor,
-                                                                       final Long cakeIdCursor,
-                                                                       final int size) {
+    public CakesPopularListRes getPopularCakesByStationStore(final Long userId,
+                                                             final Station station,
+                                                             final Integer cakeLikesCursor,
+                                                             final Long cakeIdCursor,
+                                                             final int size) {
         //커서페이지네이션으로 케이크 조회
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularCakesByStation(userId, station, cakeLikesCursor, cakeIdCursor, size);
 
@@ -98,7 +96,7 @@ public class CakeService {
                 ))
                 .toList();
 
-        return CakesPopularByStationStoreRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
+        return CakesPopularListRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
     }
 
     public CakeListByPopularityRes getCakeByRank(final Long userId) {
@@ -150,5 +148,41 @@ public class CakeService {
                 storeInfoDto.getStation(),
                 cakeSelectedInfoList
         );
+    }
+
+    //디자인 둘러보기 조회(최신순)
+    public CakesLatestListRes findCakesByCategoryAndTheme(final DayCategory dayCategory,
+                                                         final ThemeName theme,
+                                                         final Long userId,
+                                                         final Long cakeIdCursor,
+                                                         final int limit) {
+        ///페이지네이션
+        final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findCakesByCategoryAndTheme(dayCategory,theme, userId, cakeIdCursor, limit);
+
+        ///케이크 개수
+        final int allCakeCount = cakeFacade.countCakesByCategoryAndTheme(dayCategory,theme);
+
+        ///마지막 데이터 여부
+        final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+        final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
+
+        final List<CakeInfo> cakes = cakeInfoDtos.stream()
+                .map(cakeInfoDto -> CakeInfo.of(
+                        cakeInfoDto.getCakeId(),
+                        cakeInfoDto.getStoreId(),
+                        cakeInfoDto.getStoreName(),
+                        cakeInfoDto.getStation(),
+                        cakeInfoDto.isLiked(),
+                        cakeInfoDto.getImageUrl(),
+                        cakeInfoDto.getCakeLikeCount()
+                ))
+                .collect(Collectors.toList());
+
+        //커서값
+        final Long nextCursor = cakeInfoDtos.isEmpty()
+                ? -1
+                : cakeInfoDtos.get(cakes.size() - 1).getCakeId();
+
+        return CakesLatestListRes.from(nextCursor, allCakeCount, isLastData, cakes);
     }
 }

@@ -19,7 +19,7 @@ public class CakeController {
     private final CakeService cakeService;
 
     //해당역 스토어들의 디자인 조회(최신순)
-    @GetMapping("/latest")
+    @GetMapping("/station/latest")
     public ResponseEntity<BaseResponse<?>> getLatestCakesByStationStore(
         @RequestHeader(value = "Authorization", required = false) final Long userId,
         @RequestParam(value = "station", required = true) final Station station,
@@ -30,7 +30,7 @@ public class CakeController {
     }
 
     //해당역 스토어들의 디자인 조회(인기순)
-    @GetMapping("/popularity")
+    @GetMapping("/station/popularity")
     public ResponseEntity<BaseResponse<?>> getPopularCakesByStationStore(
             @RequestHeader(value = "Authorization", required = false) final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
@@ -67,4 +67,19 @@ public class CakeController {
                 SuccessCode.OK, cakeService.getSelectedCakes(cakeId, dayCategory, themeName, userId)
         );
     }
+
+    //디자인 둘러보기(최신순)
+    @GetMapping("/latest")
+    public ResponseEntity<BaseResponse<?>> getLatestCakes(
+            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @RequestParam(value = "dayCategory") final DayCategory dayCategory,
+            @RequestParam(value = "themeName") final ThemeName themeName,
+            @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
+            @RequestParam(value = "size", required = false, defaultValue = "10") final int size
+            ) {
+        return ApiResponseUtil.success(
+                SuccessCode.OK, cakeService.findCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, size)
+        );
+    }
+
 }

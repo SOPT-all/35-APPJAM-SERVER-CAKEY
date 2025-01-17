@@ -89,5 +89,20 @@ public class CakeFacade {
         return cakeRetriever.findCakesByStoreAndConditions(storeId, dayCategory, theme, userId, cakeId);
     }
 
+    //디자인 둘러보기 조회(최신순)
+    public List<CakeInfoDto> findCakesByCategoryAndTheme(final DayCategory dayCategory,
+                                                         final ThemeName theme,
+                                                         final Long userId,
+                                                         final Long cakeIdCursor,
+                                                         final int limit) {
+        return cakeRetriever.findCakesByCategoryAndTheme(dayCategory, theme, userId, cakeIdCursor, limit);
+    }
+
+
+    //카테고리, 테마에 해당하는 케이크 개수
+    public int countCakesByCategoryAndTheme(final DayCategory dayCategory, final ThemeName theme) {
+        return cakeRetriever.countCakesByCategoryAndTheme(dayCategory, theme);
+    }
+
 
 }
