@@ -159,8 +159,8 @@ public class CakeService {
         ///페이지네이션
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findCakesByCategoryAndTheme(dayCategory,theme, userId, cakeIdCursor, limit);
 
-        ///케이크 개수
-        final int allCakeCount = cakeFacade.countCakesByCategoryAndTheme(dayCategory,theme);
+        ///케이크 전체 개수
+        final int totalCakeCount = cakeFacade.countCakesByCategoryAndTheme(dayCategory,theme);
 
         ///마지막 데이터 여부
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
@@ -183,6 +183,41 @@ public class CakeService {
                 ? -1
                 : cakeInfoDtos.get(cakes.size() - 1).getCakeId();
 
-        return CakesLatestListRes.from(nextCursor, allCakeCount, isLastData, cakes);
+        return CakesLatestListRes.from(nextCursor, totalCakeCount, isLastData, cakes);
+    }
+
+    //디자인 둘러보기 조회(인기순)
+    public CakesPopularListRes getPopularCakesByCategoryAndTheme(final DayCategory dayCategory,
+                                                               final ThemeName themeName,
+                                                               final Long userId,
+                                                               final Long cakeIdCursor,
+                                                               final Integer cakeLikesCursor,
+                                                               final int size) {
+
+        ///페이지네이션
+        final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularCakesByCategoryAndTheme(dayCategory,themeName, userId, cakeIdCursor, cakeLikesCursor, size);
+
+        ///케이크 전체개수
+        final int totalCakeCount = cakeFacade.countCakesByCategoryAndTheme(dayCategory,themeName);
+
+        ///커서 업데이트
+        final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+        final int nextLikesCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeLikeCount();
+        final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+        final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
+
+        final List<CakeInfo> cakes = cakeInfoDtos.stream()
+                .map(dto -> CakeInfo.of(
+                        dto.getCakeId(),
+                        dto.getStoreId(),
+                        dto.getStoreName(),
+                        dto.getStation(),
+                        dto.isLiked(),
+                        dto.getImageUrl(),
+                        dto.getCakeLikeCount()
+                ))
+                .toList();
+
+        return CakesPopularListRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
     }
 }
