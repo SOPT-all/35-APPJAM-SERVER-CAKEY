@@ -50,4 +50,13 @@ public class StoreLikesController {
                 StoreLikedCoordinateRes.of(storeLikesService.getLikedStoreCoordinatesByUserId(userId)));
     }
 
+    //스토어 찜하기
+    @PostMapping("/{storeId}")
+    public ResponseEntity<BaseResponse<?>> postStoreLikes(
+            @RequestHeader(value = "Authorization") final long userId,
+            @PathVariable(value = "storeId") final long storeId) {
+        storeLikesService.postStoreLikes(userId, storeId);
+        return ApiResponseUtil.success(SuccessCode.CREATED);
+    }
+
 }

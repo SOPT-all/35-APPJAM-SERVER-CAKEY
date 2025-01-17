@@ -49,14 +49,7 @@ public class CakeController {
                 cakeService.getCakeByRank(userId));
     }
 
-    @PostMapping("/likes/{cakeId}")
-    public ResponseEntity<BaseResponse<?>> postCakeLike(
-            @PathVariable(value = "cakeId") final Long cakeId,
-            @RequestHeader final Long userId
-    ) {
-        cakeService.postCakeLike(cakeId, userId);
-        return ApiResponseUtil.success(SuccessCode.OK);
-    }
+
 
     //선택 디자인 조회
     @GetMapping("/{cakeId}/select")

@@ -37,4 +37,14 @@ public class CakeLikesController {
     ) {
         return ApiResponseUtil.success(SuccessCode.OK, cakeLikesService.getPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size));
     }
+
+    //케이크 좋아요 등록
+    @PostMapping("/likes/{cakeId}")
+    public ResponseEntity<BaseResponse<?>> postCakeLike(
+            @PathVariable(value = "cakeId") final Long cakeId,
+            @RequestHeader final Long userId
+    ) {
+        cakeLikesService.postCakeLike(cakeId, userId);
+        return ApiResponseUtil.success(SuccessCode.OK);
+    }
 }
