@@ -101,17 +101,6 @@ public class CakeService {
         return new CakeListByPopularityRes(cakeByPopularityDtos);
     }
 
-    @Transactional
-    public void postCakeLike(final Long cakeId, final Long userId) {
-        Cake cake = cakeFacade.findById(cakeId);
-        if (!cakeLikesFacade.existsCakeLikesByCakeIdAndUserId(cakeId, userId)) {
-            CakeLikes cakeLikes = CakeLikes.createCakeLikes(cakeId, userId);
-            cakeLikesFacade.saveCakeLikes(cakeLikes);
-        } else {
-            //todo: 추후 구체적인 예외 처리
-            throw new RuntimeException("Cake like already exists");
-        }
-    }
 
     //선택한 디자인(케이크) 조회
     public CakeSelectedRes getSelectedCakes(final Long cakeId,

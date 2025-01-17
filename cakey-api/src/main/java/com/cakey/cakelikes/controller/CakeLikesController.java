@@ -37,6 +37,16 @@ public class CakeLikesController {
         return ApiResponseUtil.success(SuccessCode.OK, cakeLikesService.getPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size));
     }
 
+    //케이크 좋아요 등록
+    @PostMapping("/{cakeId}")
+    public ResponseEntity<BaseResponse<?>> postCakeLikes(
+            @PathVariable(value = "cakeId") final Long cakeId,
+            @RequestHeader final Long userId
+    ) {
+        cakeLikesService.postCakeLike(cakeId, userId);
+        return ApiResponseUtil.success(SuccessCode.CREATED);
+    }
+
     //케이크 좋아요 취소
     @DeleteMapping("/{cakeId}")
     public ResponseEntity<BaseResponse<?>> deleteCakeLikes(

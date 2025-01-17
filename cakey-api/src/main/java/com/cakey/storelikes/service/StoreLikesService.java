@@ -9,6 +9,7 @@ import com.cakey.store.dto.StoreCoordinatesDto;
 import com.cakey.store.dto.StoreInfo;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.facade.StoreFacade;
+import com.cakey.store.facade.StoreRetriever;
 import com.cakey.storelike.facade.StoreLikeFacade;
 import com.cakey.storelikes.dto.StoreLatestLikedByUserRes;
 import com.cakey.storelikes.dto.StorePopularityLikedByUserRes;
@@ -127,7 +128,7 @@ public class StoreLikesService {
     }
 
     //찜한 스토어 좌표 조회
-    public List<StoreCoordinate> getLikedStoreCoordinatesByUserId(final Long userId) {
+    public List<StoreCoordinate> getLikedStoreCoordinatesByUserId(final long userId) {
         final List<StoreCoordinatesDto> storeCoordinatesDtos = storeFacade.findLikedStoreCoordinatesByUserId(userId);
         return storeCoordinatesDtos.stream()
                 .map(
@@ -135,4 +136,8 @@ public class StoreLikesService {
                 ).collect(Collectors.toList());
     }
 
+    //스토어 좋아요 등록
+    public void postStoreLikes(final long userId, final long storeId) {
+        storeLikeFacade.saveStoreLikes(userId, storeId);
+    }
 }
