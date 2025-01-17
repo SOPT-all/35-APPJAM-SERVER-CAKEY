@@ -2,16 +2,16 @@ package com.cakey.cake.dto;
 
 import java.util.List;
 
-public record CakesLatestByStationStoreRes(
-     Long cakeIdCursor,
+public record CakesLatestListRes(
+     Long nextCakeIdCursor,
      int cakeCount,
      boolean isLastData,
      List<CakeInfo> cakes
 ) {
-    public static CakesLatestByStationStoreRes from(final Long cakeIdCursor,
-                                                    final int cakeCount,
-                                                    final boolean isLastData,
-                                                    final List<CakeInfo> cakes) {
-        return new CakesLatestByStationStoreRes(cakeIdCursor, cakeCount, isLastData, cakes);
+    public static CakesLatestListRes from(final Long nextCakeIdCursor,
+                                          final int cakeCount,
+                                          final boolean isLastData,
+                                          final List<CakeInfo> cakes) {
+        return new CakesLatestListRes(nextCakeIdCursor, cakeCount, isLastData, cakes);
     }
 }
