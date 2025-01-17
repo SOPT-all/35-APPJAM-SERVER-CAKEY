@@ -108,10 +108,23 @@ public class CakeFacade {
         return cakeRetriever.findPopularCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, cakeLikesCursor, size);
     }
 
+    //찜한 스토어들 디자인 조회(인기순)
+    public List<CakeInfoDto> findPopularCakesLikedByUser(final long userId,
+                                                         final Long cakeIdCursor,
+                                                         final Integer cakeLikesCursor,
+                                                         final int size) {
+        return cakeRetriever.findPopularCakesLikedByUser(userId, cakeIdCursor, cakeLikesCursor, size);
+    }
+
 
     //카테고리, 테마에 해당하는 케이크 개수
     public int countCakesByCategoryAndTheme(final DayCategory dayCategory, final ThemeName theme) {
         return cakeRetriever.countCakesByCategoryAndTheme(dayCategory, theme);
+    }
+
+    //찜한 모든 스토어 모든 디자인 개수
+    public int countAllDesignsLikedByUser(final Long userId) {
+        return cakeRetriever.countAllDesignsLikedByUser(userId);
     }
 
 

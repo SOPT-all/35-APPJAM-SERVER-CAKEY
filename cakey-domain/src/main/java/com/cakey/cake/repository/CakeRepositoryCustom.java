@@ -61,6 +61,12 @@ public interface CakeRepositoryCustom {
                                                          final Integer cakeLikesCursor,
                                                          final int size);
 
+    //찜한 스토어 디자인 조회(인기순)
+    List<CakeInfoDto> findPopularCakesLikedByUser(final long userId,
+                                                  final Long cakeIdCursor,
+                                                  final Integer cakeLikesCursor,
+                                                  final int size);
+
 
     //카테고리, 테마의 케이크 개수
     int countCakesByCategoryAndTheme(final DayCategory dayCategory,
