@@ -1,10 +1,14 @@
 package com.cakey.cake.facade;
 
 import com.cakey.cake.domain.Cake;
+import com.cakey.cake.domain.DayCategory;
 import com.cakey.cake.dto.CakeByPopularityDto;
 import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakeMainImageDto;
+import com.cakey.cake.dto.CakeSelectedInfoDto;
+import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.store.domain.Station;
+import com.cakey.store.dto.StoreBySelectedCakeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -75,4 +79,15 @@ public class CakeFacade {
                                                   final int size) {
         return cakeRetriever.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
     }
+
+    //같은 스토어, 카테고리, 테마의 케이크 조회
+    public List<CakeSelectedInfoDto> findCakesByStoreAndConditions(final Long storeId,
+                                                                   final DayCategory dayCategory,
+                                                                   final ThemeName theme,
+                                                                   final Long userId,
+                                                                   final Long cakeId) {
+        return cakeRetriever.findCakesByStoreAndConditions(storeId, dayCategory, theme, userId, cakeId);
+    }
+
+
 }

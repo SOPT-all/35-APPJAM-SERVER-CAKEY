@@ -5,7 +5,6 @@ import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
 import com.cakey.store.repository.StoreRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +53,11 @@ public class StoreRetriever {
     //찜한 스토어 좌표 조회
     public List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId) {
         return storeRepository.findLikedStoreCoordinatesByUserId(userId);
+    }
+
+    //선택된 케이크의 스토어 정보 조회
+    public StoreBySelectedCakeDto findStoreBySelectedCakeId(final Long cakeId) {
+        return storeRepository.findStoreBySelectedCakeId(cakeId);
     }
 
 

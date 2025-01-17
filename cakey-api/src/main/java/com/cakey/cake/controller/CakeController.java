@@ -1,11 +1,14 @@
 package com.cakey.cake.controller;
 
+import com.cakey.cake.domain.DayCategory;
 import com.cakey.cake.service.CakeService;
+import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.common.response.SuccessCode;
 import com.cakey.store.domain.Station;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +41,7 @@ public class CakeController {
         return ApiResponseUtil.success(SuccessCode.OK, cakeService.getPopularCakesByStationStore(userId, station, cakeLikesCursor,cakeIdCursor, size));
     }
 
-    @GetMapping("/lank")
+    @GetMapping("/Rank")
     public ResponseEntity<BaseResponse<?>> getRankCakesByStationStore(@RequestHeader(required = false) final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakeByRank(userId));
     }
@@ -50,5 +53,18 @@ public class CakeController {
     ) {
         cakeService.postCakeLike(cakeId, userId);
         return ApiResponseUtil.success(SuccessCode.OK);
+    }
+
+    //선택 디자인 조회
+    @GetMapping("/{cakeId}/select")
+    public ResponseEntity<BaseResponse<?>> getCakeSelect(
+            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @PathVariable(value = "cakeId") final long cakeId,
+            @RequestParam(value = "dayCategory") final DayCategory dayCategory,
+            @RequestParam(value = "theme") final ThemeName themeName
+            ) {
+        return ApiResponseUtil.success(
+                SuccessCode.OK, cakeService.getSelectedCakes(cakeId, dayCategory, themeName, userId)
+        );
     }
 }

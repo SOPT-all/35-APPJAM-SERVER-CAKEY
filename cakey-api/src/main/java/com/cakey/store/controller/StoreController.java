@@ -96,7 +96,7 @@ public class StoreController {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreDetailInfo(storeId));
     }
 
-    @GetMapping("/lank")
+    @GetMapping("/rank")
     public ResponseEntity<BaseResponse<?>> getStoreByLank(){
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreByLank());
     }
