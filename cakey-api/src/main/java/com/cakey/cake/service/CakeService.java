@@ -118,9 +118,9 @@ public class CakeService {
 
     //선택한 디자인(케이크) 조회
     public CakeSelectedRes getSelectedCakes(final Long cakeId,
-                                           final DayCategory dayCategory,
-                                           final ThemeName theme,
-                                           final  Long userId) {
+                                            final DayCategory dayCategory,
+                                            final ThemeName theme,
+                                            final  Long userId) {
 
         ///스토어 정보 조회
         final StoreBySelectedCakeDto storeInfoDto = storeFacade.findStoreBySelectedCakeId(cakeId);
@@ -152,10 +152,10 @@ public class CakeService {
 
     //디자인 둘러보기 조회(최신순)
     public CakesLatestListRes findCakesByCategoryAndTheme(final DayCategory dayCategory,
-                                                         final ThemeName theme,
-                                                         final Long userId,
-                                                         final Long cakeIdCursor,
-                                                         final int limit) {
+                                                          final ThemeName theme,
+                                                          final Long userId,
+                                                          final Long cakeIdCursor,
+                                                          final int limit) {
         ///페이지네이션
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findCakesByCategoryAndTheme(dayCategory,theme, userId, cakeIdCursor, limit);
 
@@ -188,17 +188,49 @@ public class CakeService {
 
     //디자인 둘러보기 조회(인기순)
     public CakesPopularListRes getPopularCakesByCategoryAndTheme(final DayCategory dayCategory,
-                                                               final ThemeName themeName,
-                                                               final Long userId,
-                                                               final Long cakeIdCursor,
-                                                               final Integer cakeLikesCursor,
-                                                               final int size) {
+                                                                 final ThemeName themeName,
+                                                                 final Long userId,
+                                                                 final Long cakeIdCursor,
+                                                                 final Integer cakeLikesCursor,
+                                                                 final int size) {
 
         ///페이지네이션
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularCakesByCategoryAndTheme(dayCategory,themeName, userId, cakeIdCursor, cakeLikesCursor, size);
 
         ///케이크 전체개수
         final int totalCakeCount = cakeFacade.countCakesByCategoryAndTheme(dayCategory,themeName);
+
+        ///커서 업데이트
+        final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+        final int nextLikesCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeLikeCount();
+        final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+        final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
+
+        final List<CakeInfo> cakes = cakeInfoDtos.stream()
+                .map(dto -> CakeInfo.of(
+                        dto.getCakeId(),
+                        dto.getStoreId(),
+                        dto.getStoreName(),
+                        dto.getStation(),
+                        dto.isLiked(),
+                        dto.getImageUrl(),
+                        dto.getCakeLikeCount()
+                ))
+                .toList();
+
+        return CakesPopularListRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
+    }
+
+    //찜한 스토어들 디자인 조회(인기순)
+    public CakesPopularListRes getPopularCakeByStoreLiked(final long userId,
+                                                           final Long cakeIdCursor,
+                                                           final Integer cakeLikesCursor,
+                                                           final int size) {
+        ///페이지네이션
+        final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularCakesLikedByUser(userId, cakeIdCursor, cakeLikesCursor, size);
+
+        ///전체 케이크 개수
+        final int totalCakeCount = cakeFacade.countAllDesignsLikedByUser(userId);
 
         ///커서 업데이트
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
