@@ -87,6 +87,16 @@ public class CakeRetriever {
         return cakeRepository.findCakesByCategoryAndTheme(dayCategory, theme, userId, cakeIdCursor, limit);
     }
 
+    //디자인 둘러보기 조회(인기순)
+    public List<CakeInfoDto> findPopularCakesByCategoryAndTheme(final DayCategory dayCategory,
+                                                                final ThemeName themeName,
+                                                                final Long userId,
+                                                                final Long cakeIdCursor,
+                                                                final Integer cakeLikesCursor,
+                                                                final int size) {
+        return cakeRepository.findPopularCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, cakeLikesCursor, size);
+    }
+
     //카테고리, 테마에 해당하는 케이크 개수
     public int countCakesByCategoryAndTheme(final DayCategory dayCategory, final ThemeName theme) {
         return cakeRepository.countCakesByCategoryAndTheme(dayCategory, theme);
