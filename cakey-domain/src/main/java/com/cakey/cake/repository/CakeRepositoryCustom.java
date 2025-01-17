@@ -46,4 +46,16 @@ public interface CakeRepositoryCustom {
                                                             final Long userId,
                                                             final Long cakeId);
 
+    //디자인 둘러보기 조회(최신순)
+    List<CakeInfoDto> findCakesByCategoryAndTheme(final DayCategory dayCategory,
+                                                  final ThemeName theme,
+                                                  final Long userId,
+                                                  final Long cakeIdCursor,
+                                                  final int limit);
+
+    //카테고리, 테마의 케이크 개수
+    int countCakesByCategoryAndTheme(final DayCategory dayCategory,
+                                     final ThemeName theme);
+
+
 }
