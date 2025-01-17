@@ -21,4 +21,8 @@ public class CakeLikesRetriever {
     public int countByUserId(final Long userId) {
         return cakeLikesRepository.countByUserId(userId);
     }
+
+    public CakeLikes findCakeLikesByCakeIdAndUserId(final Long cakeId, final Long userId) {
+        return cakeLikesRepository.findByCakeIdAndUserId(cakeId, userId);
+    }
 }

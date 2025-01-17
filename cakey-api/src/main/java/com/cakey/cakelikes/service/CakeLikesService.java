@@ -6,6 +6,7 @@ import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.domain.CakeLikes;
 import com.cakey.cakelike.facade.CakeLikesFacade;
+import com.cakey.cakelike.facade.CakeLikesRemover;
 import com.cakey.cakelike.facade.CakeLikesRetriever;
 import com.cakey.cakelikes.dto.CakeLikedLatestRes;
 import com.cakey.cakelikes.dto.CakeLikedPopularRes;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class CakeLikesService {
 
     private final CakeFacade cakeFacade;
     private final CakeLikesFacade cakeLikesFacade;
+    private final CakeLikesRemover cakeLikesRemover;
 
     //찜한 디자인(케이크) 조회(최신순)
     public CakeLikedLatestRes getLatestCakeLikedByUser(final long userId,
@@ -93,6 +96,7 @@ public class CakeLikesService {
     }
 
 
+
     @Transactional
     public void postCakeLike(final long cakeId, final long userId) {
         Cake cake = cakeFacade.findById(cakeId);
@@ -105,5 +109,13 @@ public class CakeLikesService {
         }
     }
 
+
+
+    //케이크 좋아요 취소
+    @Transactional
+    public void deleteCakeLikes(final long cakeId, final long userId) {
+        CakeLikes cakeLikes = cakeLikesFacade.getCakeLikesByCakeIdAndUserId(cakeId, userId);
+        cakeLikesFacade.removeCakeLikes(cakeLikes);
+    }
 
 }

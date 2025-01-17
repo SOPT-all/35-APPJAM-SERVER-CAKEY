@@ -1,6 +1,5 @@
 package com.cakey.cakelikes.controller;
 
-import com.cakey.cakelike.domain.CakeLikes;
 import com.cakey.cakelikes.service.CakeLikesService;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/cake/like")
+@RequestMapping("/api/v1/cake/likes")
 public class CakeLikesController {
 
     private final CakeLikesService cakeLikesService;
@@ -45,6 +44,14 @@ public class CakeLikesController {
             @RequestHeader final Long userId
     ) {
         cakeLikesService.postCakeLike(cakeId, userId);
+    }
+    //케이크 좋아요 취소
+    @DeleteMapping("/{cakeId}")
+    public ResponseEntity<BaseResponse<?>> deleteCakeLikes(
+            @PathVariable(value = "cakeId") final long cakeId,
+            @RequestHeader final long userId
+    ) {
+        cakeLikesService.deleteCakeLikes(cakeId, userId);
         return ApiResponseUtil.success(SuccessCode.OK);
     }
 }
