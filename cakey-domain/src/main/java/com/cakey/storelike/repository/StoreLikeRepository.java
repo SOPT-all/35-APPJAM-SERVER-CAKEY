@@ -10,4 +10,5 @@ public interface StoreLikeRepository extends JpaRepository<StoreLike, Long> {
     int countByUserId(final long userId);
 
     int countByStoreId(final long storeId);
+
 }

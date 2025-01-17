@@ -14,7 +14,7 @@ public class CakeLikesRetriever {
         return cakeLikesRepository.existsByCakeIdAndUserId(cakeId, userId);
     }
 
-    public void saveCakeLikes(CakeLikes cakeLikes) {
+    public void saveCakeLikes(final CakeLikes cakeLikes) {
         cakeLikesRepository.save(cakeLikes);
     }
 
