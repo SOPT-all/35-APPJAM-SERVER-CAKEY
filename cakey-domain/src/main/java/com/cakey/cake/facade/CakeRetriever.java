@@ -1,12 +1,16 @@
 package com.cakey.cake.facade;
 
 import com.cakey.cake.domain.Cake;
+import com.cakey.cake.domain.DayCategory;
 import com.cakey.cake.dto.CakeByPopularityDto;
 import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakeMainImageDto;
+import com.cakey.cake.dto.CakeSelectedInfoDto;
 import com.cakey.cake.repository.CakeRepository;
+import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
+import com.cakey.store.dto.StoreBySelectedCakeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -58,11 +62,22 @@ public class CakeRetriever {
     }
 
     //찜한 디자인(케이크) 조회(인기순)
-    List<CakeInfoDto> findPopularLikedCakesByUser(final long userId,
+    public List<CakeInfoDto> findPopularLikedCakesByUser(final long userId,
                                                   final Long cakeIdCursor,
                                                   final Integer cakeLikesCursor,
                                                   final int size) {
         return cakeRepository.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
     }
+
+    //같은 스토어, 카테고리, 테마 케이크 조회
+    public List<CakeSelectedInfoDto> findCakesByStoreAndConditions(final Long storeId,
+                                                                   final DayCategory dayCategory,
+                                                                   final ThemeName theme,
+                                                                   final Long userId,
+                                                                   final Long cakeId) {
+        return cakeRepository.findCakesByStoreAndConditions(storeId, dayCategory, theme, userId, cakeId);
+    }
+
+
 
 }

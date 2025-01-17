@@ -4,7 +4,6 @@ import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
 
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -99,6 +98,11 @@ public class StoreFacade {
     public StoreDetailInfoDto findStoreDetailInfo(final Long storeId) {
         Store store = storeRetriever.findById(storeId);
         return new StoreDetailInfoDto(store.getAddress(), store.getPhone());
+    }
+
+    //선택된 케이크의 스토어 정보 조회
+    public StoreBySelectedCakeDto findStoreBySelectedCakeId(final Long cakeId) {
+        return storeRetriever.findStoreBySelectedCakeId(cakeId);
     }
 
     public List<StoreByPopularityDto> findStoreListByLank() {

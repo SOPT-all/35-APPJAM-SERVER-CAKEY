@@ -1,13 +1,18 @@
 package com.cakey.cake.repository;
 
+import com.cakey.cake.domain.DayCategory;
 import com.cakey.cake.domain.QCake;
-import com.cakey.cake.dto.CakeInfoDto;
-import com.cakey.cake.dto.CakeMainImageDto;
-import com.cakey.cake.dto.QCakeInfoDto;
+import com.cakey.cake.dto.*;
 import com.cakey.cakelike.domain.QCakeLikes;
+import com.cakey.caketheme.domain.QCakeTheme;
+import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.QStore;
 import com.cakey.store.domain.Station;
+import com.cakey.store.dto.QStoreBySelectedCakeDto;
+import com.cakey.store.dto.QStoreInfoDto;
+import com.cakey.store.dto.StoreBySelectedCakeDto;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -18,14 +23,20 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Expr;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     QCake cake = QCake.cake;
     QStore store = QStore.store;
@@ -396,6 +407,80 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     }
 
 
+
+    //같은 store의 daycategory, theme 케이크들 조회
+    @Override
+    public List<CakeSelectedInfoDto> findCakesByStoreAndConditions(final Long storeId,
+                                                                   final DayCategory dayCategory,
+                                                                   final ThemeName theme,
+                                                                   final Long userId,
+                                                                   final Long cakeId) {
+        QCake cake = QCake.cake;
+        QCakeTheme cakeTheme = QCakeTheme.cakeTheme;
+
+        // 1. 첫 번째 케이크: 들어온 cakeId 정보 가져오기
+        CakeSelectedInfoDto mainCake = queryFactory.select(new QCakeSelectedInfoDto(
+                        cake.id,
+                        isLikedByUser(cake.id, userId), // 좋아요 여부 확인
+                        cake.imageUrl
+                ))
+                .from(cake)
+                .where(cake.id.eq(cakeId))
+                .fetchOne();
+
+        if (mainCake == null) {
+            throw new IllegalArgumentException("Cake with ID " + cakeId + " not found");
+        }
+
+        // 2. 나머지 케이크 조건 생성 (theme이 ALL일 경우 theme 조건 제외)
+        BooleanBuilder whereCondition = new BooleanBuilder()
+                .and(cake.storeId.eq(storeId))
+                .and(cake.dayCategory.eq(dayCategory))
+                .and(cake.id.ne(cakeId)); // 첫 번째 케이크 제외
+
+        if (!ThemeName.ALL.equals(theme)) {
+            whereCondition.and(cakeTheme.themeName.eq(theme));
+        }
+
+        // 3. 나머지 케이크 가져오기
+        List<CakeSelectedInfoDto> otherCakes = queryFactory.select(new QCakeSelectedInfoDto(
+                        cake.id,
+                        isLikedByUser(cake.id, userId), // 좋아요 여부 확인
+                        cake.imageUrl
+                ))
+                .from(cake)
+                .join(cakeTheme).on(cake.id.eq(cakeTheme.cakeId))
+                .where(whereCondition)
+                .limit(9) // 첫 번째 케이크를 제외하고 최대 9개
+                .distinct()
+                .fetch();
+
+        // 4. 결과 리스트 생성: 첫 번째 케이크 + 나머지 케이크
+        List<CakeSelectedInfoDto> cakes = new ArrayList<>();
+        cakes.add(mainCake); // 첫 번째 케이크 추가
+        cakes.addAll(otherCakes); // 나머지 케이크 추가
+        return cakes;
+
+
+    }
+
+    private BooleanExpression isLikedByUser(NumberExpression<Long> cakeId, Long userId) {
+        QCakeLikes cakeLikes = QCakeLikes.cakeLikes;
+
+        if (userId == null) {
+            return Expressions.asBoolean(false); // 항상 false 반환
+        }
+
+        // 좋아요 여부 조건 생성
+        return new JPAQueryFactory(entityManager) // 서브쿼리 작성
+                .selectOne()
+                .from(cakeLikes)
+                .where(cakeLikes.cakeId.eq(cakeId)
+                        .and(cakeLikes.userId.eq(userId)))
+                .exists();
+    }
+
+
     // 좋아요 개수를 계산하는 서브쿼리
     private JPQLQuery<Integer> getCakeLikesCountSubQuery() {
         return JPAExpressions
@@ -415,6 +500,9 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             return Expressions.asBoolean(false);
         }
     }
+
+
+
 
     private BooleanExpression isLikedExpression(final Long userId, final NumberPath<Long> cakeIdPath) {
         if (userId != null) {

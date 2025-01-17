@@ -349,6 +349,22 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .fetch();
     }
 
+    //선택된 케이크의 스토어 정보 조회
+    @Override
+    public StoreBySelectedCakeDto findStoreBySelectedCakeId(final Long cakeId) {
+        QCake cake = QCake.cake;
+        QStore store = QStore.store;
+        return queryFactory.select(new QStoreBySelectedCakeDto(
+                        store.id,
+                        store.name,
+                        store.station
+                ))
+                .from(cake)
+                .join(store).on(cake.storeId.eq(store.id))
+                .where(cake.id.eq(cakeId))
+                .fetchOne();
+    }
+
     //좋아요 여부 서브쿼리
     private BooleanExpression isLikedExpression(final Long userId) {
         if (userId != null) {

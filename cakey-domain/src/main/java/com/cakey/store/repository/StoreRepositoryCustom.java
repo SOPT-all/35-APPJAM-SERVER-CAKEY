@@ -1,6 +1,7 @@
 package com.cakey.store.repository;
 
 import com.cakey.store.domain.Station;
+import com.cakey.store.dto.StoreBySelectedCakeDto;
 import com.cakey.store.dto.StoreCoordinatesDto;
 import com.cakey.store.dto.StoreInfoDto;
 
@@ -35,4 +36,7 @@ public interface StoreRepositoryCustom {
 
     //찜한 스토어 좌표 조회
     List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId);
+
+    //선택한 케이크의 스토어 조회
+    StoreBySelectedCakeDto findStoreBySelectedCakeId(final Long cakeId);
 }

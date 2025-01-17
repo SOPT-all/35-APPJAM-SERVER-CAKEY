@@ -1,20 +1,22 @@
 package com.cakey.cake.service;
 
 import com.cakey.cake.domain.Cake;
-import com.cakey.cake.dto.CakeByPopularityDto;
-import com.cakey.cake.dto.CakeInfo;
-import com.cakey.cake.dto.CakeInfoDto;
-import com.cakey.cake.dto.CakeListByPopularityRes;
-import com.cakey.cake.dto.CakesLatestByStationStoreRes;
-import com.cakey.cake.dto.CakesPopularByStationStoreRes;
+import com.cakey.cake.domain.DayCategory;
+import com.cakey.cake.dto.*;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.domain.CakeLikes;
 import com.cakey.cakelike.facade.CakeLikesFacade;
+import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.common.exception.NotFoundException;
 import com.cakey.store.domain.Station;
+import com.cakey.store.dto.StoreBySelectedCakeDto;
+import com.cakey.store.dto.StoreInfoDto;
+import com.cakey.store.facade.StoreFacade;
+import com.cakey.store.service.StoreService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.context.Theme;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 public class CakeService {
     private final CakeFacade cakeFacade;
     private final CakeLikesFacade cakeLikesFacade;
+    private final StoreService storeService;
+    private final StoreFacade storeFacade;
 
     //해당역 스토어의 케이크들 조회(최신순)
     public CakesLatestByStationStoreRes getLatestCakesByStationStore(final Long userId,
@@ -112,5 +116,39 @@ public class CakeService {
             //todo: 추후 구체적인 예외 처리
             throw new RuntimeException("Cake like already exists");
         }
+    }
+
+    //선택한 디자인(케이크) 조회
+    public CakeSelectedRes getSelectedCakes(final Long cakeId,
+                                           final DayCategory dayCategory,
+                                           final ThemeName theme,
+                                           final  Long userId) {
+
+        ///스토어 정보 조회
+        final StoreBySelectedCakeDto storeInfoDto = storeFacade.findStoreBySelectedCakeId(cakeId);
+
+        ///케이크 정보 조회
+        final List<CakeSelectedInfoDto> cakeSelectedInfoDtos = cakeFacade.findCakesByStoreAndConditions(
+                storeInfoDto.getStoreId(),
+                dayCategory,
+                theme,
+                userId,
+                cakeId
+        );
+
+        final List<CakeSelectedInfo> cakeSelectedInfoList = cakeSelectedInfoDtos.stream()
+                .map(cake -> CakeSelectedInfo.of(
+                        cake.cakeId(),
+                        cake.isLiked(),
+                        cake.imageUrl()
+                ))
+                .toList();
+
+        return CakeSelectedRes.of(
+                storeInfoDto.getStoreId(),
+                storeInfoDto.getStoreName(),
+                storeInfoDto.getStation(),
+                cakeSelectedInfoList
+        );
     }
 }
