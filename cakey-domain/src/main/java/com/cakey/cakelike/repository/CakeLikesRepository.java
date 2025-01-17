@@ -8,4 +8,6 @@ public interface CakeLikesRepository extends JpaRepository<CakeLikes, Long> {
 
     int countByUserId(final Long userId);
 
+    CakeLikes findByCakeIdAndUserId(final Long cakeId, final Long userId);
+
 }
