@@ -63,9 +63,9 @@ public class CakeRetriever {
 
     //찜한 디자인(케이크) 조회(인기순)
     public List<CakeInfoDto> findPopularLikedCakesByUser(final long userId,
-                                                  final Long cakeIdCursor,
-                                                  final Integer cakeLikesCursor,
-                                                  final int size) {
+                                                         final Long cakeIdCursor,
+                                                         final Integer cakeLikesCursor,
+                                                         final int size) {
         return cakeRepository.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
     }
 
@@ -97,11 +97,24 @@ public class CakeRetriever {
         return cakeRepository.findPopularCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, cakeLikesCursor, size);
     }
 
+    //찜한 스토어들 디자인 조회(인기순)
+    public List<CakeInfoDto> findPopularCakesLikedByUser(final long userId,
+                                                         final Long cakeIdCursor,
+                                                         final Integer cakeLikesCursor,
+                                                         final int size) {
+        return cakeRepository.findPopularCakesLikedByUser(userId, cakeIdCursor, cakeLikesCursor, size);
+    }
+
     //카테고리, 테마에 해당하는 케이크 개수
     public int countCakesByCategoryAndTheme(final DayCategory dayCategory, final ThemeName theme) {
         return cakeRepository.countCakesByCategoryAndTheme(dayCategory, theme);
     }
 
-
-
+    //찜한 모든 스토어 모든 디자인 개수
+    public int countAllDesignsLikedByUser(final Long userId) {
+        return cakeRepository.countAllDesignsLikedByUser(userId);
     }
+
+
+
+}

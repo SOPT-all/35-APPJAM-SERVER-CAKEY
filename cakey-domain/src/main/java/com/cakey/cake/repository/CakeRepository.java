@@ -25,5 +25,9 @@ public interface CakeRepository extends JpaRepository<Cake, Long>, CakeRepositor
             "JOIN Store s ON c.storeId = s.id " +
             "GROUP BY c.id, c.storeId, c.imageUrl, s.name, s.station " +
             "ORDER BY COUNT(cl.id) DESC, c.id ASC LIMIT 10")
-    List<CakeByPopularityDto> findCakesByRank(@Param("userId") Long userId);
+    List<CakeByPopularityDto> findCakesByRank(@Param("userId") final Long userId);
+
+    //찜한 스토어들의 전체 디자인 개수
+    @Query("SELECT COUNT(c) FROM Cake c JOIN StoreLike sl ON c.storeId = sl.storeId WHERE sl.userId = :userId")
+    int countAllDesignsLikedByUser(@Param("userId") final Long userId);
 }
