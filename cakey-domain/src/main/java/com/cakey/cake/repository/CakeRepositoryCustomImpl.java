@@ -731,6 +731,70 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         return results;
     }
 
+    //찜한 스토어들 디자인 조회(최신순)
+    @Override
+    public List<CakeInfoDto> findCakesLikedByUser(final long userId,
+                                                  final Long cakeIdCursor,
+                                                  final int size) {
+        QCake cake = QCake.cake;
+        QStore store = QStore.store;
+        QStoreLike storeLikes = QStoreLike.storeLike;
+        QCakeLikes cakeLikes = QCakeLikes.cakeLikes;
+
+        /// 좋아요 개수 서브쿼리
+        final JPQLQuery<Integer> likeCountSubQuery = JPAExpressions
+                .select(cakeLikes.count().intValue())
+                .from(cakeLikes)
+                .where(cakeLikes.cakeId.eq(cake.id));
+
+        /// 케이크 ID 커서 조건
+        final BooleanExpression cakeIdCursorCondition = (cakeIdCursor != null && cakeIdCursor > 0)
+                ? cake.id.lt(cakeIdCursor) // cakeId가 커서보다 작은 경우만
+                : null;
+
+        /// 메인 쿼리 작성
+        JPQLQuery<CakeInfoDto> query = queryFactory.selectDistinct(
+                        new QCakeInfoDto(
+                                cake.id,
+                                store.id,
+                                store.name,
+                                store.station,
+                                getIsLikedExpression(userId), // isLiked 조건
+                                cake.imageUrl,
+                                likeCountSubQuery, // 좋아요 개수
+                                cake.id, // 현재 케이크 ID를 반환
+                                Expressions.asBoolean(false) // 기본적으로 isLastData는 false로 설정
+                        )
+                )
+                .from(cake)
+                .join(store).on(cake.storeId.eq(store.id))
+                .join(storeLikes).on(store.id.eq(storeLikes.storeId).and(storeLikes.userId.eq(userId))); // 유저가 좋아요한 스토어만
+
+        /// 커서 조건 추가
+        if (cakeIdCursorCondition != null) {
+            query.where(cakeIdCursorCondition);
+        }
+
+        /// 정렬 조건 추가 (최신순)
+        query.orderBy(cake.id.desc());
+
+        /// 페이징 처리
+        query.limit(size + 1); // limit + 1로 추가 데이터 확인
+        List<CakeInfoDto> results = query.fetch();
+
+        /// 결과 페이징 처리
+        if (results.size() > size) {
+            CakeInfoDto lastItem = results.get(size - 1);
+            lastItem.setLastData(false); // 추가 데이터가 있으므로 isLastData = false 설정
+            results = results.subList(0, size); // limit 수만큼 자르기
+        } else if (!results.isEmpty()) {
+            results.get(results.size() - 1).setLastData(true); // 마지막 데이터로 설정
+        }
+
+        return results;
+    }
+
+
 
 
     //카테고리, 테마에 해당하는 케이크 개수

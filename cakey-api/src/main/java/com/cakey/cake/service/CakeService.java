@@ -41,6 +41,8 @@ public class CakeService {
         ///마지막 데이터 여부
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
         final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
+        final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+
 
         final List<CakeInfo> cakes = cakeInfoDtos.stream()
                 .map(cakeInfoDto -> CakeInfo.of(
@@ -54,12 +56,7 @@ public class CakeService {
                 ))
                 .collect(Collectors.toList());
 
-        //커서값
-        final Long nextCursor = cakeInfoDtos.isEmpty()
-                ? -1
-                : cakeInfoDtos.get(cakes.size() - 1).getCakeId();
-
-        return CakesLatestListRes.from(nextCursor, cakeCountByStation, isLastData, cakes);
+        return CakesLatestListRes.from(nextCakeIdCursor, cakeCountByStation, isLastData, cakes);
     }
 
     //해당역 디자인(케이크) 조회(인기순)
@@ -165,6 +162,8 @@ public class CakeService {
         ///마지막 데이터 여부
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
         final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
+        final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+
 
         final List<CakeInfo> cakes = cakeInfoDtos.stream()
                 .map(cakeInfoDto -> CakeInfo.of(
@@ -178,12 +177,7 @@ public class CakeService {
                 ))
                 .collect(Collectors.toList());
 
-        //커서값
-        final Long nextCursor = cakeInfoDtos.isEmpty()
-                ? -1
-                : cakeInfoDtos.get(cakes.size() - 1).getCakeId();
-
-        return CakesLatestListRes.from(nextCursor, totalCakeCount, isLastData, cakes);
+        return CakesLatestListRes.from(nextCakeIdCursor, totalCakeCount, isLastData, cakes);
     }
 
     //디자인 둘러보기 조회(인기순)
@@ -219,6 +213,37 @@ public class CakeService {
                 .toList();
 
         return CakesPopularListRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
+    }
+
+    //찜한 스토어들 디자인 조회(최신순)
+    public CakesLatestListRes getLatestCakeByStoreLiked(final long userId,
+                                                  final Long cakeIdCursor,
+                                                  final int size) {
+
+        ///페이지네이션
+        final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findCakesLikedByUser(userId, cakeIdCursor, size);
+
+        ///전체 케이크 개수
+        final int totalCakeCount = cakeFacade.countAllDesignsLikedByUser(userId);
+
+        ///커서 업데이트
+        final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
+        final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
+        final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
+
+        final List<CakeInfo> cakes = cakeInfoDtos.stream()
+                .map(cakeInfoDto -> CakeInfo.of(
+                        cakeInfoDto.getCakeId(),
+                        cakeInfoDto.getStoreId(),
+                        cakeInfoDto.getStoreName(),
+                        cakeInfoDto.getStation(),
+                        cakeInfoDto.isLiked(),
+                        cakeInfoDto.getImageUrl(),
+                        cakeInfoDto.getCakeLikeCount()
+                ))
+                .collect(Collectors.toList());
+
+        return CakesLatestListRes.from(nextCakeIdCursor, totalCakeCount, isLastData, cakes);
     }
 
     //찜한 스토어들 디자인 조회(인기순)

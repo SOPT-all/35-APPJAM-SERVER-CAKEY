@@ -103,6 +103,19 @@ public class CakeController {
         );
     }
 
+    //찜한 스토어의 디자인 조회(최신순)
+    @GetMapping("/store-liked/latest")
+    public ResponseEntity<BaseResponse<?>> getLatestCakesByLikedStore(
+            @RequestHeader(value = "Authorization", required = true) final long userId,
+            @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
+            @RequestParam(value = "size", required = false, defaultValue = "10") final int size
+    ) {
+        return ApiResponseUtil.success(
+                SuccessCode.OK,
+                cakeService.getLatestCakeByStoreLiked(userId, cakeIdCursor, size)
+        );
+    }
+
     //찜한 스토어의 디자인 조회(인기순)
     @GetMapping("/store-liked/popularity")
     public ResponseEntity<BaseResponse<?>> getPopularCakesByLikedStore(
