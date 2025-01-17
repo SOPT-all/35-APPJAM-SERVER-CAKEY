@@ -26,7 +26,8 @@ public class CakeController {
         @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
         @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
-       return ApiResponseUtil.success(SuccessCode.OK, cakeService.getLatestCakesByStationStore(userId, station, cakeIdCursor, size));
+       return ApiResponseUtil.success(SuccessCode.OK,
+               cakeService.getLatestCakesByStationStore(userId, station, cakeIdCursor, size));
     }
 
     //해당역 스토어들의 디자인 조회(인기순)
@@ -38,12 +39,14 @@ public class CakeController {
             @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
-        return ApiResponseUtil.success(SuccessCode.OK, cakeService.getPopularCakesByStationStore(userId, station, cakeLikesCursor,cakeIdCursor, size));
+        return ApiResponseUtil.success(SuccessCode.OK,
+                cakeService.getPopularCakesByStationStore(userId, station, cakeLikesCursor,cakeIdCursor, size));
     }
 
     @GetMapping("/Rank")
     public ResponseEntity<BaseResponse<?>> getRankCakesByStationStore(@RequestHeader(required = false) final Long userId) {
-        return ApiResponseUtil.success(SuccessCode.OK, cakeService.getCakeByRank(userId));
+        return ApiResponseUtil.success(SuccessCode.OK,
+                cakeService.getCakeByRank(userId));
     }
 
     @PostMapping("/likes/{cakeId}")
@@ -64,7 +67,8 @@ public class CakeController {
             @RequestParam(value = "theme") final ThemeName themeName
             ) {
         return ApiResponseUtil.success(
-                SuccessCode.OK, cakeService.getSelectedCakes(cakeId, dayCategory, themeName, userId)
+                SuccessCode.OK,
+                cakeService.getSelectedCakes(cakeId, dayCategory, themeName, userId)
         );
     }
 
@@ -78,7 +82,24 @@ public class CakeController {
             @RequestParam(value = "size", required = false, defaultValue = "10") final int size
             ) {
         return ApiResponseUtil.success(
-                SuccessCode.OK, cakeService.findCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, size)
+                SuccessCode.OK,
+                cakeService.findCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, size)
+        );
+    }
+
+    //디자인 둘러보기(인기순)
+    @GetMapping("/popularity")
+    public ResponseEntity<BaseResponse<?>> getPopularCakes(
+            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @RequestParam(value = "dayCategory") final DayCategory dayCategory,
+            @RequestParam(value = "themeName") final ThemeName themeName,
+            @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
+            @RequestParam(value = "cakeLikesCursor", required = false) final Integer cakeLikesCursor,
+            @RequestParam(value = "size", required = false, defaultValue = "10") final int size
+    ) {
+        return ApiResponseUtil.success(
+                SuccessCode.OK,
+                cakeService.getPopularCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, cakeLikesCursor, size)
         );
     }
 
