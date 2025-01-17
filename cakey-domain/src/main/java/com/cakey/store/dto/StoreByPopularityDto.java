@@ -7,14 +7,14 @@ import lombok.Builder;
 public record StoreByPopularityDto(
         Long storeId,
         String storeName,
-        Long storeLike,
+        Long storeLikesCount,
         Station station
 ) {
-    public StoreByPopularityDto of(final Long storeId, final String storeName, final Long storeLike, final Station station) {
+    public StoreByPopularityDto of(final Long storeId, final String storeName, final Long storeLikesCount, final Station station) {
         return StoreByPopularityDto.builder()
                 .storeId(storeId)
                 .storeName(storeName)
-                .storeLike(storeLike)
+                .storeLikesCount(storeLikesCount)
                 .station(station)
                 .build();
     }

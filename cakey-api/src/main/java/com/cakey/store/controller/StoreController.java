@@ -97,8 +97,8 @@ public class StoreController {
     }
 
     @GetMapping("/rank")
-    public ResponseEntity<BaseResponse<?>> getStoreByLank(){
-        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreByLank());
+    public ResponseEntity<BaseResponse<?>> getStoreByRank(){
+        return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreByRank());
     }
 
     @GetMapping("/{storeId}/select/coordinate")
