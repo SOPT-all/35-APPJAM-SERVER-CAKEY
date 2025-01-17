@@ -59,4 +59,14 @@ public class StoreLikesController {
         return ApiResponseUtil.success(SuccessCode.CREATED);
     }
 
+    //스토어 찜하기 취소
+    @DeleteMapping("/{storeId}")
+    public ResponseEntity<BaseResponse<?>> deleteStoreLikes(
+            @RequestHeader(value = "Authorization") final long userId,
+            @PathVariable(value = "storeId") final long storeId
+    ) {
+        storeLikesService.deleteStoreLikes(userId, storeId);
+        return ApiResponseUtil.success(SuccessCode.OK);
+    }
+
 }
