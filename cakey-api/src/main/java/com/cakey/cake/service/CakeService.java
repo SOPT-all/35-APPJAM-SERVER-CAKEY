@@ -117,7 +117,7 @@ public class CakeService {
     public CakeSelectedRes getSelectedCakes(final Long cakeId,
                                             final DayCategory dayCategory,
                                             final ThemeName theme,
-                                            final  Long userId) {
+                                            final Long userId) {
 
         ///스토어 정보 조회
         final StoreBySelectedCakeDto storeInfoDto = storeFacade.findStoreBySelectedCakeId(cakeId);

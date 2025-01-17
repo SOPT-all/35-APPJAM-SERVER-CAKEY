@@ -7,7 +7,7 @@ public record CakeByPopularityDto(
         Long storeId,
         String imageUrl,
         String storeName,
-        Long cakeLike,
+        Long cakeLikesCount,
         Station station,
         boolean isLiked
 ) {
@@ -15,10 +15,10 @@ public record CakeByPopularityDto(
                                            final Long storeId,
                                            final String imageUrl,
                                            final String storeName,
-                                           final Long cakeLike,
+                                           final Long cakeLikesCount,
                                            final Station station,
                                            final boolean isLiked
                                            ) {
-        return new CakeByPopularityDto(cakeId, storeId, imageUrl, storeName, cakeLike, station, isLiked);
+        return new CakeByPopularityDto(cakeId, storeId, imageUrl, storeName, cakeLikesCount, station, isLiked);
     }
 }

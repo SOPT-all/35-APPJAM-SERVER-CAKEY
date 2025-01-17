@@ -12,7 +12,7 @@ public record CakeInfo(
         Station station,
         boolean isLiked,
         String imageUrl,
-        int cakeLikeCount
+        int cakeLikesCount
 ) {
     public static CakeInfo of(final long cakeId,
                               final long storeId,
@@ -20,7 +20,7 @@ public record CakeInfo(
                               final Station station,
                               final boolean isLiked,
                               final String imageUrl,
-                              final int cakeLikeCount
+                              final int cakeLikesCount
     ) {
         return CakeInfo.builder()
                 .cakeId(cakeId)
@@ -29,7 +29,7 @@ public record CakeInfo(
                 .station(station)
                 .isLiked(isLiked)
                 .imageUrl(imageUrl)
-                .cakeLikeCount(cakeLikeCount)
+                .cakeLikesCount(cakeLikesCount)
                 .build();
     }
 }
