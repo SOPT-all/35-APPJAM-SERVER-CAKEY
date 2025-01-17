@@ -140,4 +140,9 @@ public class StoreLikesService {
     public void postStoreLikes(final long userId, final long storeId) {
         storeLikeFacade.saveStoreLikes(userId, storeId);
     }
+
+    //스토어 좋아요 취소
+    public void deleteStoreLikes(final long userId, final long storeId) {
+        storeLikeFacade.deleteStoreLikes(userId, storeId);
+    }
 }
