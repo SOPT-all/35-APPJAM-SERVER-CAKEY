@@ -108,6 +108,13 @@ public class CakeFacade {
         return cakeRetriever.findPopularCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, cakeLikesCursor, size);
     }
 
+    //찜한 스토어들 디자인 조회(최신순)
+    public List<CakeInfoDto> findCakesLikedByUser(final long userId,
+                                                  final Long cakeIdCursor,
+                                                  final int size) {
+        return cakeRetriever.findCakesLikedByUser(userId, cakeIdCursor, size);
+    }
+
     //찜한 스토어들 디자인 조회(인기순)
     public List<CakeInfoDto> findPopularCakesLikedByUser(final long userId,
                                                          final Long cakeIdCursor,
