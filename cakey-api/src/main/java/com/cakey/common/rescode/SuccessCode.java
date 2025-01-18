@@ -1,6 +1,5 @@
-package com.cakey.common.response;
+package com.cakey.common.rescode;
 
-import com.cakey.common.rescode.ApiCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

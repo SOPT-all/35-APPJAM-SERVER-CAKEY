@@ -104,6 +104,15 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 400 - IllegalArgumentException
+     * 발생 이유: 잘못된 인자값이 전달되었을 때 발생
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<BaseResponse<?>> handleException(IllegalArgumentException e) {
+        return ApiResponseUtil.failure(ErrorCode.BAD_REQUEST, e.getCause().getMessage());
+    }
+
+    /**
      * 404 - EntityNotFoundException
      * 발생 이유 :  리소스를 찾을 수 없음
      */
