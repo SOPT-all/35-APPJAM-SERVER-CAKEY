@@ -234,4 +234,19 @@ public class StoreService {
         Store store = storeFacade.findStoreById(storeId);
         return StoreSelectedCoordinateRes.of(storeId, store.getLatitude(), store.getLongitude());
     }
+
+    //선택된 스토어 조회
+    public StoreSelectedRes getStoreSelected(final long storeId, final Long userId) {
+        final StoreSelectedDto storeSelectedDto = storeFacade.findStoreInfoById(storeId, userId);
+
+        return StoreSelectedRes.of(
+                storeSelectedDto.storeId(),
+                storeSelectedDto.storeName(),
+                storeSelectedDto.address(),
+                storeSelectedDto.station(),
+                storeSelectedDto.isLiked(),
+                storeSelectedDto.imageUrl(),
+                storeSelectedDto.storeLikesCount()
+        );
+    }
 }

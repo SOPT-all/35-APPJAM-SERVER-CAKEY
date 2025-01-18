@@ -351,7 +351,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
     //선택된 케이크의 스토어 정보 조회
     @Override
-    public StoreBySelectedCakeDto findStoreBySelectedCakeId(final Long cakeId) {
+    public StoreBySelectedCakeDto findStoreBySelectedCakeId(final long cakeId) {
         QCake cake = QCake.cake;
         QStore store = QStore.store;
         return queryFactory.select(new QStoreBySelectedCakeDto(
@@ -363,6 +363,58 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .join(store).on(cake.storeId.eq(store.id))
                 .where(cake.id.eq(cakeId))
                 .fetchOne();
+    }
+
+    //선택한 스토어 조회
+    @Override
+    public StoreSelectedDto findStoreInfoById(final long storeId, final Long userId) {
+        QStore store = QStore.store;
+        QStoreLike storeLike = QStoreLike.storeLike;
+        QCake cake = QCake.cake;
+
+        /// 스토어 좋아요 개수 서브쿼리
+        Expression<Integer> storeLikesCount = queryFactory
+                .select(storeLike.count().intValue())
+                .from(storeLike)
+                .where(storeLike.storeId.eq(storeId));
+
+        /// 메인 케이크 이미지 URL 가져오기
+        String fetchedImageUrl = queryFactory
+                .select(cake.imageUrl)
+                .from(cake)
+                .where(cake.storeId.eq(storeId).and(cake.isMainImage.isTrue()))
+                .orderBy(cake.id.desc())
+                .fetchFirst();
+
+        Expression<String> mainImageUrl = fetchedImageUrl != null
+                ? Expressions.constant(fetchedImageUrl)
+                : Expressions.nullExpression(String.class);
+
+        /// 메인 쿼리
+        return queryFactory.select(new QStoreSelectedDto(
+                        store.id,
+                        store.name,
+                        store.address,
+                        store.station,
+                        getIsLikedExpression(userId),
+                        mainImageUrl,
+                        storeLikesCount != null ? storeLikesCount : Expressions.asNumber(0)
+                ))
+                .from(store)
+                .where(store.id.eq(storeId))
+                .fetchOne();
+    }
+
+    // 유저의 케이크 좋아요 여부 서브쿼리
+    private BooleanExpression getIsLikedExpression(final Long userId) {
+        if (userId != null) {
+            return JPAExpressions.selectOne()
+                    .from(storeLike)
+                    .where(storeLike.storeId.eq(store.id).and(storeLike.userId.eq(userId)))
+                    .exists();
+        } else {
+            return Expressions.asBoolean(false);
+        }
     }
 
     //좋아요 여부 서브쿼리

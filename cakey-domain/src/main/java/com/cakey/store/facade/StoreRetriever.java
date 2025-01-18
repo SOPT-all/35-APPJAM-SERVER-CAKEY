@@ -60,6 +60,11 @@ public class StoreRetriever {
         return storeRepository.findStoreBySelectedCakeId(cakeId);
     }
 
+    //선택한 스토어 조회
+    public StoreSelectedDto findStoreInfoById(long storeId, Long userId) {
+        return storeRepository.findStoreInfoById(storeId, userId);
+    }
+
 
     public int countAllStores() {
         return storeRepository.countAllStores();

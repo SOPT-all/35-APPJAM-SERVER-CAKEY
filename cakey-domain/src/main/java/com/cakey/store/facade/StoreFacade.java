@@ -105,6 +105,11 @@ public class StoreFacade {
         return storeRetriever.findStoreBySelectedCakeId(cakeId);
     }
 
+    //선택한 스토어 조회
+    public StoreSelectedDto findStoreInfoById(long storeId, Long userId) {
+        return storeRetriever.findStoreInfoById(storeId, userId);
+    }
+
     public List<StoreByPopularityDto> findStoreListByLank() {
         return storeRetriever.findStoreListByLank();
     }
