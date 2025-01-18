@@ -4,6 +4,7 @@ import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreBySelectedCakeDto;
 import com.cakey.store.dto.StoreCoordinatesDto;
 import com.cakey.store.dto.StoreInfoDto;
+import com.cakey.store.dto.StoreSelectedDto;
 
 import java.util.List;
 
@@ -38,5 +39,9 @@ public interface StoreRepositoryCustom {
     List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId);
 
     //선택한 케이크의 스토어 조회
-    StoreBySelectedCakeDto findStoreBySelectedCakeId(final Long cakeId);
+    StoreBySelectedCakeDto findStoreBySelectedCakeId(final long cakeId);
+
+    //선택한 스토어 조회
+    StoreSelectedDto findStoreInfoById(final long storeId, final Long userId);
+
 }
