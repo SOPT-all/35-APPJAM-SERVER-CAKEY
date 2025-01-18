@@ -8,9 +8,8 @@ import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.dto.CakeSelectedInfoDto;
 import com.cakey.cake.repository.CakeRepository;
 import com.cakey.caketheme.domain.ThemeName;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.Station;
-import com.cakey.store.dto.StoreBySelectedCakeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +51,7 @@ public class CakeRetriever {
 
     public Cake findById(final Long cakeId) {
         return cakeRepository.findById(cakeId)
-                .orElseThrow(() -> new NotFoundException());
+                .orElseThrow(() -> new NotFoundBaseException());
     }
     //찜한 디자인(케이크) 조회(최신순)
     public List<CakeInfoDto> findLatestLikedCakesByUser (final Long userId,

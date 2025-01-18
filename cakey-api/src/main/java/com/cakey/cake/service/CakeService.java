@@ -1,18 +1,15 @@
 package com.cakey.cake.service;
 
-import com.cakey.cake.domain.Cake;
 import com.cakey.cake.domain.DayCategory;
 import com.cakey.cake.dto.*;
 import com.cakey.cake.facade.CakeFacade;
-import com.cakey.cakelike.domain.CakeLikes;
 import com.cakey.cakelike.facade.CakeLikesFacade;
 import com.cakey.caketheme.domain.ThemeName;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreBySelectedCakeDto;
 import com.cakey.store.facade.StoreFacade;
 import com.cakey.store.service.StoreService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +66,7 @@ public class CakeService {
         final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularCakesByStation(userId, station, cakeLikesCursor, cakeIdCursor, size);
 
         if(cakeInfoDtos.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         ///커서 업데이트

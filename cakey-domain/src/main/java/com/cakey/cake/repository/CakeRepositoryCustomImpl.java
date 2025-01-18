@@ -6,16 +6,12 @@ import com.cakey.cake.dto.*;
 import com.cakey.cakelike.domain.QCakeLikes;
 import com.cakey.caketheme.domain.QCakeTheme;
 import com.cakey.caketheme.domain.ThemeName;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.QStore;
 import com.cakey.store.domain.Station;
-import com.cakey.store.dto.QStoreBySelectedCakeDto;
-import com.cakey.store.dto.QStoreInfoDto;
-import com.cakey.store.dto.StoreBySelectedCakeDto;
 import com.cakey.storelike.domain.QStoreLike;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -27,11 +23,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Expr;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
@@ -107,7 +101,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         List<CakeInfoDto> cakes = query.fetch();
 
         if(cakes.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         ///마지막 데이터
@@ -224,7 +218,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         List<CakeInfoDto> cakes = query.fetch();
 
         if(cakes.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 좋아요 수 비교 및 Cursor 설정
@@ -289,7 +283,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         List<CakeInfoDto> results = query.fetch();
 
         if(results.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         ///마지막 데이터 여부 설정
@@ -381,7 +375,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         List<CakeInfoDto> results = query.fetch();
 
         if (results.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 페이징 결과 처리
@@ -512,7 +506,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .fetch();
 
         if (cakes.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 마지막 데이터인지 확인하여 isLastData 필드 설정
@@ -609,7 +603,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
 
         /// 결과 비어있을 때 예외 처리
         if (results.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 페이징 결과 처리
@@ -709,7 +703,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
 
         /// 결과 비어있을 때 예외 처리
         if (results.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 페이징 결과 처리

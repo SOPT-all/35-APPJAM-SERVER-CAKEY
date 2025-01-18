@@ -1,6 +1,6 @@
 package com.cakey.storelike.facade;
 
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.storelike.domain.StoreLike;
 import com.cakey.storelike.repository.StoreLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class StoreLikeRetriever {
 
     public StoreLike findByUserIdAndStoreId(final long userId, final long storeId) {
         return storeLikeRepository.findByUserIdAndStoreId(userId, storeId).orElseThrow(
-                NotFoundException::new
+                NotFoundBaseException::new
         );
     }
 

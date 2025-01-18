@@ -4,7 +4,7 @@ import com.cakey.cake.domain.Cake;
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.facade.CakeLikesFacade;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.operationtime.dto.StoreOperationTimeDto;
 import com.cakey.operationtime.facade.StoreOperationTimeFacade;
 import com.cakey.size.dto.SizeDto;
@@ -159,7 +159,7 @@ public class StoreService {
         final StoreKakaoLinkDto storeKakaoLinkDto;
         try {
             storeKakaoLinkDto = storeFacade.findById(storeId);
-        } catch (NotFoundException e) {
+        } catch (NotFoundBaseException e) {
             //todo: 추후 구체적인 예외처리
             throw e;
         }
@@ -220,7 +220,7 @@ public class StoreService {
                     storeDetailInfoDto.address(),
                     storeDetailInfoDto.phone()
             );
-        } catch (NotFoundException e) {
+        } catch (NotFoundBaseException e) {
             //todo: 추후 구체적인 예외처리
             throw e;
         }

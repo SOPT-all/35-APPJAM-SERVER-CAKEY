@@ -11,7 +11,7 @@ package com.cakey.user.service;
 //import com.cakey.user.domain.User;
 //import com.cakey.user.dto.AccessTokenGetSuccess;
 //import com.cakey.user.dto.LoginSuccessRes;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.user.dto.UserInfoDto;
 import com.cakey.user.dto.UserInfoRes;
 import com.cakey.user.facade.UserFacade;
@@ -135,7 +135,7 @@ public class UserService {
         final UserInfoDto userInfoDto;
         try {
             userInfoDto = userFacade.findById(userId);
-        } catch (NotFoundException e) {
+        } catch (NotFoundBaseException e) {
             //todo: 추후 구체적인 예외처리
             throw e;
         }

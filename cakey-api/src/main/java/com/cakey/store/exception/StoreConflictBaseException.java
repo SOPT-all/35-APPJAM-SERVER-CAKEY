@@ -3,8 +3,8 @@ package com.cakey.store.exception;
 import com.cakey.common.rescode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public class StoreConflictException extends StoreApiException {
-    protected StoreConflictException(ErrorCode errorCode) {
+public class StoreConflictBaseException extends StoreApiBaseException {
+    protected StoreConflictBaseException(ErrorCode errorCode) {
         super(errorCode);
     }
 

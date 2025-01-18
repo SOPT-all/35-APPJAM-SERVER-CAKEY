@@ -1,6 +1,6 @@
 package com.cakey.store.facade;
 
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
@@ -76,7 +76,7 @@ public class StoreRetriever {
 
     public Store findById(final Long storeId) {
         return storeRepository.findById(storeId)
-                .orElseThrow(() -> new NotFoundException());
+                .orElseThrow(() -> new NotFoundBaseException());
     }
 
     public List<StoreByPopularityDto> findStoreListByLank(){

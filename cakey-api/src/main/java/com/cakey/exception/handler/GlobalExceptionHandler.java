@@ -3,7 +3,6 @@ package com.cakey.exception.handler;
 import com.cakey.common.rescode.ErrorCode;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
-import com.cakey.exception.CakeyException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;

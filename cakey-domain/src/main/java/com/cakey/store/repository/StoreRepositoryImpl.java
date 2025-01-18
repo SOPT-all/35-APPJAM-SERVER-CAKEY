@@ -1,7 +1,7 @@
 package com.cakey.store.repository;
 
 import com.cakey.cake.domain.QCake;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.QStore;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.*;
@@ -15,7 +15,6 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         .fetch();
 
         if (dtos.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         } else {
             return dtos;
         }
@@ -114,7 +113,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         ///비어있는 리스트
         if (stores.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 좋아요 수 비교 및 Cursor 설정
@@ -168,7 +167,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         .fetch();
 
         if (storeInfoDtos.isEmpty()){
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         if (storeInfoDtos.size() > size) {
@@ -216,7 +215,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .fetch();
 
         if(storeInfoDtos.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         if (storeInfoDtos.size() > size) {
@@ -311,7 +310,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         ///비어있는 리스트
         if (stores.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 좋아요 수 비교 및 Cursor 설정
