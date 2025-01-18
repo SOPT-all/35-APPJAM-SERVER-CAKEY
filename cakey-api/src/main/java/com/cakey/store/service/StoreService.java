@@ -112,7 +112,8 @@ public class StoreService {
     public List<AllStationRes.StationInfo> getAllStation() {
         return Arrays.stream(Station.values())
                 .map(station -> AllStationRes.StationInfo.of(
-                        station.getStationName(),
+                        station.getStationEnName(),
+                        station.getStationKrName(),
                         station.getLatitude(),
                         station.getLongitude()
                 ))
