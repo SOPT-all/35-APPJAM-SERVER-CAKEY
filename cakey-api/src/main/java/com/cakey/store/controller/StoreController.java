@@ -7,6 +7,7 @@ import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreCoordinateListRes;
 import com.cakey.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,5 +105,16 @@ public class StoreController {
     @GetMapping("/{storeId}/select/coordinate")
     public ResponseEntity<BaseResponse<?>> getStoreSelectedCoordinate(@PathVariable final Long storeId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreSelectedCoordinate(storeId));
+    }
+
+    //선택 스토어 조회
+    @GetMapping("/{storeId}/select")
+    public ResponseEntity<BaseResponse<?>> getStoreSelected(
+            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @PathVariable final long storeId) {
+        return ApiResponseUtil.success(
+                SuccessCode.OK,
+                storeService.getStoreSelected(storeId, userId)
+        );
     }
 }
