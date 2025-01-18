@@ -1,4 +1,4 @@
-package com.cakey;
+package com.cakey.common.rescode;
 
 import org.springframework.http.HttpStatus;
 

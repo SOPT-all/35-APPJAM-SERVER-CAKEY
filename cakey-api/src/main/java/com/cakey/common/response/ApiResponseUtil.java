@@ -1,7 +1,6 @@
 package com.cakey.common.response;
 
-import com.cakey.ApiCode;
-import com.cakey.exception.ErrorCode;
+import com.cakey.common.rescode.ErrorCode;
 import org.springframework.http.ResponseEntity;
 
 public class ApiResponseUtil {

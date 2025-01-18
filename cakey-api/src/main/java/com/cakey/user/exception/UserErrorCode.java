@@ -1,6 +1,6 @@
 package com.cakey.user.exception;
 
-import com.cakey.ApiCode;
+import com.cakey.common.rescode.ApiCode;
 import org.springframework.http.HttpStatus;
 
 public enum UserErrorCode implements ApiCode {

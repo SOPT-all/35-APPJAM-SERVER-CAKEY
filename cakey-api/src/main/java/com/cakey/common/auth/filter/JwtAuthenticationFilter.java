@@ -4,7 +4,7 @@
 //import com.cakey.common.auth.UserAuthentication;
 //import com.cakey.common.auth.JwtValidationType;
 //import com.cakey.exception.CakeyException;
-//import com.cakey.exception.ErrorCode;
+//import com.cakey.common.rescode.ErrorCode;
 //import com.cakey.jwt.service.TokenService;
 //import jakarta.servlet.FilterChain;
 //import jakarta.servlet.ServletException;
