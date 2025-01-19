@@ -1,20 +1,17 @@
-package com.cakey.cake.exception;
+package com.cakey.store.exception;
 
 import com.cakey.common.rescode.ApiCode;
-import com.cakey.common.rescode.ErrorBaseCode;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
-@Getter
-public enum CakeErrorCode implements ApiCode {
+public enum StoreErrorCode implements ApiCode {
 
     /**
      * 404 Not Found
      */
-    CAKE_NOT_FOUND_ENTITY(HttpStatus.NOT_FOUND, 40401, "케이크를 찾을 수 없습니다."),
-    CAKE_LIKES_NOT_FOUND_ENTITY(HttpStatus.NOT_FOUND, 40404, "케이크 좋아요를 찾을 수 없습니다."),
+    STORE_NOT_FOUND_ENTITY(HttpStatus.NOT_FOUND, 40402, "스토어를 찾을 수 없습니다."),
+    STORE_LIKES_NOT_FOUND_ENTITY(HttpStatus.NOT_FOUND, 40403, "스토어 좋아요를 찾을 수 없습니다."),
 
 
 
@@ -22,13 +19,7 @@ public enum CakeErrorCode implements ApiCode {
     /**
      * 409 Conflict
      */
-    CAKE_LIKES_CONFLICT(HttpStatus.CONFLICT, 40901, "이미 케이크 좋아요가 있습니다."),
-
-
-
-
-
-
+    STORE_LIKES_CONFLICT(HttpStatus.CONFLICT, 40902, "이미 스토어 좋아요가 있습니다."),
 
 
     ;

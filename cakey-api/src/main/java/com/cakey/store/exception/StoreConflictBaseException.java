@@ -1,11 +1,11 @@
 package com.cakey.store.exception;
 
-import com.cakey.common.rescode.ErrorCode;
+import com.cakey.common.rescode.ErrorBaseCode;
 import org.springframework.http.HttpStatus;
 
 public class StoreConflictBaseException extends StoreApiBaseException {
-    protected StoreConflictBaseException(ErrorCode errorCode) {
-        super(errorCode);
+    protected StoreConflictBaseException(ErrorBaseCode errorBaseCode) {
+        super(errorBaseCode);
     }
 
     @Override

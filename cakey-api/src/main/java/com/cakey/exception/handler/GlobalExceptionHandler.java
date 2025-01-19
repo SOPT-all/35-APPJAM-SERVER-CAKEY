@@ -1,6 +1,6 @@
 package com.cakey.exception.handler;
 
-import com.cakey.common.rescode.ErrorCode;
+import com.cakey.common.rescode.ErrorBaseCode;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("\n")); // 메시지를 줄바꿈으로 연결
 
-        return ApiResponseUtil.failure(ErrorCode.BAD_REQUEST_REQUEST_BODY_VALID, errorMessage);
+        return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST_REQUEST_BODY_VALID, errorMessage);
     }
 
     /**
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
                 .map(MessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("\n"));
 
-        return ApiResponseUtil.failure(ErrorCode.BAD_REQUEST_REQUEST_PARAM_MODELATTRI, errorMessage);
+        return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST_REQUEST_PARAM_MODELATTRI, errorMessage);
     }
 
     /**
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<BaseResponse<?>> handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
         final String errorMessage = "누락된 파라미터 : " + e.getParameterName();
-        return ApiResponseUtil.failure(ErrorCode.BAD_REQUEST_MISSING_PARAM, errorMessage);
+        return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST_MISSING_PARAM, errorMessage);
     }
 
     /**
@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<BaseResponse<?>> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
         final String errorMessage = "잘못된 인자값 : " + e.getParameter().getParameterName();
-        return ApiResponseUtil.failure(ErrorCode.BAD_REQUEST_METHOD_ARGUMENT_TYPE, errorMessage);
+        return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST_METHOD_ARGUMENT_TYPE, errorMessage);
     }
 
     /**
@@ -96,9 +96,9 @@ public class GlobalExceptionHandler {
                     .map(ref -> String.format("잘못된 필드 값 : '%s'", ref.getFieldName()))
                     .collect(Collectors.joining("\n"));
 
-            return ApiResponseUtil.failure(ErrorCode.BAD_REQUEST_NOT_READABLE, errorMessage);
+            return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST_NOT_READABLE, errorMessage);
         } else { //그 외의 경우들
-            return ApiResponseUtil.failure(ErrorCode.BAD_REQUEST_NOT_READABLE);
+            return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST_NOT_READABLE);
         }
     }
 
@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<BaseResponse<?>> handleException(IllegalArgumentException e) {
-        return ApiResponseUtil.failure(ErrorCode.BAD_REQUEST, e.getCause().getMessage());
+        return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST, e.getCause().getMessage());
     }
 
     /**
@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<BaseResponse<?>> handleEntityNotFoundException(final EntityNotFoundException e) {
-        return ApiResponseUtil.failure(ErrorCode.NOT_FOUND_ENTITY);
+        return ApiResponseUtil.failure(ErrorBaseCode.NOT_FOUND_ENTITY);
     }
 
     /**
@@ -126,7 +126,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<BaseResponse<?>> handleNoResourceFoundException(final NoResourceFoundException e) {
-        return ApiResponseUtil.failure(ErrorCode.NOT_FOUND_API);
+        return ApiResponseUtil.failure(ErrorBaseCode.NOT_FOUND_API);
     }
 
     /**
@@ -135,7 +135,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<BaseResponse<?>> handleNoHandlerFoundException(final NoHandlerFoundException e) {
-        return ApiResponseUtil.failure(ErrorCode.NOT_FOUND_API);
+        return ApiResponseUtil.failure(ErrorBaseCode.NOT_FOUND_API);
     }
 
     /**
@@ -144,7 +144,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<BaseResponse<?>> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
-        return ApiResponseUtil.failure(ErrorCode.METHOD_NOT_ALLOWED);
+        return ApiResponseUtil.failure(ErrorBaseCode.METHOD_NOT_ALLOWED);
     }
 
     /**
@@ -159,10 +159,10 @@ public class GlobalExceptionHandler {
             String constraintName = constraintViolationException.getConstraintName().toString();
             String errorMessage = String.format("제약 조건 '%s' 위반이 발생했습니다.", constraintName);
 //            log.info(errorMessage);
-            return ApiResponseUtil.failure(ErrorCode.INTEGRITY_CONFLICT, errorMessage);
+            return ApiResponseUtil.failure(ErrorBaseCode.INTEGRITY_CONFLICT, errorMessage);
         } else {
 //            log.info(e.getMessage());
-            return ApiResponseUtil.failure(ErrorCode.INTEGRITY_CONFLICT);
+            return ApiResponseUtil.failure(ErrorBaseCode.INTEGRITY_CONFLICT);
         }
     }
 
@@ -172,6 +172,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<?>> handleAllExceptions(final Exception e) {
 //        log.error(e.getMessage());
-        return ApiResponseUtil.failure(ErrorCode.INTERNAL_SERVER_ERROR);
+        return ApiResponseUtil.failure(ErrorBaseCode.INTERNAL_SERVER_ERROR);
     }
 }

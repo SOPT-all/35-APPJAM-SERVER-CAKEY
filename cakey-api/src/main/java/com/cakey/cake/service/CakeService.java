@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CakeService {
     private final CakeFacade cakeFacade;
-    private final CakeLikesFacade cakeLikesFacade;
-    private final StoreService storeService;
     private final StoreFacade storeFacade;
 
     //해당역 스토어의 케이크들 조회(최신순)

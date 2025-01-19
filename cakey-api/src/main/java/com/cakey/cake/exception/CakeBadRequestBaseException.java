@@ -1,15 +1,12 @@
 package com.cakey.cake.exception;
 
-import com.cakey.common.rescode.ErrorCode;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
+import com.cakey.common.rescode.ErrorBaseCode;
 import org.springframework.http.HttpStatus;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class CakeBadRequestBaseException extends CakeApiBaseException {
 
-    protected CakeBadRequestBaseException(ErrorCode errorCode) {
-        super(errorCode);
+    protected CakeBadRequestBaseException(ErrorBaseCode errorBaseCode) {
+        super(errorBaseCode);
     }
 
     @Override
