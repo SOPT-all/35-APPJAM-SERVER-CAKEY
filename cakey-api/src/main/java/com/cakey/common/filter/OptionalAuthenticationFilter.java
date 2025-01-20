@@ -25,15 +25,13 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //ë¡œê·
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        try {
-            final String accessToken = getAccessTokenFromCookie(request);
 
-            if (accessToken != null) {
-                final Long userId = jwtProvider.getUserIdFromSubject(accessToken);
-                SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userId, null, null));
-            }
-
-        } catch (Exception e) {
+        final String accessToken = getAccessTokenFromCookie(request);
+        if (accessToken != null) {
+            final Long userId = jwtProvider.getUserIdFromSubject(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userId, null, null));
+        } else {
+            SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(null, null, null));
         }
 
         filterChain.doFilter(request, response);
