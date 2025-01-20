@@ -57,7 +57,7 @@ public class CakeController {
             @UserId final Long userId,
             @PathVariable(value = "cakeId") final long cakeId,
             @RequestParam(value = "dayCategory") final DayCategory dayCategory,
-            @RequestParam(value = "theme") final ThemeName themeName
+            @RequestParam(value = "themeName") final ThemeName themeName
             ) {
         return ApiResponseUtil.success(
                 SuccessCode.OK,
