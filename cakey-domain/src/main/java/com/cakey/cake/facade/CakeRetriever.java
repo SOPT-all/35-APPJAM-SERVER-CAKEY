@@ -25,7 +25,11 @@ public class CakeRetriever {
     }
 
     public List<Cake> findAllByStoreId(final Long storeId) {
-        return cakeRepository.findAllByStoreId(storeId);
+        final List<Cake> cakes = cakeRepository.findAllByStoreId(storeId);
+        if(cakes.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return cakes;
     }
 
     public List<CakeInfoDto> findCakesByStation(final Long userId, final Station station, final Long cakeIdCursor, final int size) {

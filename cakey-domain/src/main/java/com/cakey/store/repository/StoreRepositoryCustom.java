@@ -44,5 +44,4 @@ public interface StoreRepositoryCustom {
 
     //선택한 스토어 조회
     Optional<StoreSelectedDto> findStoreInfoById(final long storeId, final Long userId);
-
 }

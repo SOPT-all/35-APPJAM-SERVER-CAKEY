@@ -40,7 +40,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     //가게 메인이미지 조회
     @Override
     public List<CakeMainImageDto> findMainImageByStoreIds(List<Long> storeIds) {
-        return queryFactory.select(Projections.constructor(CakeMainImageDto.class,
+        List<CakeMainImageDto> cakeMainImageDtos = queryFactory.select(Projections.constructor(CakeMainImageDto.class,
                         cake.storeId,
                         cake.id,
                         cake.imageUrl))
@@ -48,6 +48,10 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .where(cake.storeId.in(storeIds)
                         .and(cake.isMainImage.isTrue()))
                 .fetch();
+        if (cakeMainImageDtos.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return cakeMainImageDtos;
     }
 
     //해당역 스토어의 디자인(케이크) 조회(최신순)

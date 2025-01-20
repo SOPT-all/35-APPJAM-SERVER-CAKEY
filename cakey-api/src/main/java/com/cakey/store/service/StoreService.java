@@ -2,6 +2,8 @@ package com.cakey.store.service;
 
 import com.cakey.cake.domain.Cake;
 import com.cakey.cake.dto.CakeMainImageDto;
+import com.cakey.cake.exception.CakeErrorCode;
+import com.cakey.cake.exception.CakeNotFoundException;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.facade.CakeLikesFacade;
 import com.cakey.common.exception.NotFoundBaseException;
@@ -12,6 +14,7 @@ import com.cakey.size.facade.SizeFacade;
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
+import com.cakey.store.exception.StoreErrorCode;
 import com.cakey.store.exception.StoreNotfoundException;
 import com.cakey.store.facade.StoreFacade;
 import java.time.format.DateTimeFormatter;
@@ -55,27 +58,36 @@ public class StoreService {
                                                                      final Long storeIdCursor,
                                                                      final int size) {
 
-        final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, storeIdCursor, size);
+        final List<StoreInfoDto> storeInfoDtos;
+        final Map<Long, List<CakeMainImageDto>> mainImageMap;
+
+        try {
+            storeInfoDtos = storeFacade.findStoreInfoByStationAndLikes(userId, station, likesCursor, storeIdCursor, size);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
 
         /// 조회한 store들의 ID 추출
         final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
 
         ///메인 이미지 map
-        final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
-
+        try {
+            mainImageMap = cakeFacade.getMainImageMap(storeIds);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_MAIN_IMAGE_NOT_FOUND);
+        }
         ///storInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
 
         ///스토어 개수 조회
         final int storeCount = storeFacade.getStoreCountByStation(station);
 
-
         ///커서 업데이트
         final int lastStoreInfoDtosIndex = storeInfoDtos.size() - 1;
         final int nextLikesCursor = storeInfoDtos.get(lastStoreInfoDtosIndex).getStoreLikesCount();
         final Long nextCakeIdCursor = storeInfoDtos.get(lastStoreInfoDtosIndex).getStoreIdCursor();
         final boolean isLastData = storeInfoDtos.get(lastStoreInfoDtosIndex).isLastData();
-        
+
         ///StoreInfoListRes 반환
         return StoreInfoListBylikesRes.of(nextLikesCursor, nextCakeIdCursor, storeCount, isLastData, storeInfos);
     }
@@ -86,14 +98,23 @@ public class StoreService {
                                                                        final Long storeIdCursor,
                                                                        final int size) {
 
+        final List<StoreInfoDto> storeInfoDtos;
         ///커서 페이지네이션
-        final List<StoreInfoDto> storeInfoDtos = storeFacade.findStoreInfoByStationAndLatest(userId, station, storeIdCursor, size);
-
+        try {
+            storeInfoDtos = storeFacade.findStoreInfoByStationAndLatest(userId, station, storeIdCursor, size);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
         /// 조회한 store들의 ID 추출
         final List<Long> storeIds = storeFacade.getStoreIds(storeInfoDtos);
 
+        final Map<Long, List<CakeMainImageDto>> mainImageMap;
         ///메인 이미지 map
-        final Map<Long, List<CakeMainImageDto>> mainImageMap = cakeFacade.getMainImageMap(storeIds);
+        try {
+            mainImageMap = cakeFacade.getMainImageMap(storeIds);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_MAIN_IMAGE_NOT_FOUND);
+        }
 
         ///storInfo 생성
         final List<StoreInfo> storeInfos = getStoreInfo(storeInfoDtos, mainImageMap);
@@ -101,7 +122,6 @@ public class StoreService {
         ///스토어 개수 조회
         final int storeCount = storeFacade.getStoreCountByStation(station);
 
-        ///마지막 데이터 여부
         ///마지막 데이터 여부
         final int lastStoreInfoDtos = storeInfoDtos.size() - 1;
         final boolean isLastData = storeInfoDtos.get(lastStoreInfoDtos).isLastData();
@@ -170,9 +190,15 @@ public class StoreService {
     }
 
     public StoreDetailAllDesignRes getStoreAllDesign(final long storeId, final Long userId) {
+
+        final List<Cake> cakes;
         // 케이크 조회
         // 스토어 ID로 케이크 리스트 조회
-        final List<Cake> cakes = cakeFacade.findAllByStoreId(storeId);
+        try {
+             cakes = cakeFacade.findAllByStoreId(storeId);
+        } catch (NotFoundBaseException e) {
+            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+        }
 
         //좋아요 상태 설정
         List<StoreDetailDesign> designs = cakes.stream()
@@ -194,7 +220,12 @@ public class StoreService {
     }
 
     public StoreAllSizeAndTasteRes getStoreSizeAndTaste(final long storeId) {
-        final List<SizeDto> sizeList = sizeFacade.findSizeAllByStoreIdAndOrderByPriceAsc(storeId);
+        final List<SizeDto> sizeList;
+        try {
+             sizeList = sizeFacade.findSizeAllByStoreIdAndOrderByPriceAsc(storeId);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
         return StoreAllSizeAndTasteRes.of(sizeList, storeFacade.findTaste(storeId).taste());
     }
 
@@ -224,7 +255,7 @@ public class StoreService {
                     storeDetailInfoDto.phone()
             );
         } catch (NotFoundBaseException e) {
-            throw new StoreNotfoundException(STORE_OPERATION_TIME_NOT_FOUND)
+            throw new StoreNotfoundException(STORE_OPERATION_TIME_NOT_FOUND);
         }
     }
 
