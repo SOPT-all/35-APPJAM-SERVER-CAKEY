@@ -41,7 +41,12 @@ public class StoreService {
     private final StoreOperationTimeFacade storeOperationTimeFacade;
 
     public List<StoreCoordinate> getStoreCoordinateList(final Station station) {
-        final List<StoreCoordinatesDto> storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
+        final List<StoreCoordinatesDto> storeCoordianteDtoList;
+        try {
+            storeCoordianteDtoList = storeFacade.findCoordinatesByStation(station);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
 
         return storeCoordianteDtoList.stream()
                 .map(storeCoordianteDto -> StoreCoordinate.of(
