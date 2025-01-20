@@ -10,17 +10,17 @@ public record AllStationRes(
             return new AllStationRes(stations);
     }
 
-    public record StationInfo(
+    public record StationInfo (
             String stationEnName,
-            String stationKnName,
+            String stationKrName,
             double latitude,
             double longitude) {
 
         public static StationInfo of(final String stationEnName,
-                                     final String stationKnName,
+                                     final String stationKrName,
                                      final double latitude,
                                      final double longitude) {
-            return new StationInfo(stationEnName, stationKnName, latitude, longitude);
+            return new StationInfo(stationEnName, stationKrName, latitude, longitude);
         }
     }
 }
