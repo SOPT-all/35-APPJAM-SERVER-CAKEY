@@ -15,14 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
     private final UserIdResolver userIdResolver;
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .maxAge(3600);
-    }
-
-    @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(userIdResolver);
     }
