@@ -20,6 +20,7 @@ import com.cakey.user.exception.UserErrorCode;
 import com.cakey.user.facade.UserFacade;
 import com.cakey.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseCookie;
@@ -39,7 +40,8 @@ public class UserService {
 
     public LoginSuccessRes login(
             final String authorizationCode,
-            final LoginReq loginReq
+            final LoginReq loginReq,
+            final HttpServletResponse response
     ) {
         //카카오 유저정보
         final KakaoUserDto kakaoUserInfo;
@@ -67,12 +69,9 @@ public class UserService {
 
             final Token newToken = jwtProvider.issueToken(savedUserId);
 
-            //리프레시토큰 캐시에 저장
-            updateRefreshToken(newToken.getRefreshToken(), savedUserId);
-
             //쿠키설정
-            setAccessCookie(newToken.getAccessToken());
-            setRefreshCookie(newToken.getRefreshToken());
+            setAccessCookie(newToken.getAccessToken(), response);
+            setRefreshCookie(newToken.getRefreshToken(), response);
 
             return LoginSuccessRes.of(
                     savedUserId,
@@ -84,12 +83,9 @@ public class UserService {
 
             final Token newToken = jwtProvider.issueToken(userId);
 
-            //리프레시토큰 캐시 저장
-            updateRefreshToken(newToken.getRefreshToken(), userId);
-
             //쿠키 설정
-            setAccessCookie(newToken.getAccessToken());
-            setRefreshCookie(newToken.getRefreshToken());
+            setAccessCookie(newToken.getAccessToken(), response);
+            setRefreshCookie(newToken.getRefreshToken(), response);
 
             return LoginSuccessRes.of(
                     userId,
@@ -113,26 +109,26 @@ public class UserService {
         jwtProvider.generateRefreshToken(userId);
     }
 
-    public ResponseCookie setAccessCookie(final String accessToken ) {
+    public void setAccessCookie(final String accessToken, final HttpServletResponse response) {
         ResponseCookie accessCookie = ResponseCookie.from(ACCESS_TOKEN, accessToken)
-                .maxAge(60 * 60 * 7 * 24) //액세스 토큰 기간
+                .maxAge(14* 24 * 60 * 60 * 1000L) //액세스 토큰 기간 2주
                 .path("/")
                 .secure(true)
                 .sameSite("None")
                 .httpOnly(true)
                 .build();
-        return accessCookie;
+        response.setHeader("Set-Cookie", accessCookie.toString());
     }
 
-    public ResponseCookie setRefreshCookie(final String refreshToken) {
+    public void setRefreshCookie(final String refreshToken, final HttpServletResponse response) {
         ResponseCookie refreshCookie = ResponseCookie.from(REFRESH_TOKEN, refreshToken)
-                .maxAge(60 * 60 * 7 * 24) //리프레시 토큰 기간
+                .maxAge(14* 24 * 60 * 60 * 1000L) //리프레시 토큰 기간 2주
                 .path("/")
                 .secure(true)
                 .sameSite("None")
                 .httpOnly(true)
                 .build();
-        return refreshCookie;
+        response.setHeader("Set-Cookie", refreshCookie.toString());
     }
 
     public UserInfoRes getUserInfo(final Long userId) {
