@@ -45,7 +45,7 @@ public class UserService {
         final KakaoUserDto kakaoUserInfo;
 
         if (loginReq.socialType().equals(SocialType.KAKAO)) {
-            kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(authorizationCode);
+            kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(authorizationCode, loginReq.redirectUri());
         } else {
             throw new UserBadRequestException(UserErrorCode.USER_SOCIAL_TYPE_NOT_FOUND); //todo: exception 변경
         }
