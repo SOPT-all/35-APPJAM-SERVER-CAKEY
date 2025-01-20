@@ -19,6 +19,7 @@ import com.cakey.user.exception.UserBadRequestException;
 import com.cakey.user.exception.UserErrorCode;
 import com.cakey.user.facade.UserFacade;
 import com.cakey.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseCookie;
@@ -96,6 +97,14 @@ public class UserService {
         }
     }
 
+//    //jwt 재발급
+//    public LoginSuccessRes jwtReissue(final String refreshToken) {
+        ///refresh token 검증
+//
+//    }
+
+
+
     @CacheEvict(value = "refresh")
     public void deleteRefreshToken(final long userId) { }
 
@@ -125,9 +134,6 @@ public class UserService {
                 .build();
         return refreshCookie;
     }
-
-
-
 
     public UserInfoRes getUserInfo(final Long userId) {
         final UserInfoDto userInfoDto;
