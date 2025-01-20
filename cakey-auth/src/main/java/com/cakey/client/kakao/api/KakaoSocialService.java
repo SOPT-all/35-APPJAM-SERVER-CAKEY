@@ -33,10 +33,8 @@ public class KakaoSocialService {
         }
 
         String contentType = MediaType.APPLICATION_FORM_URLENCODED.toString();
-
         // Access Token으로 유저 정보 불러오기
-        final KakaoUserDto kakaoUserDto =  getUserInfo(kakaoAccessToken, contentType);
-        return kakaoUserDto;
+        return getUserInfo(kakaoAccessToken, contentType);
     }
 
     private String getOAuth2Authentication(

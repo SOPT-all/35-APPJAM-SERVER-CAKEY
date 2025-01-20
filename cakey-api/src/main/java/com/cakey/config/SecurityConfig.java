@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests( auth -> auth.anyRequest().permitAll()) //todo: 추후 변경
+                .authorizeHttpRequests( auth -> auth.anyRequest().permitAll())
                 .build();
     }
 }
