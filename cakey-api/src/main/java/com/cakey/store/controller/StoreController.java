@@ -83,7 +83,7 @@ public class StoreController {
 
     @GetMapping("/{storeId}/design")
     public ResponseEntity<BaseResponse<?>> getAllDesign(@PathVariable("storeId") final Long storeId,
-                                                        @RequestHeader(required = false) final Long userId) {
+                                                        @UserId final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreAllDesign(storeId, userId));
     }
 
