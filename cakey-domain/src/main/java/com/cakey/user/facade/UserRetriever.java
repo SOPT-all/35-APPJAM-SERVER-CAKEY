@@ -16,7 +16,7 @@ public class UserRetriever {
     public User findById(final Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new NotFoundException());
+                        ()-> new NotFoundBaseException());
     }
 
     public Long findUserIdFromSocialTypeAndPlatformId(final SocialType socialType, final long platformId) {

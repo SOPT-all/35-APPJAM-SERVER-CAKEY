@@ -1,6 +1,7 @@
 package com.cakey.common.response;
 
-import com.cakey.ApiCode;
+import com.cakey.common.rescode.ApiCode;
+import com.cakey.common.rescode.SuccessCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,5 @@
-package com.cakey.exception;
+package com.cakey.common.rescode;
 
-import com.cakey.ApiCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public enum ErrorCode implements ApiCode {
+public enum ErrorBaseCode implements ErrorCode {
     /**
      * 400 Bad Request
      */

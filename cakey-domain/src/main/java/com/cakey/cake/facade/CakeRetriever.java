@@ -8,9 +8,8 @@ import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.dto.CakeSelectedInfoDto;
 import com.cakey.cake.repository.CakeRepository;
 import com.cakey.caketheme.domain.ThemeName;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.Station;
-import com.cakey.store.dto.StoreBySelectedCakeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,11 @@ public class CakeRetriever {
     }
 
     public List<Cake> findAllByStoreId(final Long storeId) {
-        return cakeRepository.findAllByStoreId(storeId);
+        final List<Cake> cakes = cakeRepository.findAllByStoreId(storeId);
+        if(cakes.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return cakes;
     }
 
     public List<CakeInfoDto> findCakesByStation(final Long userId, final Station station, final Long cakeIdCursor, final int size) {
@@ -45,14 +48,17 @@ public class CakeRetriever {
         return cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
     }
 
-
     public List<CakeByPopularityDto> findCakesByRank(final Long userId) {
+        final List<CakeByPopularityDto> cakeByPopularityDtos = cakeRepository.findCakesByRank(userId);
+        if (cakeByPopularityDtos.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
         return cakeRepository.findCakesByRank(userId);
     }
 
     public Cake findById(final Long cakeId) {
         return cakeRepository.findById(cakeId)
-                .orElseThrow(() -> new NotFoundException());
+                .orElseThrow(NotFoundBaseException::new);
     }
     //찜한 디자인(케이크) 조회(최신순)
     public List<CakeInfoDto> findLatestLikedCakesByUser (final Long userId,
@@ -75,7 +81,18 @@ public class CakeRetriever {
                                                                    final ThemeName theme,
                                                                    final Long userId,
                                                                    final Long cakeId) {
-        return cakeRepository.findCakesByStoreAndConditions(storeId, dayCategory, theme, userId, cakeId);
+        List<CakeSelectedInfoDto> cakeSelectedInfoDtos = cakeRepository.findCakesByStoreAndConditions(
+                storeId,
+                dayCategory,
+                theme,
+                userId,
+                cakeId
+        );
+
+        if (cakeSelectedInfoDtos.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return cakeSelectedInfoDtos;
     }
 
     //디자인 둘러보기 조회(최신순)

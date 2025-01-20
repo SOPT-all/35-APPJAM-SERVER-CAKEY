@@ -1,6 +1,6 @@
 package com.cakey.store.facade;
 
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
@@ -57,12 +57,14 @@ public class StoreRetriever {
 
     //선택된 케이크의 스토어 정보 조회
     public StoreBySelectedCakeDto findStoreBySelectedCakeId(final Long cakeId) {
-        return storeRepository.findStoreBySelectedCakeId(cakeId);
+        return storeRepository.findStoreBySelectedCakeId(cakeId).orElseThrow(
+                NotFoundBaseException::new
+        );
     }
 
     //선택한 스토어 조회
     public StoreSelectedDto findStoreInfoById(long storeId, Long userId) {
-        return storeRepository.findStoreInfoById(storeId, userId);
+        return storeRepository.findStoreInfoById(storeId, userId).orElseThrow(NotFoundBaseException::new);
     }
 
 
@@ -76,7 +78,7 @@ public class StoreRetriever {
 
     public Store findById(final Long storeId) {
         return storeRepository.findById(storeId)
-                .orElseThrow(() -> new NotFoundException());
+                .orElseThrow(NotFoundBaseException::new);
     }
 
     public List<StoreByPopularityDto> findStoreListByLank(){

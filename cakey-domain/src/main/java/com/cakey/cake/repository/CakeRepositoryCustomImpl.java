@@ -6,16 +6,12 @@ import com.cakey.cake.dto.*;
 import com.cakey.cakelike.domain.QCakeLikes;
 import com.cakey.caketheme.domain.QCakeTheme;
 import com.cakey.caketheme.domain.ThemeName;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.QStore;
 import com.cakey.store.domain.Station;
-import com.cakey.store.dto.QStoreBySelectedCakeDto;
-import com.cakey.store.dto.QStoreInfoDto;
-import com.cakey.store.dto.StoreBySelectedCakeDto;
 import com.cakey.storelike.domain.QStoreLike;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -27,11 +23,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Expr;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
@@ -46,7 +40,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     //가게 메인이미지 조회
     @Override
     public List<CakeMainImageDto> findMainImageByStoreIds(List<Long> storeIds) {
-        return queryFactory.select(Projections.constructor(CakeMainImageDto.class,
+        List<CakeMainImageDto> cakeMainImageDtos = queryFactory.select(Projections.constructor(CakeMainImageDto.class,
                         cake.storeId,
                         cake.id,
                         cake.imageUrl))
@@ -54,6 +48,10 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .where(cake.storeId.in(storeIds)
                         .and(cake.isMainImage.isTrue()))
                 .fetch();
+        if (cakeMainImageDtos.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return cakeMainImageDtos;
     }
 
     //해당역 스토어의 디자인(케이크) 조회(최신순)
@@ -107,7 +105,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         List<CakeInfoDto> cakes = query.fetch();
 
         if(cakes.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         ///마지막 데이터
@@ -224,7 +222,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         List<CakeInfoDto> cakes = query.fetch();
 
         if(cakes.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 좋아요 수 비교 및 Cursor 설정
@@ -289,7 +287,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         List<CakeInfoDto> results = query.fetch();
 
         if(results.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         ///마지막 데이터 여부 설정
@@ -381,7 +379,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         List<CakeInfoDto> results = query.fetch();
 
         if (results.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 페이징 결과 처리
@@ -426,7 +424,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .fetchOne();
 
         if (mainCake == null) {
-            throw new IllegalArgumentException("Cake with ID " + cakeId + " not found");
+            throw new NotFoundBaseException();
         }
 
         ///나머지 케이크 조건 생성 (theme이 ALL일 경우 theme 조건 제외)
@@ -451,6 +449,10 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .limit(9) /// 첫 번째 케이크를 제외하고 최대 9개
                 .distinct()
                 .fetch();
+
+        if (otherCakes == null) {
+            throw new NotFoundBaseException();
+        }
 
         /// 첫 번째 케이크 + 나머지 케이크
         List<CakeSelectedInfoDto> cakes = new ArrayList<>();
@@ -512,7 +514,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .fetch();
 
         if (cakes.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 마지막 데이터인지 확인하여 isLastData 필드 설정
@@ -609,7 +611,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
 
         /// 결과 비어있을 때 예외 처리
         if (results.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 페이징 결과 처리
@@ -707,9 +709,8 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         query.limit(size + 1); // limit + 1로 추가 데이터 확인
         List<CakeInfoDto> results = query.fetch();
 
-        /// 결과 비어있을 때 예외 처리
         if (results.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 페이징 결과 처리
@@ -782,6 +783,10 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         query.limit(size + 1); // limit + 1로 추가 데이터 확인
         List<CakeInfoDto> results = query.fetch();
 
+        if (results.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+
         /// 결과 페이징 처리
         if (results.size() > size) {
             CakeInfoDto lastItem = results.get(size - 1);
@@ -793,9 +798,6 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
 
         return results;
     }
-
-
-
 
     //카테고리, 테마에 해당하는 케이크 개수
     @Override
@@ -823,9 +825,6 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         return count != null ? Math.toIntExact(count) : 0;
     }
 
-
-
-
     private BooleanExpression isLikedByUser(NumberExpression<Long> cakeId, Long userId) {
         QCakeLikes cakeLikes = QCakeLikes.cakeLikes;
 
@@ -842,8 +841,6 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 .exists();
     }
 
-
-
     // 유저의 케이크 좋아요 여부 서브쿼리
     private BooleanExpression getIsLikedExpression(final Long userId) {
         if (userId != null) {
@@ -855,9 +852,6 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             return Expressions.asBoolean(false);
         }
     }
-
-
-
 
     private BooleanExpression isLikedExpression(final Long userId, final NumberPath<Long> cakeIdPath) {
         if (userId != null) {

@@ -2,14 +2,13 @@ package com.cakey.storelikes.service;
 
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.facade.CakeFacade;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreCoordinate;
 import com.cakey.store.dto.StoreCoordinatesDto;
 import com.cakey.store.dto.StoreInfo;
 import com.cakey.store.dto.StoreInfoDto;
 import com.cakey.store.facade.StoreFacade;
-import com.cakey.store.facade.StoreRetriever;
 import com.cakey.storelike.facade.StoreLikeFacade;
 import com.cakey.storelikes.dto.StoreLatestLikedByUserRes;
 import com.cakey.storelikes.dto.StorePopularityLikedByUserRes;
@@ -79,7 +78,7 @@ public class StoreLikesService {
 
 
         if(storeInfoOrderByLikesDtos.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         ///커서 업데이트

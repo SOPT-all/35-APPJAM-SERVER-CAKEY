@@ -3,7 +3,7 @@ package com.cakey.cakelikes.controller;
 import com.cakey.cakelikes.service.CakeLikesService;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
-import com.cakey.common.response.SuccessCode;
+import com.cakey.common.rescode.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

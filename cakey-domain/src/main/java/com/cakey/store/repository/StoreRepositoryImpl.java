@@ -1,7 +1,7 @@
 package com.cakey.store.repository;
 
 import com.cakey.cake.domain.QCake;
-import com.cakey.common.exception.NotFoundException;
+import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.QStore;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.*;
@@ -15,8 +15,9 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class StoreRepositoryImpl implements StoreRepositoryCustom {
@@ -37,12 +38,12 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         ))
                         .from(store)
                         .where(
-                                station == Station.ALL ? null : store.station.eq(station) // ALL이면 조건없이 들어가므로 전체조회
+                                station == Station.ALL ? null : store.station.eq(station) /// ALL이면 조건없이 들어가므로 전체조회
                         )
                         .fetch();
 
         if (dtos.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         } else {
             return dtos;
         }
@@ -114,7 +115,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         ///비어있는 리스트
         if (stores.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 좋아요 수 비교 및 Cursor 설정
@@ -168,7 +169,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         .fetch();
 
         if (storeInfoDtos.isEmpty()){
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         if (storeInfoDtos.size() > size) {
@@ -216,7 +217,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .fetch();
 
         if(storeInfoDtos.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         if (storeInfoDtos.size() > size) {
@@ -311,7 +312,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         ///비어있는 리스트
         if (stores.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundBaseException();
         }
 
         /// 좋아요 수 비교 및 Cursor 설정
@@ -337,7 +338,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     //찜한 스토어 좌표 조회
     @Override
     public List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId) {
-        return queryFactory
+        final List<StoreCoordinatesDto> storeCoordinatesDtos = queryFactory
                 .select(new QStoreCoordinatesDto(
                         store.id,
                         store.latitude,
@@ -347,14 +348,19 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .join(storeLike).on(store.id.eq(storeLike.storeId))
                 .where(storeLike.userId.eq(userId))
                 .fetch();
+
+        if (storeCoordinatesDtos.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return storeCoordinatesDtos;
     }
 
     //선택된 케이크의 스토어 정보 조회
     @Override
-    public StoreBySelectedCakeDto findStoreBySelectedCakeId(final long cakeId) {
+    public Optional<StoreBySelectedCakeDto> findStoreBySelectedCakeId(final long cakeId) {
         QCake cake = QCake.cake;
         QStore store = QStore.store;
-        return queryFactory.select(new QStoreBySelectedCakeDto(
+        return Optional.ofNullable(queryFactory.select(new QStoreBySelectedCakeDto(
                         store.id,
                         store.name,
                         store.station
@@ -362,12 +368,12 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .from(cake)
                 .join(store).on(cake.storeId.eq(store.id))
                 .where(cake.id.eq(cakeId))
-                .fetchOne();
+                .fetchOne());
     }
 
     //선택한 스토어 조회
     @Override
-    public StoreSelectedDto findStoreInfoById(final long storeId, final Long userId) {
+    public Optional<StoreSelectedDto> findStoreInfoById(final long storeId, final Long userId) {
         QStore store = QStore.store;
         QStoreLike storeLike = QStoreLike.storeLike;
         QCake cake = QCake.cake;
@@ -391,7 +397,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 : Expressions.nullExpression(String.class);
 
         /// 메인 쿼리
-        return queryFactory.select(new QStoreSelectedDto(
+        return Optional.ofNullable(queryFactory.select(new QStoreSelectedDto(
                         store.id,
                         store.name,
                         store.address,
@@ -402,7 +408,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 ))
                 .from(store)
                 .where(store.id.eq(storeId))
-                .fetchOne();
+                .fetchOne());
     }
 
     // 유저의 케이크 좋아요 여부 서브쿼리

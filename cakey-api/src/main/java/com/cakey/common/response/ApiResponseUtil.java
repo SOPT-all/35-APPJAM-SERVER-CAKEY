@@ -1,7 +1,7 @@
 package com.cakey.common.response;
 
-import com.cakey.ApiCode;
-import com.cakey.exception.ErrorCode;
+import com.cakey.common.rescode.ErrorBaseCode;
+import com.cakey.common.rescode.SuccessCode;
 import org.springframework.http.ResponseEntity;
 
 public class ApiResponseUtil {
@@ -15,15 +15,15 @@ public class ApiResponseUtil {
                 .body(BaseResponse.of(successCode, data));
     }
 
-    public static ResponseEntity<BaseResponse<?>> failure(final ErrorCode errorCode) {
-        return ResponseEntity.status(errorCode.getHttpStatus())
-                .body(BaseResponse.of(errorCode));
+    public static ResponseEntity<BaseResponse<?>> failure(final ErrorBaseCode errorBaseCode) {
+        return ResponseEntity.status(errorBaseCode.getHttpStatus())
+                .body(BaseResponse.of(errorBaseCode));
     }
 
     //따로 error message 넣어줄 때, 사용
-    public static ResponseEntity<BaseResponse<?>> failure(final ErrorCode errorCode, final String message) {
+    public static ResponseEntity<BaseResponse<?>> failure(final ErrorBaseCode errorBaseCode, final String message) {
         return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(BaseResponse.of(errorCode.getCode(), message));
+                .status(errorBaseCode.getHttpStatus())
+                .body(BaseResponse.of(errorBaseCode.getCode(), message));
     }
 }

@@ -2,12 +2,11 @@ package com.cakey.store.controller;
 
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
-import com.cakey.common.response.SuccessCode;
+import com.cakey.common.rescode.SuccessCode;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreCoordinateListRes;
 import com.cakey.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
