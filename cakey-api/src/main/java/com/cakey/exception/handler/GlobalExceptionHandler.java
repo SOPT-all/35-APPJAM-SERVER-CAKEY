@@ -5,6 +5,7 @@ import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.val;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -21,6 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -164,6 +166,14 @@ public class GlobalExceptionHandler {
 //            log.info(e.getMessage());
             return ApiResponseUtil.failure(ErrorBaseCode.INTEGRITY_CONFLICT);
         }
+    }
+
+
+    @ExceptionHandler(InvocationTargetException.class)
+    public ResponseEntity<BaseResponse<?>> handleInvocationTargetException(final InvocationTargetException e) {
+        Throwable cause = e.getCause();
+        System.out.println(cause.getMessage());
+        return ApiResponseUtil.failure(ErrorBaseCode.INTERNAL_SERVER_ERROR, cause.getMessage());
     }
 
     /**
