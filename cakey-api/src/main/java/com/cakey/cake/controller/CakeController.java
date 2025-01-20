@@ -43,8 +43,8 @@ public class CakeController {
                 cakeService.getPopularCakesByStationStore(userId, station, cakeLikesCursor,cakeIdCursor, size));
     }
 
-    @GetMapping("/Rank")
-    public ResponseEntity<BaseResponse<?>> getRankCakesByStationStore(@RequestHeader(required = false) final Long userId) {
+    @GetMapping("/rank")
+    public ResponseEntity<BaseResponse<?>> getRankCakesByStationStore(@UserId final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK,
                 cakeService.getCakeByRank(userId));
     }
