@@ -1,11 +1,12 @@
 package com.cakey.store.exception;
 
 import com.cakey.common.rescode.ApiCode;
+import com.cakey.common.rescode.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
-public enum StoreErrorCode implements ApiCode {
+public enum StoreErrorCode implements ErrorCode {
 
     /**
      * 404 Not Found

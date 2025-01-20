@@ -203,7 +203,7 @@ public class CakeService {
         final List<CakeInfoDto> cakeInfoDtos;
         ///페이지네이션
         try {
-             cakeInfoDtos = cakeFacade.findPopularCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, cakeLikesCursor, size);
+            cakeInfoDtos = cakeFacade.findPopularCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, cakeLikesCursor, size);
         } catch (NotFoundBaseException e) {
             throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
@@ -234,8 +234,8 @@ public class CakeService {
 
     //찜한 스토어들 디자인 조회(최신순)
     public CakesLatestListRes getLatestCakeByStoreLiked(final long userId,
-                                                  final Long cakeIdCursor,
-                                                  final int size) {
+                                                        final Long cakeIdCursor,
+                                                        final int size) {
         final List<CakeInfoDto> cakeInfoDtos;
         ///페이지네이션
         try {
@@ -268,9 +268,9 @@ public class CakeService {
 
     //찜한 스토어들 디자인 조회(인기순)
     public CakesPopularListRes getPopularCakeByStoreLiked(final long userId,
-                                                           final Long cakeIdCursor,
-                                                           final Integer cakeLikesCursor,
-                                                           final int size) {
+                                                          final Long cakeIdCursor,
+                                                          final Integer cakeLikesCursor,
+                                                          final int size) {
         final List<CakeInfoDto> cakeInfoDtos;
         ///페이지네이션
         try {
