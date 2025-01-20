@@ -1,4 +1,4 @@
-package com.cakey.common.auth;
+package com.cakey.jwt.auth;
 
 import lombok.AllArgsConstructor;
 

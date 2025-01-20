@@ -3,8 +3,8 @@ package com.cakey.config;
 //import com.cakey.common.auth.CustomAccessDeniedHandler;
 //import com.cakey.common.auth.CustomJwtAuthenticationEntryPoint;
 //import com.cakey.common.auth.JwtTokenProvider;
-//import com.cakey.common.auth.filter.CustomAuthenticationFilter;
-//import com.cakey.common.auth.filter.JwtAuthenticationFilter;
+//import com.cakey.common.auth.filter.OptionalAuthenticationFilter;
+//import com.cakey.common.auth.filter.RequiredAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-//    private final CustomAuthenticationFilter customAuthenticationFilter;
+//    private final RequiredAuthenticationFilter jwtAuthenticationFilter;
+//    private final OptionalAuthenticationFilter customAuthenticationFilter;
 //    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 //    private final CustomJwtAuthenticationEntryPoint customJwtAuthenticationEntryPoint;
 //    private final JwtTokenProvider jwtTokenProvider;
@@ -50,14 +50,14 @@ public class SecurityConfig {
 //                .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers(AUTH_WHITELIST).permitAll() // 화이트리스트 경로 허용
 //                        .anyRequest().authenticated())
-//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(new CustomAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new RequiredAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new OptionalAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 //                .build();
     }
 
 //    @Bean
-//    public FilterRegistrationBean<JwtAuthenticationFilter> firstFilterFilterRegistrationBean() {
-//        FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
+//    public FilterRegistrationBean<RequiredAuthenticationFilter> firstFilterFilterRegistrationBean() {
+//        FilterRegistrationBean<RequiredAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
 //        registrationBean.setFilter(jwtAuthenticationFilter);
 //        registrationBean.addUrlPatterns("/api/v1/user/test1"); // /test1 경로에만 FirstFilter 적용
 //        registrationBean.setOrder(1); // 필터 순서 설정
@@ -65,8 +65,8 @@ public class SecurityConfig {
 //    }
 //
 //    @Bean
-//    public FilterRegistrationBean<CustomAuthenticationFilter> secondFilterFilterRegistrationBean() {
-//        FilterRegistrationBean<CustomAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
+//    public FilterRegistrationBean<OptionalAuthenticationFilter> secondFilterFilterRegistrationBean() {
+//        FilterRegistrationBean<OptionalAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
 //        registrationBean.setFilter(customAuthenticationFilter);
 //        registrationBean.addUrlPatterns("/v1/user/test2"); // /test2 경로에만 SecondFilter 적용
 //        registrationBean.setOrder(2); // 필터 순서 설정
