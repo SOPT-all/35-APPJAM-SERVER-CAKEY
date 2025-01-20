@@ -1,12 +1,16 @@
 package com.cakey.user.dto;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+
+@Builder(access = AccessLevel.PRIVATE)
 public record LoginSuccessRes(
-        String accessToken,
-        String refreshToken
+        long userId,
+        String userName
 ) {
     public static LoginSuccessRes of(
-            final String accessToken,
-            final String refreshToken) {
-        return new LoginSuccessRes(accessToken, refreshToken);
+            final long userId,
+            final String userName) {
+        return LoginSuccessRes.builder().userId(userId).userName(userName).build();
     }
 }

@@ -3,18 +3,20 @@ package com.cakey.client.dto;
 import com.cakey.client.SocialType;
 import com.cakey.jwt.domain.UserRole;
 
-public record KakaoUserInfoRes(
+public record KakaoUserInfoDto(
         String socialId,
         String name,
         SocialType socialType,
-        UserRole userRole
+        UserRole userRole,
+        String socialEmail
 ) {
-    public static KakaoUserInfoRes of(
+    public static KakaoUserInfoDto of(
             final String socialId,
             final String name,
             final SocialType socialType,
-            final UserRole userRole
+            final UserRole userRole,
+            final String socialEmail
     ) {
-        return new KakaoUserInfoRes(socialId, name, socialType, userRole);
+        return new KakaoUserInfoDto(socialId, name, socialType, userRole, socialEmail);
     }
 }
