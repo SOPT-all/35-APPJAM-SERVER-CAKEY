@@ -18,7 +18,6 @@ public enum CakeErrorCode implements ApiCode {
 
 
 
-
     /**
      * 409 Conflict
      */

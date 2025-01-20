@@ -4,8 +4,8 @@ import com.cakey.common.rescode.ErrorBaseCode;
 import org.springframework.http.HttpStatus;
 
 public class CakeConflictBaseException extends CakeApiBaseException {
-    protected CakeConflictBaseException(ErrorBaseCode errorBaseCode) {
-        super(errorBaseCode);
+    protected CakeConflictBaseException(CakeErrorCode cakeErrorCode) {
+        super(cakeErrorCode);
     }
 
     @Override

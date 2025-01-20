@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class StoreApiBaseException extends CakeBaseException {
-    private final ErrorBaseCode errorBaseCode;
+    private final StoreErrorCode storeErrorCode;
 
     abstract HttpStatus getStatus();
 

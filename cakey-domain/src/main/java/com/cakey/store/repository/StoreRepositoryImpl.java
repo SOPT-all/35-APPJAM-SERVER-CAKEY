@@ -15,7 +15,9 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class StoreRepositoryImpl implements StoreRepositoryCustom {
@@ -350,7 +352,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
     //선택된 케이크의 스토어 정보 조회
     @Override
-    public StoreBySelectedCakeDto findStoreBySelectedCakeId(final long cakeId) {
+    public Optional<StoreBySelectedCakeDto> findStoreBySelectedCakeId(final long cakeId) {
         QCake cake = QCake.cake;
         QStore store = QStore.store;
         return queryFactory.select(new QStoreBySelectedCakeDto(
@@ -366,7 +368,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
     //선택한 스토어 조회
     @Override
-    public StoreSelectedDto findStoreInfoById(final long storeId, final Long userId) {
+    public Optional<StoreSelectedDto> findStoreInfoById(final long storeId, final Long userId) {
         QStore store = QStore.store;
         QStoreLike storeLike = QStoreLike.storeLike;
         QCake cake = QCake.cake;
@@ -390,7 +392,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 : Expressions.nullExpression(String.class);
 
         /// 메인 쿼리
-        return queryFactory.select(new QStoreSelectedDto(
+        return Optional.ofNullable(queryFactory.select(new QStoreSelectedDto(
                         store.id,
                         store.name,
                         store.address,
@@ -401,7 +403,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 ))
                 .from(store)
                 .where(store.id.eq(storeId))
-                .fetchOne();
+                .fetchOne());
     }
 
     // 유저의 케이크 좋아요 여부 서브쿼리

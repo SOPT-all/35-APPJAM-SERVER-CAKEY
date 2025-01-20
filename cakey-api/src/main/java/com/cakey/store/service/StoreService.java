@@ -12,6 +12,7 @@ import com.cakey.size.facade.SizeFacade;
 import com.cakey.store.domain.Station;
 import com.cakey.store.domain.Store;
 import com.cakey.store.dto.*;
+import com.cakey.store.exception.StoreNotfoundException;
 import com.cakey.store.facade.StoreFacade;
 import java.time.format.DateTimeFormatter;
 
@@ -22,6 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.cakey.store.exception.StoreErrorCode.STORE_KAKAO_LINK_NOT_FOUND;
+import static com.cakey.store.exception.StoreErrorCode.STORE_OPERATION_TIME_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -160,8 +164,7 @@ public class StoreService {
         try {
             storeKakaoLinkDto = storeFacade.findById(storeId);
         } catch (NotFoundBaseException e) {
-            //todo: 추후 구체적인 예외처리
-            throw e;
+            throw new StoreNotfoundException(STORE_KAKAO_LINK_NOT_FOUND);
         }
         return new StoreKakaoLinkRes(storeKakaoLinkDto.kakaoLink());
     }
@@ -221,8 +224,7 @@ public class StoreService {
                     storeDetailInfoDto.phone()
             );
         } catch (NotFoundBaseException e) {
-            //todo: 추후 구체적인 예외처리
-            throw e;
+            throw new StoreNotfoundException(STORE_OPERATION_TIME_NOT_FOUND)
         }
     }
 
