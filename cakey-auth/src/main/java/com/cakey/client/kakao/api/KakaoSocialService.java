@@ -18,32 +18,32 @@ public class KakaoSocialService {
     private final KakaoAuthApiClient kakaoAuthApiClient;
 
     private static final String AUTH_CODE = "authorization_code";
-    private static final String REDIRECT_URI = "http://localhost:5173/kakao/redirection";
 
     @Value("${kakao.clientId}")
     private String clientId;
 
-    public KakaoUserDto getKakaoUserInfo(final String authorizationCode) {
+    public KakaoUserDto getKakaoUserInfo(final String authorizationCode, final String redirectUri) {
         String kakaoAccessToken;
         try {
             // 인가 코드로 카카오 Access Token 받아오기
-            kakaoAccessToken = getOAuth2Authentication(authorizationCode);
+            kakaoAccessToken = getOAuth2Authentication(authorizationCode, redirectUri);
         } catch (FeignException e) {
             throw new RuntimeException("authentication code expired");
         }
 
-        String contentType = MediaType.APPLICATION_FORM_URLENCODED.toString();
+        final String contentType = MediaType.APPLICATION_FORM_URLENCODED.toString();
         // Access Token으로 유저 정보 불러오기
         return getUserInfo(kakaoAccessToken, contentType);
     }
 
     private String getOAuth2Authentication(
-            final String authorizationCode
+            final String authorizationCode,
+            final String redirectUri
     ) {
-        KakaoAccessTokenRes response = kakaoAuthApiClient.getOAuth2AccessToken(
+        final KakaoAccessTokenRes response = kakaoAuthApiClient.getOAuth2AccessToken(
                 AUTH_CODE,
                 clientId,
-                REDIRECT_URI,
+                redirectUri,
                 authorizationCode
         );
         return response.accessToken();
