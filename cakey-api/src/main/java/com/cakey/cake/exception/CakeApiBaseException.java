@@ -1,7 +1,6 @@
 package com.cakey.cake.exception;
 
-import com.cakey.common.rescode.ErrorBaseCode;
-import com.cakey.common.rescode.ErrorCode;
+import com.cakey.rescode.ErrorCode;
 import com.cakey.exception.CakeBaseException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package com.cakey.storelikes.controller;
 
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
-import com.cakey.common.rescode.SuccessCode;
+import com.cakey.rescode.SuccessCode;
 import com.cakey.store.dto.StoreLikedCoordinateRes;
 import com.cakey.storelikes.service.StoreLikesService;
 import lombok.RequiredArgsConstructor;

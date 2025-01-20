@@ -4,13 +4,12 @@ package com.cakey.user.controller;
 import com.cakey.client.dto.LoginReq;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
-import com.cakey.common.response.SuccessCode;
+import com.cakey.rescode.SuccessCode;
 import com.cakey.user.dto.LoginSuccessRes;
 import com.cakey.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +28,7 @@ public class UserController {
     public ResponseEntity<BaseResponse<?>> login(
             @RequestHeader(value = "Authorization") final String authorization,
                                                  @RequestBody final LoginReq loginReq) {
-       final LoginSuccessRes loginSuccessRes = userService.login(authorization, loginReq);
+       userService.login(authorization, loginReq);
        return ApiResponseUtil.success(SuccessCode.OK);
    }
 

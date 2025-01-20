@@ -1,7 +1,8 @@
 package com.cakey.jwt.auth;
 
-import com.cakey.exception.ErrorCode;
 import com.cakey.jwt.domain.Token;
+import com.cakey.rescode.ErrorBaseCode;
+import com.cakey.rescode.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class JwtProvider {
         try {
             return Long.parseLong(subject);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(String.valueOf(ErrorCode.INTERNAL_SERVER_ERROR)); //todo: 추후 변경
+            throw new IllegalArgumentException(String.valueOf(ErrorBaseCode.INTERNAL_SERVER_ERROR)); //todo: 추후 변경
         }
     }
 }

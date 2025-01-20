@@ -18,5 +18,6 @@ public class SizeRetriever {
         if (response.isEmpty()) {
             throw new NotFoundBaseException();
         }
+        return response;
     }
 }

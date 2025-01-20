@@ -1,7 +1,6 @@
 package com.cakey.store.exception;
 
-import com.cakey.common.rescode.ErrorBaseCode;
-import com.cakey.common.rescode.ErrorCode;
+import com.cakey.rescode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class StoreNotfoundException extends StoreApiBaseException {
@@ -12,6 +11,6 @@ public class StoreNotfoundException extends StoreApiBaseException {
 
   @Override
   HttpStatus getStatus() {
-    return null;
+    return HttpStatus.NOT_FOUND;
   }
 }

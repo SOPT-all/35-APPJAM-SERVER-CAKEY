@@ -1,4 +1,4 @@
-package com.cakey.common.rescode;
+package com.cakey.rescode;
 
 public interface ErrorCode extends ApiCode {
 }

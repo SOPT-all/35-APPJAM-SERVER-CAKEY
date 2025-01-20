@@ -1,14 +1,13 @@
 package com.cakey.user.service;
 
 
+import com.cakey.cake.exception.CakeBadRequestBaseException;
 import com.cakey.client.SocialType;
 import com.cakey.client.dto.LoginReq;
 import com.cakey.client.kakao.api.KakaoSocialService;
 import com.cakey.client.kakao.api.dto.KakaoUserDto;
 import com.cakey.client.kakao.api.dto.UserCreateDto;
 import com.cakey.jwt.auth.JwtProvider;
-import com.cakey.common.exception.NotFoundException;
-import com.cakey.exception.CakeyApiException;
 import com.cakey.jwt.domain.Token;
 import com.cakey.jwt.domain.UserRole;
 import com.cakey.user.domain.User;
@@ -16,6 +15,8 @@ import com.cakey.user.dto.LoginSuccessRes;
 import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.user.dto.UserInfoDto;
 import com.cakey.user.dto.UserInfoRes;
+import com.cakey.user.exception.UserBadRequestException;
+import com.cakey.user.exception.UserErrorCode;
 import com.cakey.user.facade.UserFacade;
 import com.cakey.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class UserService {
         if (loginReq.socialType().equals(SocialType.KAKAO)) {
             kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(authorizationCode);
         } else {
-            throw new CakeyApiException(); //todo: exception 변경
+            throw new UserBadRequestException(UserErrorCode.USER_SOCIAL_TYPE_NOT_FOUND); //todo: exception 변경
         }
 
         //플랫폼 타입

@@ -1,6 +1,6 @@
 package com.cakey.exception.handler;
 
-import com.cakey.common.rescode.ErrorBaseCode;
+import com.cakey.rescode.ErrorBaseCode;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;

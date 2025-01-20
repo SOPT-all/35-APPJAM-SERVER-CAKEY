@@ -1,7 +1,7 @@
 package com.cakey.common.response;
 
-import com.cakey.common.rescode.ErrorBaseCode;
-import com.cakey.common.rescode.SuccessCode;
+import com.cakey.rescode.ErrorBaseCode;
+import com.cakey.rescode.SuccessCode;
 import org.springframework.http.ResponseEntity;
 
 public class ApiResponseUtil {

@@ -5,7 +5,7 @@ import com.cakey.cake.service.CakeService;
 import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
-import com.cakey.common.rescode.SuccessCode;
+import com.cakey.rescode.SuccessCode;
 import com.cakey.store.domain.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

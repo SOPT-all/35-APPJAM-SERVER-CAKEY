@@ -1,8 +1,6 @@
 package com.cakey.cake.exception;
 
-import com.cakey.common.rescode.ApiCode;
-import com.cakey.common.rescode.ErrorBaseCode;
-import com.cakey.common.rescode.ErrorCode;
+import com.cakey.rescode.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
