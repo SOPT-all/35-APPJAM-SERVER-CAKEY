@@ -128,7 +128,7 @@ public class UserService {
                 .sameSite("None")
                 .httpOnly(true)
                 .build();
-        response.setHeader("Set-Cookie", refreshCookie.toString());
+        response.addHeader("Set-Cookie", refreshCookie.toString());
     }
 
     public UserInfoRes getUserInfo(final Long userId) {
