@@ -10,6 +10,7 @@ import com.cakey.user.dto.LoginSuccessRes;
 import com.cakey.user.service.UserService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,11 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<?>> login(
             @RequestHeader(value = "Authorization") final String authorization,
-                                                 @RequestBody final LoginReq loginReq) {
-        final LoginSuccessRes loginSuccessRes = userService.login(authorization, loginReq);
+            @RequestBody final LoginReq loginReq,
+            HttpServletResponse response
+            ) {
+        final LoginSuccessRes loginSuccessRes = userService.login(authorization, loginReq, response);
+
        return ApiResponseUtil.success(SuccessCode.OK, loginSuccessRes);
    }
 

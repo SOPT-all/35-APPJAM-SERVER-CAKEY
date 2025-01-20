@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class JwtGenerator {
 
     //todo: 추후에 properties로 가져오기(데로 참고)
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 2 * 60 * 60 * 1000L; //2시간
+    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 14* 24 * 60 * 60 * 1000L; //2시간
     private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 14* 24 * 60 * 60 * 1000L; //2주
     private static final String SECRET_KEY = "cakeyfsdafasdfjsadrhksadrhskdlrskadjlralsdkrhasdklrhsadr";
 
