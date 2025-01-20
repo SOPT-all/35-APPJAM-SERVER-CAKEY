@@ -1,5 +1,6 @@
 package com.cakey.store.controller;
 
+import com.cakey.common.resolver.user.UserId;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.rescode.SuccessCode;
@@ -31,7 +32,7 @@ public class StoreController {
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLikes(
             //todo: @UserId final Long userId //다음 피알에서 추가예정
-            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @UserId final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "likesCursor", required = false) final Integer likesCursor,
             @RequestParam(value = "storeIdCursor", required = false) final Long storeIdCursor,
@@ -51,7 +52,7 @@ public class StoreController {
     @GetMapping("/latest")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLatest(
             //todo: @UserId final Long userId //다음 피알에서 추가예정
-            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @UserId final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "storeIdCursor", required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
@@ -109,7 +110,7 @@ public class StoreController {
     //선택 스토어 조회
     @GetMapping("/{storeId}/select")
     public ResponseEntity<BaseResponse<?>> getStoreSelected(
-            @RequestHeader(value = "Authorization", required = false) final Long userId,
+            @UserId final Long userId,
             @PathVariable final long storeId) {
         return ApiResponseUtil.success(
                 SuccessCode.OK,

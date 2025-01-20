@@ -1,6 +1,7 @@
 package com.cakey.cakelikes.controller;
 
 import com.cakey.cakelikes.service.CakeLikesService;
+import com.cakey.common.resolver.user.UserId;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.rescode.SuccessCode;
@@ -18,7 +19,7 @@ public class CakeLikesController {
     //찜한 디자인(케이크) 조회(최신순)
     @GetMapping("/latest")
     public ResponseEntity<BaseResponse<?>> getLatestCakeLikedByUser(
-            @RequestHeader(value = "Authorization") final long userId,
+            @UserId final long userId,
             @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final Integer size
     ) {
@@ -28,7 +29,7 @@ public class CakeLikesController {
     //찜한 디자인(케이크) 조회(인기순)
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getPopularCakeLikedByUser(
-            @RequestHeader(value = "Authorization") final long userId,
+            @UserId final long userId,
             @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
             @RequestParam(value = "cakeLikesCursor", required = false) final Integer cakeLikesCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final Integer size

@@ -2,6 +2,7 @@ package com.cakey.user.controller;
 
 
 import com.cakey.client.dto.LoginReq;
+import com.cakey.common.resolver.user.UserId;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.rescode.SuccessCode;
@@ -34,7 +35,8 @@ public class UserController {
 
     //유저 정보 조회(이름, 이메일)
     @GetMapping
-    public ResponseEntity<BaseResponse<?>> getUserInfo(@RequestHeader(value = "userId") final Long userId) {
+    public ResponseEntity<BaseResponse<?>> getUserInfo(
+            @UserId final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, userService.getUserInfo(userId));
     }
 }

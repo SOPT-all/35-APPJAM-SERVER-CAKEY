@@ -1,5 +1,6 @@
 package com.cakey.storelikes.controller;
 
+import com.cakey.common.resolver.user.UserId;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.rescode.SuccessCode;
@@ -18,7 +19,7 @@ public class StoreLikesController {
     //찜한 스토어 조회(최신순)
     @GetMapping("/latest")
     public ResponseEntity<BaseResponse<?>> getLatestStoreByUserLikes(
-            @RequestHeader(value = "userId", required = true) final long userId,
+            @UserId final long userId,
             @RequestParam(value = "storeIdCursor", required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
@@ -30,7 +31,7 @@ public class StoreLikesController {
     //찜한 스토어 조회(인기순)
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getPopularityStoreByUserLikes(
-            @RequestHeader(value = "userId", required = true) final long userId,
+            @UserId final long userId,
             @RequestParam(value = "likesCursor", required = false) final Integer likesCursor,
             @RequestParam(value = "storeIdCursor",  required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
@@ -43,7 +44,7 @@ public class StoreLikesController {
     //찜한 스토어 좌표 조회
     @GetMapping("/coordinate")
     public ResponseEntity<BaseResponse<?>> getStoreLikedCoordinate(
-            @RequestHeader(value = "Authorization", required = true) final long userId
+            @UserId final long userId
     ) {
         return ApiResponseUtil.success(
                 SuccessCode.OK,
@@ -53,7 +54,7 @@ public class StoreLikesController {
     //스토어 찜하기
     @PostMapping("/{storeId}")
     public ResponseEntity<BaseResponse<?>> postStoreLikes(
-            @RequestHeader(value = "Authorization") final long userId,
+            @UserId final long userId,
             @PathVariable(value = "storeId") final long storeId) {
         storeLikesService.postStoreLikes(userId, storeId);
         return ApiResponseUtil.success(SuccessCode.CREATED);
@@ -62,7 +63,7 @@ public class StoreLikesController {
     //스토어 찜하기 취소
     @DeleteMapping("/{storeId}")
     public ResponseEntity<BaseResponse<?>> deleteStoreLikes(
-            @RequestHeader(value = "Authorization") final long userId,
+            @UserId final long userId,
             @PathVariable(value = "storeId") final long storeId
     ) {
         storeLikesService.deleteStoreLikes(userId, storeId);
