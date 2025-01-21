@@ -30,8 +30,6 @@ public class FilterConfig {
                 "/api/v1/cake/popularity/*",
                 "/api/v1/cake/select/*",
                 "/api/v1/store/design/*"
-
-
                 );
 
         /// 필터 우선순위 설정
