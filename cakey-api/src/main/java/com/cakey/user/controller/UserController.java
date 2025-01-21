@@ -41,7 +41,15 @@ public class UserController {
     }
 
     //로그아웃
-//    @
+    @DeleteMapping("/logout")
+    public ResponseEntity<BaseResponse<?>> logout(
+        @UserId final Long userId,
+        HttpServletResponse response
+    ) {
+        userService.logout(userId, response);
+        return ApiResponseUtil.success(SuccessCode.OK);
+    }
+    
 
 //    //jwt 재발급
 //    @GetMapping("/reissue")

@@ -11,8 +11,10 @@ public enum UserErrorCode implements ErrorCode {
     /**
      * 404 Not Found
      */
-    USER_SOCIAL_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, 40408, "유저의 소셜타입을 찾을 수 없습니다."),
-    
+    USER_SOCIAL_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, 40407, "유저의 소셜타입을 찾을 수 없습니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, 40408, "유저를 찾을 수 없습니다."),
+
+
     ;
 
     private final HttpStatus httpStatus;

@@ -5,6 +5,7 @@ import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.user.domain.User;
 import com.cakey.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,6 +22,11 @@ public class UserRetriever {
 
     public Long findUserIdFromSocialTypeAndPlatformId(final SocialType socialType, final long platformId) {
         return userRepository.findIdBySocialTypeAndSocialId(socialType, platformId).orElse(null);
+    }
+
+    //유저 있는지 확인
+    public boolean isExistById(final long userId) {
+        return userRepository.existsById(userId);
     }
 
 
