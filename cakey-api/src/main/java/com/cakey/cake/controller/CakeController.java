@@ -43,6 +43,7 @@ public class CakeController {
                 cakeService.getPopularCakesByStationStore(userId, station, cakeLikesCursor,cakeIdCursor, size));
     }
 
+    //인기 케이크 조회
     @GetMapping("/rank")
     public ResponseEntity<BaseResponse<?>> getRankCakesByStationStore(@UserId final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK,
@@ -97,7 +98,7 @@ public class CakeController {
     }
 
     //찜한 스토어의 디자인 조회(최신순)
-    @GetMapping("/store-liked/latest")
+    @GetMapping("/store/likes/cake/latest")
     public ResponseEntity<BaseResponse<?>> getLatestCakesByLikedStore(
             @UserId final long userId,
             @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
@@ -110,7 +111,7 @@ public class CakeController {
     }
 
     //찜한 스토어의 디자인 조회(인기순)
-    @GetMapping("/store-liked/popularity")
+    @GetMapping("/store/likes/cake/popularity")
     public ResponseEntity<BaseResponse<?>> getPopularCakesByLikedStore(
             @UserId final long userId,
             @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,

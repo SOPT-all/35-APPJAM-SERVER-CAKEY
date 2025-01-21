@@ -80,27 +80,32 @@ public class StoreController {
                 storeService.getStoreKakaoLink(storeId));
     }
 
+    //스토어 상세 디자인 조회
     @GetMapping("/design/{storeId}")
     public ResponseEntity<BaseResponse<?>> getAllDesign(@PathVariable("storeId") final Long storeId,
                                                         @UserId final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreAllDesign(storeId, userId));
     }
 
+    //스토어 상세 사이즈/맛 조회
     @GetMapping("/{storeId}/size")
     public ResponseEntity<BaseResponse<?>> getSizeAndTaste(@PathVariable("storeId") final Long storeId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreSizeAndTaste(storeId));
     }
 
+    //스토어 상세 정보 조회
     @GetMapping("/{storeId}/information")
     public ResponseEntity<BaseResponse<?>> getStoreInformation(@PathVariable("storeId") final Long storeId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreDetailInfo(storeId));
     }
 
+    //인기 스토어 조회
     @GetMapping("/rank")
     public ResponseEntity<BaseResponse<?>> getStoreByRank(){
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreByRank());
     }
 
+    //선택 스토어 좌표 조회
     @GetMapping("/{storeId}/select/coordinate")
     public ResponseEntity<BaseResponse<?>> getStoreSelectedCoordinate(@PathVariable final Long storeId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreSelectedCoordinate(storeId));
