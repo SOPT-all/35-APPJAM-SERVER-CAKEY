@@ -273,7 +273,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                                 Expressions.asBoolean(true), /// 유저가 좋아요한 케이크이므로 true
                                 cake.imageUrl,
                                 likeCountSubQuery, // 좋아요 개수
-                                Expressions.nullExpression(),
+                                cake.id, 
                                 Expressions.asBoolean(false)
                         )
                 )
