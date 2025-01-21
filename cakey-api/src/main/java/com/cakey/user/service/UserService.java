@@ -1,7 +1,6 @@
 package com.cakey.user.service;
 
 
-import com.cakey.cake.exception.CakeBadRequestBaseException;
 import com.cakey.client.SocialType;
 import com.cakey.client.dto.LoginReq;
 import com.cakey.client.kakao.api.KakaoSocialService;
@@ -17,14 +16,17 @@ import com.cakey.user.dto.UserInfoDto;
 import com.cakey.user.dto.UserInfoRes;
 import com.cakey.user.exception.UserBadRequestException;
 import com.cakey.user.exception.UserErrorCode;
+import com.cakey.user.exception.UserNotFoundException;
 import com.cakey.user.facade.UserFacade;
-import com.cakey.user.repository.UserRepository;
-import jakarta.servlet.http.Cookie;
+import com.cakey.user.facade.UserRetriever;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +38,7 @@ public class UserService {
     private final static String ACCESS_TOKEN = "accessToken";
     private final static String REFRESH_TOKEN = "refreshToken";
     private final JwtProvider jwtProvider;
+    private final UserRetriever userRetriever;
 
 
     public LoginSuccessRes login(
@@ -95,18 +98,46 @@ public class UserService {
 
 //    //jwt 재발급
 //    public LoginSuccessRes jwtReissue(final String refreshToken) {
-        ///refresh token 검증
+    ///refresh token 검증
 //
 //    }
 
-
+    //로그아웃
+    public void logout(final long userId, final HttpServletResponse response) {
+        if(userRetriever.isExistById(userId)) {
+            deleteAccessCookie(response);
+            deleteRefreshCookie(response);
+            deleteRefreshToken(userId);
+        } else {
+            throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
+        }
+    }
 
     @CacheEvict(value = "refresh")
     public void deleteRefreshToken(final long userId) { }
 
+    //accessToken 쿠키 삭제
+    public void deleteAccessCookie(HttpServletResponse response) {
+        ResponseCookie accessCookie = ResponseCookie.from(ACCESS_TOKEN, "")
+                .maxAge(0) // 쿠키 즉시 삭제
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.addHeader("Set-Cookie", accessCookie.toString());
+    }
 
-    private void updateRefreshToken(final String refreshToken, final long userId) {
-        jwtProvider.generateRefreshToken(userId);
+    //refreshToken 쿠키 삭제
+    public void deleteRefreshCookie(HttpServletResponse response) {
+        ResponseCookie refreshCookie = ResponseCookie.from(REFRESH_TOKEN, "")
+                .maxAge(0) // 쿠키 즉시 삭제
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.addHeader("Set-Cookie", refreshCookie.toString());
     }
 
     public void setAccessCookie(final String accessToken, final HttpServletResponse response) {
@@ -134,7 +165,7 @@ public class UserService {
     public UserInfoRes getUserInfo(final Long userId) {
         final UserInfoDto userInfoDto;
         try {
-            userInfoDto = userFacade.findById(userId);
+            userInfoDto = userFacade.findUserInfoById(userId);
         } catch (NotFoundBaseException e) {
             //todo: 추후 구체적인 예외처리
             throw e;

@@ -13,7 +13,7 @@ public class UserFacade {
     private final UserRetriever userRetriever;
     private final UserCreator userCreator;
 
-    public UserInfoDto findById(final Long userId){
+    public UserInfoDto findUserInfoById(final Long userId){
         User user = userRetriever.findById(userId);
         return new UserInfoDto(user.getName(), user.getSocialEmail());
     }
@@ -24,5 +24,10 @@ public class UserFacade {
 
     public long createUser(final UserCreateDto userCreateDto) {
         return userCreator.createUser(userCreateDto);
+    }
+
+    //유저 있는지 확인
+    public boolean isExistById(final long userId) {
+        return userRetriever.isExistById(userId);
     }
 }

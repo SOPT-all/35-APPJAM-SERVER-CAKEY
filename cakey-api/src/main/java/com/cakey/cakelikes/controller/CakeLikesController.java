@@ -42,7 +42,7 @@ public class CakeLikesController {
     @PostMapping("/{cakeId}")
     public ResponseEntity<BaseResponse<?>> postCakeLikes(
             @PathVariable(value = "cakeId") final Long cakeId,
-            @RequestHeader final Long userId
+            @RequstHeader final Long userId
     ) {
         cakeLikesService.postCakeLike(cakeId, userId);
         return ApiResponseUtil.success(SuccessCode.CREATED);
