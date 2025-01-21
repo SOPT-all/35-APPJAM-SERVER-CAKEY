@@ -17,6 +17,8 @@ import com.cakey.store.dto.*;
 import com.cakey.store.exception.StoreErrorCode;
 import com.cakey.store.exception.StoreNotfoundException;
 import com.cakey.store.facade.StoreFacade;
+
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.cakey.store.exception.StoreErrorCode.STORE_KAKAO_LINK_NOT_FOUND;
@@ -224,8 +227,8 @@ public class StoreService {
     }
 
     public StoreDetailInfoRes getStoreDetailInfo(final long storeId) {
-        StoreDetailInfoDto storeDetailInfoDto;
-        StoreOperationTimeDto storeOperationTimeDto;
+        final StoreDetailInfoDto storeDetailInfoDto;
+        final StoreOperationTimeDto storeOperationTimeDto;
         try {
             storeDetailInfoDto = storeFacade.findStoreDetailInfo(storeId);
         } catch (NotFoundBaseException e) {
@@ -237,26 +240,31 @@ public class StoreService {
         } catch (NotFoundBaseException e) {
             throw new StoreNotfoundException(STORE_OPERATION_TIME_NOT_FOUND);
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        final Function<LocalTime, String> formatTime = time -> time == null ? null : time.format(formatter);
+
         return StoreDetailInfoRes.of(
-                storeOperationTimeDto.monOpen().format(formatter),
-                storeOperationTimeDto.monClose().format(formatter),
-                storeOperationTimeDto.tueOpen().format(formatter),
-                storeOperationTimeDto.tueClose().format(formatter),
-                storeOperationTimeDto.wedOpen().format(formatter),
-                storeOperationTimeDto.wedClose().format(formatter),
-                storeOperationTimeDto.thuOpen().format(formatter),
-                storeOperationTimeDto.thuClose().format(formatter),
-                storeOperationTimeDto.friOpen().format(formatter),
-                storeOperationTimeDto.friClose().format(formatter),
-                storeOperationTimeDto.satOpen().format(formatter),
-                storeOperationTimeDto.satClose().format(formatter),
-                storeOperationTimeDto.sunOpen().format(formatter),
-                storeOperationTimeDto.sunClose().format(formatter),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.monOpen())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.monClose())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.tueOpen())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.tueClose())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.wedOpen())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.wedClose())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.thuOpen())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.thuClose())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.friOpen())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.friClose())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.satOpen())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.satClose())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.sunOpen())),
+                formatTime.apply(LocalTime.from(storeOperationTimeDto.sunClose())),
                 storeDetailInfoDto.address(),
                 storeDetailInfoDto.phone()
         );
     }
+
 
     public StoreListByPopularityRes getStoreByRank() {
         final List<StoreByPopularityDto> storeByPopularityDtoList;
