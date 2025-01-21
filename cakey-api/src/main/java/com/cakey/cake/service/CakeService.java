@@ -99,12 +99,13 @@ public class CakeService {
     }
 
     public CakeListByPopularityRes getCakeByRank(final Long userId) {
+        final List<CakeByPopularityDto> cakeByPopularityDtos;
         try {
-            final List<CakeByPopularityDto> cakeByPopularityDtos = cakeFacade.findCakeByRank(userId);
-            return new CakeListByPopularityRes(cakeByPopularityDtos);
+            cakeByPopularityDtos = cakeFacade.findCakeByRank(userId);
         } catch (NotFoundBaseException e) {
             throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
+        return new CakeListByPopularityRes(cakeByPopularityDtos);
     }
 
 
@@ -175,7 +176,6 @@ public class CakeService {
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
         final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
         final Long nextCakeIdCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeIdCursor();
-
 
         final List<CakeInfo> cakes = cakeInfoDtos.stream()
                 .map(cakeInfoDto -> CakeInfo.of(

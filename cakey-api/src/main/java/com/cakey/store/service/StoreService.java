@@ -149,17 +149,6 @@ public class StoreService {
                 .collect(Collectors.toList());
     }
 
-    private int calculateNextCursor(final List<StoreInfoDto> storeInfoDtos) {
-        return storeInfoDtos.isEmpty() ? -1 : storeInfoDtos.get(storeInfoDtos.size() - 1).getStoreLikesCount();
-    }
-
-    //스토어 id들 조회
-    private List<Long> getStoreIds(final List<StoreInfoDto> storeInfoDtos) {
-        return storeInfoDtos.stream()
-                .map(StoreInfoDto::getStoreId)
-                .toList();
-    }
-
     //storeInfo 생성
     private List<StoreInfo> getStoreInfo(final List<StoreInfoDto> storeInfoDtos, final Map<Long, List<CakeMainImageDto>> imageMap) {
         return storeInfoDtos.stream()
@@ -200,7 +189,7 @@ public class StoreService {
         // 케이크 조회
         // 스토어 ID로 케이크 리스트 조회
         try {
-             cakes = cakeFacade.findAllByStoreId(storeId);
+            cakes = cakeFacade.findAllByStoreId(storeId);
         } catch (NotFoundBaseException e) {
             throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
@@ -227,7 +216,7 @@ public class StoreService {
     public StoreAllSizeAndTasteRes getStoreSizeAndTaste(final long storeId) {
         final List<SizeDto> sizeList;
         try {
-             sizeList = sizeFacade.findSizeAllByStoreIdAndOrderByPriceAsc(storeId);
+            sizeList = sizeFacade.findSizeAllByStoreIdAndOrderByPriceAsc(storeId);
         } catch (NotFoundBaseException e) {
             throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
         }
@@ -239,45 +228,64 @@ public class StoreService {
         StoreOperationTimeDto storeOperationTimeDto;
         try {
             storeDetailInfoDto = storeFacade.findStoreDetailInfo(storeId);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
+
+        try {
             storeOperationTimeDto = storeOperationTimeFacade.findStoreOperationTimeByStoreId(storeId);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            return StoreDetailInfoRes.of(
-                    storeOperationTimeDto.monOpen().format(formatter),
-                    storeOperationTimeDto.monClose().format(formatter),
-                    storeOperationTimeDto.tueOpen().format(formatter),
-                    storeOperationTimeDto.tueClose().format(formatter),
-                    storeOperationTimeDto.wedOpen().format(formatter),
-                    storeOperationTimeDto.wedClose().format(formatter),
-                    storeOperationTimeDto.thuOpen().format(formatter),
-                    storeOperationTimeDto.thuClose().format(formatter),
-                    storeOperationTimeDto.friOpen().format(formatter),
-                    storeOperationTimeDto.friClose().format(formatter),
-                    storeOperationTimeDto.satOpen().format(formatter),
-                    storeOperationTimeDto.satClose().format(formatter),
-                    storeOperationTimeDto.sunOpen().format(formatter),
-                    storeOperationTimeDto.sunClose().format(formatter),
-                    storeDetailInfoDto.address(),
-                    storeDetailInfoDto.phone()
-            );
         } catch (NotFoundBaseException e) {
             throw new StoreNotfoundException(STORE_OPERATION_TIME_NOT_FOUND);
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return StoreDetailInfoRes.of(
+                storeOperationTimeDto.monOpen().format(formatter),
+                storeOperationTimeDto.monClose().format(formatter),
+                storeOperationTimeDto.tueOpen().format(formatter),
+                storeOperationTimeDto.tueClose().format(formatter),
+                storeOperationTimeDto.wedOpen().format(formatter),
+                storeOperationTimeDto.wedClose().format(formatter),
+                storeOperationTimeDto.thuOpen().format(formatter),
+                storeOperationTimeDto.thuClose().format(formatter),
+                storeOperationTimeDto.friOpen().format(formatter),
+                storeOperationTimeDto.friClose().format(formatter),
+                storeOperationTimeDto.satOpen().format(formatter),
+                storeOperationTimeDto.satClose().format(formatter),
+                storeOperationTimeDto.sunOpen().format(formatter),
+                storeOperationTimeDto.sunClose().format(formatter),
+                storeDetailInfoDto.address(),
+                storeDetailInfoDto.phone()
+        );
     }
 
     public StoreListByPopularityRes getStoreByRank() {
-        final List<StoreByPopularityDto> storeByPopularityDtoList = storeFacade.findStoreListByLank();
+        final List<StoreByPopularityDto> storeByPopularityDtoList;
+        try {
+            storeByPopularityDtoList = storeFacade.findStoreListByLank();
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
         return new StoreListByPopularityRes(storeByPopularityDtoList);
     }
 
     public StoreSelectedCoordinateRes getStoreSelectedCoordinate(final long storeId) {
-        Store store = storeFacade.findStoreById(storeId);
+        final Store store;
+        try {
+            store = storeFacade.findStoreById(storeId);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
         return StoreSelectedCoordinateRes.of(storeId, store.getLatitude(), store.getLongitude());
     }
 
     //선택된 스토어 조회
     public StoreSelectedRes getStoreSelected(final long storeId, final Long userId) {
-        final StoreSelectedDto storeSelectedDto = storeFacade.findStoreInfoById(storeId, userId);
-
+        final StoreSelectedDto storeSelectedDto;
+        try {
+            storeSelectedDto = storeFacade.findStoreInfoById(storeId, userId);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
         return StoreSelectedRes.of(
                 storeSelectedDto.storeId(),
                 storeSelectedDto.storeName(),

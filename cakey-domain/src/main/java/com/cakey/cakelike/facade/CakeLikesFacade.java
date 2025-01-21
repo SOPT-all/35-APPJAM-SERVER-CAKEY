@@ -11,7 +11,7 @@ public class CakeLikesFacade {
     private final CakeLikesRetriever cakeLikesRetriever;
     private final CakeLikesRemover cakeLikesRemover;
 
-    public boolean existsCakeLikesByCakeIdAndUserId(final Long cakeId, final Long userId) {
+    public boolean existsCakeLikesByCakeIdAndUserId(final long cakeId, final long userId) {
         return cakeLikesRetriever.existsCakeLikesByCakeIdAndUserId(cakeId, userId);
     }
 
@@ -28,7 +28,7 @@ public class CakeLikesFacade {
         cakeLikesRemover.removeCakeLikes(cakeLikes);
     }
 
-    public CakeLikes getCakeLikesByCakeIdAndUserId(final Long cakeId, final Long userId) {
+    public CakeLikes getCakeLikesByCakeIdAndUserId(final long cakeId, final long userId) {
         return cakeLikesRetriever.findCakeLikesByCakeIdAndUserId(cakeId, userId);
     }
 
