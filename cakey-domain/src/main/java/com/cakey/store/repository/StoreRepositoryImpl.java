@@ -157,7 +157,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                 store.address,
                                 isLikedExpression,
                                 storeLike.id.count().intValue(),
-                                Expressions.nullExpression(),
+                                store.id, //todo: 추후 삭제
                                 Expressions.asBoolean(false)
                         ))
                         .from(store)
@@ -204,7 +204,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.address,
                         Expressions.asBoolean(true), /// 좋아요 여부는 항상 true
                         storeLikesCountSubQuery,
-                        Expressions.nullExpression(),
+                        store.id,
                         Expressions.asBoolean(false)
                 ))
                 .from(store)

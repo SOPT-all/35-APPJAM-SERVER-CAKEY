@@ -91,7 +91,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                                 isLikedExpression(userId, cake.id), // 유저의 좋아요 여부 확인
                                 cake.imageUrl,
                                 likeCountSubQuery, // 좋아요 개수 서브쿼리
-                                Expressions.nullExpression(),
+                                cake.id,
                                 Expressions.asBoolean(false)))
                 .from(cake)
                 .join(store).on(cake.storeId.eq(store.id))
