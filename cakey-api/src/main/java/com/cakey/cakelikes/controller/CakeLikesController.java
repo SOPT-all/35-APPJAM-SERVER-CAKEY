@@ -42,7 +42,7 @@ public class CakeLikesController {
     @PostMapping("/{cakeId}")
     public ResponseEntity<BaseResponse<?>> postCakeLikes(
             @PathVariable(value = "cakeId") final Long cakeId,
-            @RequestHeader final Long userId
+            @UserId final Long userId
     ) {
         cakeLikesService.postCakeLike(cakeId, userId);
         return ApiResponseUtil.success(SuccessCode.CREATED);
@@ -52,7 +52,7 @@ public class CakeLikesController {
     @DeleteMapping("/{cakeId}")
     public ResponseEntity<BaseResponse<?>> deleteCakeLikes(
             @PathVariable(value = "cakeId") final long cakeId,
-            @RequestHeader final long userId
+            @UserId final long userId
     ) {
         cakeLikesService.deleteCakeLikes(cakeId, userId);
         return ApiResponseUtil.success(SuccessCode.OK);
