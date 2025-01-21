@@ -31,7 +31,6 @@ public class StoreController {
     //지하철역 스토어 리스트 조회(인기순)
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLikes(
-            //todo: @UserId final Long userId //다음 피알에서 추가예정
             @UserId final Long userId,
             @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "likesCursor", required = false) final Integer likesCursor,
@@ -75,13 +74,13 @@ public class StoreController {
     }
 
     //스토어 카카오 오픈채팅 링크 조회
-    @GetMapping("/{storeId}/kakaoLink")
+    @GetMapping("/kakaoLink/{storeId}")
     public ResponseEntity<BaseResponse<?>> getKakaoLink(@PathVariable("storeId") final Long storeId) {
         return ApiResponseUtil.success(SuccessCode.OK,
                 storeService.getStoreKakaoLink(storeId));
     }
 
-    @GetMapping("/{storeId}/design")
+    @GetMapping("/design/{storeId}")
     public ResponseEntity<BaseResponse<?>> getAllDesign(@PathVariable("storeId") final Long storeId,
                                                         @UserId final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, storeService.getStoreAllDesign(storeId, userId));
@@ -108,7 +107,7 @@ public class StoreController {
     }
 
     //선택 스토어 조회
-    @GetMapping("/{storeId}/select")
+    @GetMapping("/select/{storeId}")
     public ResponseEntity<BaseResponse<?>> getStoreSelected(
             @UserId final Long userId,
             @PathVariable final long storeId) {

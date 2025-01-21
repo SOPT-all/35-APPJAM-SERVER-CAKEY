@@ -52,7 +52,7 @@ public class CakeController {
 
 
     //선택 디자인 조회
-    @GetMapping("/{cakeId}/select")
+    @GetMapping("/select/{cakeId}")
     public ResponseEntity<BaseResponse<?>> getCakeSelect(
             @UserId final Long userId,
             @PathVariable(value = "cakeId") final long cakeId,
