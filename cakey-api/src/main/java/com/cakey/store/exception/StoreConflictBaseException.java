@@ -4,7 +4,7 @@ import com.cakey.rescode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class StoreConflictBaseException extends StoreApiBaseException {
-    protected StoreConflictBaseException(ErrorCode errorCode) {
+    public StoreConflictBaseException(ErrorCode errorCode) {
         super(errorCode);
     }
 

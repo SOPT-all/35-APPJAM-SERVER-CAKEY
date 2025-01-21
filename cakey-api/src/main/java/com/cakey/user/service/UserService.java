@@ -52,7 +52,7 @@ public class UserService {
         if (loginReq.socialType().equals(SocialType.KAKAO)) {
             kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(authorizationCode, loginReq.redirectUri());
         } else {
-            throw new UserBadRequestException(UserErrorCode.USER_SOCIAL_TYPE_NOT_FOUND); //todo: exception 변경
+            throw new UserBadRequestException(UserErrorCode.KAKAO_LOGIN_FAILED);
         }
 
         //플랫폼 타입
@@ -167,8 +167,7 @@ public class UserService {
         try {
             userInfoDto = userFacade.findUserInfoById(userId);
         } catch (NotFoundBaseException e) {
-            //todo: 추후 구체적인 예외처리
-            throw e;
+            throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
         }
         return UserInfoRes.from(userInfoDto);
 
