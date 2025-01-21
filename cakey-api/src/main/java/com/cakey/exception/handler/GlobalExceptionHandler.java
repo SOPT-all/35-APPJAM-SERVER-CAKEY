@@ -8,8 +8,8 @@ import com.cakey.store.exception.StoreApiBaseException;
 import com.cakey.user.exception.UserApiBaseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.val;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -58,6 +58,21 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("\n")); // 메시지를 줄바꿈으로 연결
 
+        return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST_REQUEST_BODY_VALID, errorMessage);
+    }
+
+    /**
+     * 400 - ConstraintViolationException
+     * 발생 이유 : @Validated 검증 실패
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<BaseResponse<?>> handleConstraintViolationException(final ConstraintViolationException e) {
+        String errorMessage = e.getConstraintViolations().stream()
+                .map(violation -> String.format("Field '%s': %s",
+                        violation.getPropertyPath(),
+                        violation.getMessage()
+                ))
+                .collect(Collectors.joining(", "));
         return ApiResponseUtil.failure(ErrorBaseCode.BAD_REQUEST_REQUEST_BODY_VALID, errorMessage);
     }
 
@@ -168,7 +183,7 @@ public class GlobalExceptionHandler {
         if (e.getCause() instanceof ConstraintViolationException constraintViolationException) {
 
             // 제약 조건 이름 추출
-            String constraintName = constraintViolationException.getConstraintName().toString();
+            String constraintName = constraintViolationException.getConstraintViolations().toString();
             String errorMessage = String.format("제약 조건 '%s' 위반이 발생했습니다.", constraintName);
 //            log.info(errorMessage);
             return ApiResponseUtil.failure(ErrorBaseCode.INTEGRITY_CONFLICT, errorMessage);

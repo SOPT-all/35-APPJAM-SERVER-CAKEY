@@ -2,6 +2,7 @@ package com.cakey.cakelike.facade;
 
 import com.cakey.cakelike.domain.CakeLikes;
 import com.cakey.cakelike.repository.CakeLikesRepository;
+import com.cakey.common.exception.NotFoundBaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class CakeLikesRetriever {
     private final CakeLikesRepository cakeLikesRepository;
 
-    public boolean existsCakeLikesByCakeIdAndUserId(Long cakeId, Long userId) {
+    public boolean existsCakeLikesByCakeIdAndUserId(final long cakeId, final long userId) {
         return cakeLikesRepository.existsByCakeIdAndUserId(cakeId, userId);
     }
 
@@ -22,7 +23,7 @@ public class CakeLikesRetriever {
         return cakeLikesRepository.countByUserId(userId);
     }
 
-    public CakeLikes findCakeLikesByCakeIdAndUserId(final Long cakeId, final Long userId) {
-        return cakeLikesRepository.findByCakeIdAndUserId(cakeId, userId);
+    public CakeLikes findCakeLikesByCakeIdAndUserId(final long cakeId, final long userId) {
+        return cakeLikesRepository.findByCakeIdAndUserId(cakeId, userId).orElseThrow(NotFoundBaseException::new);
     }
 }

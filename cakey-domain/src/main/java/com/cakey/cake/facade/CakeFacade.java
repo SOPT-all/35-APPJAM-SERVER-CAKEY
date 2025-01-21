@@ -62,7 +62,7 @@ public class CakeFacade {
         return cakeRetriever.findCakesByRank(userId);
     }
 
-    public Cake findById(final Long cakeId) {
+    public Cake findById(final long cakeId) {
         return cakeRetriever.findById(cakeId);
     }
     //찜한 디자인(케이크) 조회(최신순)

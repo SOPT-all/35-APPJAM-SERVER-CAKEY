@@ -8,13 +8,16 @@ import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.rescode.SuccessCode;
 import com.cakey.store.domain.Station;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/cake")
 @RequiredArgsConstructor
+@Validated
 public class CakeController {
     private final CakeService cakeService;
 
@@ -56,7 +59,7 @@ public class CakeController {
     @GetMapping("/select/{cakeId}")
     public ResponseEntity<BaseResponse<?>> getCakeSelect(
             @UserId final Long userId,
-            @PathVariable(value = "cakeId") final long cakeId,
+            @PathVariable(value = "cakeId") @Min(1) final long cakeId,
             @RequestParam(value = "dayCategory") final DayCategory dayCategory,
             @RequestParam(value = "themeName") final ThemeName themeName
             ) {

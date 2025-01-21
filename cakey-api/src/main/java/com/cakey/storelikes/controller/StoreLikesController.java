@@ -6,11 +6,14 @@ import com.cakey.common.response.BaseResponse;
 import com.cakey.rescode.SuccessCode;
 import com.cakey.store.dto.StoreLikedCoordinateRes;
 import com.cakey.storelikes.service.StoreLikesService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Validated
 @RequestMapping("/api/v1/store/likes")
 @RequiredArgsConstructor
 public class StoreLikesController {
@@ -44,7 +47,7 @@ public class StoreLikesController {
     //찜한 스토어 좌표 조회
     @GetMapping("/coordinate")
     public ResponseEntity<BaseResponse<?>> getStoreLikedCoordinate(
-            @UserId final long userId
+            @UserId @Min(1) final long userId
     ) {
         return ApiResponseUtil.success(
                 SuccessCode.OK,

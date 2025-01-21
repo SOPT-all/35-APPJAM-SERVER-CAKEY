@@ -13,6 +13,7 @@ public enum UserErrorCode implements ErrorCode {
      */
     USER_SOCIAL_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, 40407, "유저의 소셜타입을 찾을 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, 40408, "유저를 찾을 수 없습니다."),
+    KAKAO_LOGIN_FAILED(HttpStatus.BAD_REQUEST, 40409, "카카오 로그인에 실패하였습니다"),
 
 
     ;

@@ -14,7 +14,7 @@ public class StoreOperationTimeRetriever {
 
     public StoreOperationTime findStoreOperationTimeByStoreId(final Long storeId) {
         return storeOperationTimeRepository.findByStoreId(storeId)
-                .orElseThrow(() -> new NotFoundBaseException());
+                .orElseThrow(NotFoundBaseException::new);
     }
 
 }

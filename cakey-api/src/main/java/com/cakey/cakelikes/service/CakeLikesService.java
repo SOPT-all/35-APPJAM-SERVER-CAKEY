@@ -3,12 +3,15 @@ package com.cakey.cakelikes.service;
 import com.cakey.cake.domain.Cake;
 import com.cakey.cake.dto.CakeInfo;
 import com.cakey.cake.dto.CakeInfoDto;
+import com.cakey.cake.exception.CakeErrorCode;
+import com.cakey.cake.exception.CakeNotFoundException;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.domain.CakeLikes;
 import com.cakey.cakelike.facade.CakeLikesFacade;
 import com.cakey.cakelike.facade.CakeLikesRemover;
 import com.cakey.cakelikes.dto.CakeLikedLatestRes;
 import com.cakey.cakelikes.dto.CakeLikedPopularRes;
+import com.cakey.common.exception.NotFoundBaseException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,10 +31,13 @@ public class CakeLikesService {
     public CakeLikedLatestRes getLatestCakeLikedByUser(final long userId,
                                                        final Long cakeIdCursor,
                                                        final Integer size) {
-
+        final List<CakeInfoDto> cakeInfoDtos;
         // 페이지네이션 조회
-        final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
-
+        try {
+            cakeInfoDtos = cakeFacade.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
+        } catch (NotFoundBaseException e) {
+            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+        }
         //마지막 데이터인지
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
         final boolean isLastData = cakeInfoDtos.get(lastCakeInfoDtosIndex).isLastData();
@@ -63,10 +69,14 @@ public class CakeLikesService {
                                                           final Long cakeIdCursor,
                                                           final Integer cakeLikesCursor,
                                                           final int size) {
+        final List<CakeInfoDto> cakeInfoDtos;
 
         // 페이지네이션 조회
-        final List<CakeInfoDto> cakeInfoDtos = cakeFacade.findPopularLikedCakesByUser(userId, cakeIdCursor,cakeLikesCursor, size);
-
+        try {
+            cakeInfoDtos = cakeFacade.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
+        } catch (NotFoundBaseException e) {
+            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+        }
         //마지막 데이터인지
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
         final int nextLikesCursor = cakeInfoDtos.get(lastCakeInfoDtosIndex).getCakeLikeCount();
@@ -96,21 +106,29 @@ public class CakeLikesService {
 
     @Transactional
     public void postCakeLike(final long cakeId, final long userId) {
-        Cake cake = cakeFacade.findById(cakeId);
+        try {
+            final Cake cake = cakeFacade.findById(cakeId);
+        } catch (NotFoundBaseException e) {
+            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+        }
+
         if (!cakeLikesFacade.existsCakeLikesByCakeIdAndUserId(cakeId, userId)) {
-            CakeLikes cakeLikes = CakeLikes.createCakeLikes(cakeId, userId);
+            final CakeLikes cakeLikes = CakeLikes.createCakeLikes(cakeId, userId);
             cakeLikesFacade.saveCakeLikes(cakeLikes);
         } else {
-            //todo: 추후 구체적인 예외 처리
-            throw new RuntimeException("Cake like already exists");
+            throw new CakeNotFoundException(CakeErrorCode.CAKE_LIKES_CONFLICT);
         }
     }
 
     //케이크 좋아요 취소
     @Transactional
     public void deleteCakeLikes(final long cakeId, final long userId) {
-        CakeLikes cakeLikes = cakeLikesFacade.getCakeLikesByCakeIdAndUserId(cakeId, userId);
+        final CakeLikes cakeLikes;
+        try {
+            cakeLikes = cakeLikesFacade.getCakeLikesByCakeIdAndUserId(cakeId, userId);
+        } catch (NotFoundBaseException e) {
+            throw new CakeNotFoundException(CakeErrorCode.CAKE_LIKES_NOT_FOUND_ENTITY);
+        }
         cakeLikesFacade.removeCakeLikes(cakeLikes);
     }
-
 }

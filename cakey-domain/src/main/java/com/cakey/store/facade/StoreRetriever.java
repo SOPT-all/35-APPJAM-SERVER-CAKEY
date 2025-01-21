@@ -82,6 +82,9 @@ public class StoreRetriever {
     }
 
     public List<StoreByPopularityDto> findStoreListByLank(){
+        if (storeRepository.findStoresByLikeCount().isEmpty()) {
+            throw new NotFoundBaseException();
+        }
         return storeRepository.findStoresByLikeCount();
     }
 }

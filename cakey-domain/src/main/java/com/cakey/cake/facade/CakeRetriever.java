@@ -56,7 +56,7 @@ public class CakeRetriever {
         return cakeRepository.findCakesByRank(userId);
     }
 
-    public Cake findById(final Long cakeId) {
+    public Cake findById(final long cakeId) {
         return cakeRepository.findById(cakeId)
                 .orElseThrow(NotFoundBaseException::new);
     }
