@@ -34,7 +34,7 @@ public class UserController {
    }
 
     //유저 정보 조회(이름, 이메일)
-    @GetMapping
+    @GetMapping("/name-email")
     public ResponseEntity<BaseResponse<?>> getUserInfo(
             @UserId final Long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, userService.getUserInfo(userId));
