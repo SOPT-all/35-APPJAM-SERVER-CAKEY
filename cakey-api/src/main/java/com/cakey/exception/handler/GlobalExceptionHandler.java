@@ -1,8 +1,11 @@
 package com.cakey.exception.handler;
 
+import com.cakey.cake.exception.CakeApiBaseException;
 import com.cakey.rescode.ErrorBaseCode;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
+import com.cakey.store.exception.StoreApiBaseException;
+import com.cakey.user.exception.UserApiBaseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
@@ -28,19 +31,26 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(CakeApiBaseException.class)
+    public ResponseEntity<BaseResponse<?>> handleCakeApiBaseException(final CakeApiBaseException e) {
+        return ApiResponseUtil.failure(e.getErrorCode());
+    }
 
-//    /**
-//     * CakeyException
-//     */
-//    @ExceptionHandler(CakeyException.class)
-//    protected ResponseEntity<BaseResponse<?>> handleAgodaException(final AgodaException e) {
-//        return ApiResponseUtil.failure(e.getFailMessage());
-//    }
+    @ExceptionHandler(StoreApiBaseException.class)
+    public ResponseEntity<BaseResponse<?>> handleStoreApiBaseException(final StoreApiBaseException e) {
+        return ApiResponseUtil.failure(e.getErrorCode());
+    }
 
-    /**
-     * 400 - MethodArgumentNotValidException
-     * 발생 이유 : @Valid 검증 실패 (@Request Body)
-     */
+    @ExceptionHandler(UserApiBaseException.class)
+    public ResponseEntity<BaseResponse<?>> handleUserApiBaseException(final UserApiBaseException e) {
+        return ApiResponseUtil.failure(e.getErrorCode());
+    }
+
+
+        /**
+         * 400 - MethodArgumentNotValidException
+         * 발생 이유 : @Valid 검증 실패 (@Request Body)
+         */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponse<?>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         // 모든 검증 실패 메시지를 추출하고 줄바꿈으로 연결
