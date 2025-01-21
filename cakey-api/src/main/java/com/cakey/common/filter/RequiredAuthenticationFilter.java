@@ -3,6 +3,9 @@ package com.cakey.common.filter;
 import com.cakey.jwt.auth.JwtProvider;
 import com.cakey.jwt.auth.UserAuthentication;
 import com.cakey.jwt.auth.JwtValidationType;
+import com.cakey.rescode.ErrorBaseCode;
+import com.cakey.rescode.ErrorCode;
+import com.cakey.user.exception.UserBadRequestException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -77,6 +80,6 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }
-        throw new Exception();
+        throw new UserBadRequestException(ErrorBaseCode.BAD_REQUEST_REQUEST_BODY_VALID);
     }
 }
