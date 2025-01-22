@@ -337,7 +337,8 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 )
                 .from(cake)
                 .join(store).on(cake.storeId.eq(store.id))
-                .join(cakeLikes).on(cakeLikes.cakeId.eq(cake.id).and(cakeLikes.userId.eq(userId)));
+                .join(cakeLikes).on(cakeLikes.cakeId.eq(cake.id).and(cakeLikes.userId.eq(userId)))
+                .groupBy(cake.id);
 
         /// 조건 처리
         if (cakeLikesCursor == null && cakeIdCursor == null) {
@@ -537,12 +538,6 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         QCakeLikes cakeLikes = QCakeLikes.cakeLikes;
         QStore store = QStore.store;
 
-        /// 좋아요 개수를 계산하는 서브쿼리
-//        final JPQLQuery<Integer> cakeLikesCountSubQuery = JPAExpressions
-//                .select(cakeLikes.count().intValue())
-//                .from(cakeLikes)
-//                .where(cakeLikes.cakeId.eq(cake.id));
-
         /// 좋아요 개수를 정렬 가능한 표현식으로 변환
         final NumberExpression<Integer> cakeLikesOrderExpression = Expressions.asNumber(JPAExpressions
                 .select(cakeLikes.count().intValue())
@@ -573,8 +568,8 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 )
                 .from(cake)
                 .join(store).on(cake.storeId.eq(store.id))
-                .leftJoin(cakeTheme).on(cake.id.eq(cakeTheme.cakeId)); // CakeTheme 조인
-
+                .leftJoin(cakeTheme).on(cake.id.eq(cakeTheme.cakeId)) // CakeTheme 조인
+                .groupBy(cake.id);
         /// 조건 추가
         query.where(cake.dayCategory.eq(dayCategory)); // dayCategory는 필수 조건
 
@@ -686,8 +681,8 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                 )
                 .from(cake)
                 .join(store).on(cake.storeId.eq(store.id))
-                .join(storeLikes).on(store.id.eq(storeLikes.storeId).and(storeLikes.userId.eq(userId))); /// 유저가 좋아요한 스토어만
-
+                .join(storeLikes).on(store.id.eq(storeLikes.storeId).and(storeLikes.userId.eq(userId))) /// 유저가 좋아요한 스토어만
+                .groupBy(cake.id);
         /// 조건 처리
         if (cakeLikesCursor == null && cakeIdCursor == null) {
             /// 1. 아이디커서와 좋아요커서 둘 다 없을 때
