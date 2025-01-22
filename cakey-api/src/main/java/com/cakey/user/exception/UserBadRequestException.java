@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 public class UserBadRequestException extends UserApiBaseException{
 
-    public UserBadRequestException(ErrorCode errorCode) {
+    public UserBadRequestException(final ErrorCode errorCode) {
         super(errorCode);
     }
 

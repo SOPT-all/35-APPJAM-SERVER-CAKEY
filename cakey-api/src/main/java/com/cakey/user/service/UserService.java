@@ -6,29 +6,31 @@ import com.cakey.client.dto.LoginReq;
 import com.cakey.client.kakao.api.KakaoSocialService;
 import com.cakey.client.kakao.api.dto.KakaoUserDto;
 import com.cakey.client.kakao.api.dto.UserCreateDto;
+import com.cakey.exception.AuthKakaoException;
 import com.cakey.jwt.auth.JwtProvider;
 import com.cakey.jwt.domain.Token;
 import com.cakey.jwt.domain.UserRole;
-import com.cakey.user.domain.User;
+import com.cakey.rescode.ErrorCode;
 import com.cakey.user.dto.LoginSuccessRes;
 import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.user.dto.UserInfoDto;
 import com.cakey.user.dto.UserInfoRes;
 import com.cakey.user.exception.UserBadRequestException;
 import com.cakey.user.exception.UserErrorCode;
+import com.cakey.user.exception.UserKakaoException;
 import com.cakey.user.exception.UserNotFoundException;
 import com.cakey.user.facade.UserFacade;
 import com.cakey.user.facade.UserRetriever;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
@@ -50,7 +52,11 @@ public class UserService {
         final KakaoUserDto kakaoUserInfo;
 
         if (loginReq.socialType().equals(SocialType.KAKAO)) {
-            kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(authorizationCode, loginReq.redirectUri());
+            try {
+                kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(authorizationCode, loginReq.redirectUri());
+            } catch (AuthKakaoException e) {
+                throw new UserKakaoException(UserErrorCode.KAKAO_LOGIN_FAILED);
+            }
         } else {
             throw new UserBadRequestException(UserErrorCode.KAKAO_LOGIN_FAILED);
         }
