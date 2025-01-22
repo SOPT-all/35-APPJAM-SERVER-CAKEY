@@ -187,10 +187,8 @@ public class GlobalExceptionHandler {
             // 제약 조건 이름 추출
             String constraintName = constraintViolationException.getConstraintViolations().toString();
             String errorMessage = String.format("제약 조건 '%s' 위반이 발생했습니다.", constraintName);
-//            log.info(errorMessage);
             return ApiResponseUtil.failure(ErrorBaseCode.INTEGRITY_CONFLICT, errorMessage);
         } else {
-//            log.info(e.getMessage());
             return ApiResponseUtil.failure(ErrorBaseCode.INTEGRITY_CONFLICT);
         }
     }

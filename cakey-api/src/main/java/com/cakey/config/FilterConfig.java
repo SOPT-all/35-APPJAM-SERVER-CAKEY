@@ -54,7 +54,8 @@ public class FilterConfig {
                 "/api/v1/cake/likes/*",
                 "/api/v1/cake/likes/latest/*",
                 "/api/v1/cake/likes/popularity/*",
-                "/api/v1/user/name-email"
+                "/api/v1/user/name-email",
+                "/api/v1/user/logout"
         );
 
         registrationBean.setOrder(2);
