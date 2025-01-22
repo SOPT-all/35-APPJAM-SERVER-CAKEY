@@ -9,6 +9,7 @@ import com.cakey.user.exception.UserApiBaseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -198,6 +200,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<BaseResponse<?>> handleInvocationTargetException(final InvocationTargetException e) {
         Throwable cause = e.getCause();
         System.out.println(cause.getMessage());
+        log.error(cause.getMessage());
         return ApiResponseUtil.failure(ErrorBaseCode.INTERNAL_SERVER_ERROR, cause.getMessage());
     }
 
@@ -206,8 +209,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<?>> handleAllExceptions(final Exception e) {
-//        log.error(e.getMessage());
-
+        log.error("e.getMessage() + e.getCause().getMessage()");
         return ApiResponseUtil.failure(ErrorBaseCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }

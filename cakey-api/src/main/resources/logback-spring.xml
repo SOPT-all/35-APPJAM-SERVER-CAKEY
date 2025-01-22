@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<!--    로컬 - console-->
+    <springProfile name="local">
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="LOCALCONSOLE">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %cyan(%logger{0}) - %msg%n
+                </pattern>
+            </encoder>
+        </appender>
+        <root level="DEBUG">
+            <appender-ref ref="LOCALCONSOLE" />
+        </root>
+    </springProfile>
+
+<!--    ec2 - rollingFile-->
+    <springProfile name="dev">
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="DEVROLLFILE">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %logger{0} - %msg%n</pattern>
+            </encoder>
+            <file>/home/ubuntu/CAKEY-ERROR-LOG.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/home/ubuntu/CAKEY-ERROR-LOG-%d{yyyy-MM-dd}-%i-log.zip</fileNamePattern>
+                <maxFileSize>50MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>3GB</totalSizeCap>
+            </rollingPolicy>
+        </appender>
+        <root level="WARN">
+            <appender-ref ref="DEVROLLFILE" />
+        </root>
+    </springProfile>
+
+</configuration>
+
