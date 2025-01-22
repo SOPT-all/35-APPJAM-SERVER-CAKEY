@@ -4,14 +4,18 @@ import com.cakey.client.dto.KakaoUserInfoDto;
 import com.cakey.client.kakao.api.dto.KakaoAccessTokenRes;
 import com.cakey.client.kakao.api.dto.KakaoUserDto;
 import com.cakey.client.SocialType;
+import com.cakey.exception.AuthKakaoException;
 import com.cakey.jwt.domain.UserRole;
+import com.cakey.rescode.ErrorBaseCode;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class KakaoSocialService {
     private final KakaoApiClient kakaoApiClient;
@@ -23,12 +27,13 @@ public class KakaoSocialService {
     private String clientId;
 
     public KakaoUserDto getKakaoUserInfo(final String authorizationCode, final String redirectUri) {
-        String kakaoAccessToken;
+        final String kakaoAccessToken;
         try {
             // 인가 코드로 카카오 Access Token 받아오기
             kakaoAccessToken = getOAuth2Authentication(authorizationCode, redirectUri);
         } catch (FeignException e) {
-            throw new RuntimeException("authentication code expired");
+            log.error(e.getMessage(), e);
+            throw new AuthKakaoException();
         }
 
         final String contentType = MediaType.APPLICATION_FORM_URLENCODED.toString();
