@@ -1,5 +1,6 @@
 package com.cakey.jwt.auth;
 
+import com.cakey.jwt.domain.Token;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jws;
@@ -18,16 +19,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class JwtGenerator {
-
-    //todo: 추후에 properties로 가져오기(데로 참고)
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 14* 24 * 60 * 60 * 1000L; //2시간
-    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 14* 24 * 60 * 60 * 1000L; //2주
-    private static final String SECRET_KEY = "cakeyfsdafasdfjsadrhksadrhskdlrskadjlralsdkrhasdklrhsadr";
+    private final JwtProperties jwtProperties;
 
     //액세스 토큰 발급
     public String generateAccessToken(final long userId) {
         final Date now = new Date();
-        final Date expireDate = generateExpirationDate(now);
+        final Date expireDate = generateExpirationDate(now, true);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -41,7 +38,7 @@ public class JwtGenerator {
     @Cacheable(value = "refresh")
     public String generateRefreshToken(final long userId) {
         final Date now = new Date();
-        final Date expireDate = generateExpirationDate(now);
+        final Date expireDate = generateExpirationDate(now, false);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -52,8 +49,12 @@ public class JwtGenerator {
                 .compact();
     }
 
-    private Date generateExpirationDate(final Date now) {
-        return new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME);
+    private Date generateExpirationDate(final Date now, final boolean isAccessToken) {
+        if (isAccessToken) {
+            return new Date(now.getTime() + jwtProperties.getAccessTokenExpirationTime());
+        } else {
+            return new Date(now.getTime() + jwtProperties.getRefreshTokenExpirationTime());
+        }
     }
 
     public Key getSigningKey() {
@@ -61,7 +62,7 @@ public class JwtGenerator {
     }
 
     private String encodeSecretKeyToBase64() {
-        return Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
+        return Base64.getEncoder().encodeToString(jwtProperties.getSecret().getBytes());
     }
 
     public Jws<Claims> parseToken(final String token) {

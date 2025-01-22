@@ -147,7 +147,7 @@ public class UserService {
 
     public void setAccessCookie(final String accessToken, final HttpServletResponse response) {
         ResponseCookie accessCookie = ResponseCookie.from(ACCESS_TOKEN, accessToken)
-                .maxAge(14* 24 * 60 * 60 * 1000L) //액세스 토큰 기간 2주
+                .maxAge(30 * 24 * 60 * 60 * 1000L) /// 1달
                 .path("/")
                 .secure(true)
                 .sameSite("None")
@@ -158,7 +158,7 @@ public class UserService {
 
     public void setRefreshCookie(final String refreshToken, final HttpServletResponse response) {
         ResponseCookie refreshCookie = ResponseCookie.from(REFRESH_TOKEN, refreshToken)
-                .maxAge(14* 24 * 60 * 60 * 1000L) //리프레시 토큰 기간 2주
+                .maxAge(30 * 24 * 60 * 60 * 1000L) /// 1달
                 .path("/")
                 .secure(true)
                 .sameSite("None")
