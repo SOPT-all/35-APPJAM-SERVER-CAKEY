@@ -9,19 +9,19 @@ import java.util.List;
 @Builder(access = AccessLevel.PRIVATE)
 public record StorePopularityLikedByUserRes(
         Integer nextLikesCursor,
-        Long nexStoreId,
+        Long nextStoreId,
         long storeCount,
         boolean isLastData,
         List<StoreInfo> stores
 ) {
     public static StorePopularityLikedByUserRes of(final Integer nextLikesCursor,
-                                                   final Long nexStoreId,
+                                                   final Long nextStoreId,
                                                    final long storeCount,
                                                    final boolean isLastData,
                                                    final List<StoreInfo> stores) {
         return StorePopularityLikedByUserRes.builder()
                 .nextLikesCursor(nextLikesCursor)
-                .nexStoreId(nexStoreId)
+                .nextStoreId(nextStoreId)
                 .storeCount(storeCount)
                 .isLastData(isLastData)
                 .stores(stores)
