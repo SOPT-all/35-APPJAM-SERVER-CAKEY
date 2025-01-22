@@ -3,7 +3,7 @@ package com.cakey.store.service;
 import com.cakey.cake.domain.Cake;
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.exception.CakeErrorCode;
-import com.cakey.cake.exception.CakeNotFoundException;
+import com.cakey.cake.exception.CakeyNotFoundException;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.facade.CakeLikesFacade;
 import com.cakey.common.exception.NotFoundBaseException;
@@ -176,7 +176,7 @@ public class StoreService {
                 .toList();
     }
 
-    public StoreKakaoLinkRes getStoreKakaoLink(final Long storeId) {
+    public StoreKakaoLinkRes getStoreKakaoLink(final long storeId) {
         final StoreKakaoLinkDto storeKakaoLinkDto;
         try {
             storeKakaoLinkDto = storeFacade.findById(storeId);
@@ -194,7 +194,7 @@ public class StoreService {
         try {
             cakes = cakeFacade.findAllByStoreId(storeId);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
 
         //좋아요 상태 설정

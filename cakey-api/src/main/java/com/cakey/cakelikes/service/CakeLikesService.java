@@ -4,7 +4,7 @@ import com.cakey.cake.domain.Cake;
 import com.cakey.cake.dto.CakeInfo;
 import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.exception.CakeErrorCode;
-import com.cakey.cake.exception.CakeNotFoundException;
+import com.cakey.cake.exception.CakeyNotFoundException;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.cakelike.domain.CakeLikes;
 import com.cakey.cakelike.facade.CakeLikesFacade;
@@ -36,7 +36,7 @@ public class CakeLikesService {
         try {
             cakeInfoDtos = cakeFacade.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
         //마지막 데이터인지
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
@@ -75,7 +75,7 @@ public class CakeLikesService {
         try {
             cakeInfoDtos = cakeFacade.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
         //마지막 데이터인지
         final int lastCakeInfoDtosIndex = cakeInfoDtos.size() - 1;
@@ -109,14 +109,14 @@ public class CakeLikesService {
         try {
             final Cake cake = cakeFacade.findById(cakeId);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
 
         if (!cakeLikesFacade.existsCakeLikesByCakeIdAndUserId(cakeId, userId)) {
             final CakeLikes cakeLikes = CakeLikes.createCakeLikes(cakeId, userId);
             cakeLikesFacade.saveCakeLikes(cakeLikes);
         } else {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_LIKES_CONFLICT);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_LIKES_CONFLICT);
         }
     }
 
@@ -127,7 +127,7 @@ public class CakeLikesService {
         try {
             cakeLikes = cakeLikesFacade.getCakeLikesByCakeIdAndUserId(cakeId, userId);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_LIKES_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_LIKES_NOT_FOUND_ENTITY);
         }
         cakeLikesFacade.removeCakeLikes(cakeLikes);
     }

@@ -13,7 +13,7 @@ public class UserFacade {
     private final UserRetriever userRetriever;
     private final UserCreator userCreator;
 
-    public UserInfoDto findUserInfoById(final Long userId){
+    public UserInfoDto findUserInfoById(final long userId){
         User user = userRetriever.findById(userId);
         return new UserInfoDto(user.getName(), user.getSocialEmail());
     }

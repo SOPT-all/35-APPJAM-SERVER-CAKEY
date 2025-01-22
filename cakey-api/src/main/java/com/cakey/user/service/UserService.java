@@ -45,15 +45,16 @@ public class UserService {
 
     public LoginSuccessRes login(
             final String authorizationCode,
-            final LoginReq loginReq,
+            final SocialType socialType,
+            final String redirectUri,
             final HttpServletResponse response
     ) {
         //카카오 유저정보
         final KakaoUserDto kakaoUserInfo;
 
-        if (loginReq.socialType().equals(SocialType.KAKAO)) {
+        if (socialType.equals(SocialType.KAKAO)) {
             try {
-                kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(authorizationCode, loginReq.redirectUri());
+                kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(authorizationCode, redirectUri);
             } catch (AuthKakaoException e) {
                 throw new UserKakaoException(UserErrorCode.KAKAO_LOGIN_FAILED);
             }
@@ -61,8 +62,6 @@ public class UserService {
             throw new UserBadRequestException(UserErrorCode.KAKAO_LOGIN_FAILED);
         }
 
-        //플랫폼 타입
-        final SocialType socialType = loginReq.socialType();
 
         //플랫폼 아이디
         final long platformId = kakaoUserInfo.id();
@@ -73,7 +72,7 @@ public class UserService {
         if (userId == null) { //유저 처음 가입
             //유저생성
             final UserCreateDto userCreateDto = UserCreateDto.of(kakaoUserInfo.kakaoAccount().profile().nickname(),
-                    UserRole.USER, loginReq.socialType(), kakaoUserInfo.id(), kakaoUserInfo.kakaoAccount().email());
+                    UserRole.USER, socialType, kakaoUserInfo.id(), kakaoUserInfo.kakaoAccount().email());
             final long savedUserId = userFacade.createUser(userCreateDto);
 
             final Token newToken = jwtProvider.issueToken(savedUserId);
@@ -168,7 +167,7 @@ public class UserService {
         response.addHeader("Set-Cookie", refreshCookie.toString());
     }
 
-    public UserInfoRes getUserInfo(final Long userId) {
+    public UserInfoRes getUserInfo(final long userId) {
         final UserInfoDto userInfoDto;
         try {
             userInfoDto = userFacade.findUserInfoById(userId);

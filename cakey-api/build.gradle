@@ -12,7 +12,6 @@ dependencies {
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0' //feign
 

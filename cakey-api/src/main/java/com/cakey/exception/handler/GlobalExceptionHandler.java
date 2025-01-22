@@ -1,6 +1,6 @@
 package com.cakey.exception.handler;
 
-import com.cakey.cake.exception.CakeApiBaseException;
+import com.cakey.cake.exception.CakeyApiBaseException;
 import com.cakey.rescode.ErrorBaseCode;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -33,8 +32,8 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CakeApiBaseException.class)
-    public ResponseEntity<BaseResponse<?>> handleCakeApiBaseException(final CakeApiBaseException e) {
+    @ExceptionHandler(CakeyApiBaseException.class)
+    public ResponseEntity<BaseResponse<?>> handleCakeApiBaseException(final CakeyApiBaseException e) {
         return ApiResponseUtil.failure(e.getErrorCode());
     }
 
@@ -43,11 +42,11 @@ public class GlobalExceptionHandler {
         return ApiResponseUtil.failure(e.getErrorCode());
     }
 
+
     @ExceptionHandler(UserApiBaseException.class)
     public ResponseEntity<BaseResponse<?>> handleUserApiBaseException(final UserApiBaseException e) {
         return ApiResponseUtil.failure(e.getErrorCode());
     }
-
 
         /**
          * 400 - MethodArgumentNotValidException
@@ -187,10 +186,8 @@ public class GlobalExceptionHandler {
             // 제약 조건 이름 추출
             String constraintName = constraintViolationException.getConstraintViolations().toString();
             String errorMessage = String.format("제약 조건 '%s' 위반이 발생했습니다.", constraintName);
-//            log.info(errorMessage);
             return ApiResponseUtil.failure(ErrorBaseCode.INTEGRITY_CONFLICT, errorMessage);
         } else {
-//            log.info(e.getMessage());
             return ApiResponseUtil.failure(ErrorBaseCode.INTEGRITY_CONFLICT);
         }
     }

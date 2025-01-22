@@ -3,7 +3,7 @@ package com.cakey.cake.service;
 import com.cakey.cake.domain.DayCategory;
 import com.cakey.cake.dto.*;
 import com.cakey.cake.exception.CakeErrorCode;
-import com.cakey.cake.exception.CakeNotFoundException;
+import com.cakey.cake.exception.CakeyNotFoundException;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.common.exception.NotFoundBaseException;
@@ -35,7 +35,7 @@ public class CakeService {
         try {
             cakeInfoDtos = cakeFacade.findLatestCakesByStation(userId, station, cakeIdCursor, size);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
         ///해당역 케이크 개수
         final int cakeCountByStation = cakeFacade.countCakesByStation(station);
@@ -71,7 +71,7 @@ public class CakeService {
         try {
             cakeInfoDtos = cakeFacade.findPopularCakesByStation(userId, station, cakeLikesCursor, cakeIdCursor, size);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
 
         ///커서 업데이트
@@ -103,7 +103,7 @@ public class CakeService {
         try {
             cakeByPopularityDtos = cakeFacade.findCakeByRank(userId);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
         return new CakeListByPopularityRes(cakeByPopularityDtos);
     }
@@ -135,7 +135,7 @@ public class CakeService {
                     cakeId
             );
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
 
         final List<CakeSelectedInfo> cakeSelectedInfoList = cakeSelectedInfoDtos.stream()
@@ -166,7 +166,7 @@ public class CakeService {
         try {
             cakeInfoDtos = cakeFacade.findCakesByCategoryAndTheme(dayCategory, theme, userId, cakeIdCursor, limit);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
 
         ///케이크 전체 개수
@@ -205,7 +205,7 @@ public class CakeService {
         try {
             cakeInfoDtos = cakeFacade.findPopularCakesByCategoryAndTheme(dayCategory, themeName, userId, cakeIdCursor, cakeLikesCursor, size);
         } catch (NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
 
         ///케이크 전체개수
@@ -241,7 +241,7 @@ public class CakeService {
         try {
             cakeInfoDtos = cakeFacade.findCakesLikedByUser(userId, cakeIdCursor, size);
         } catch (final NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
         ///전체 케이크 개수
         final int totalCakeCount = cakeFacade.countAllDesignsLikedByUser(userId);
@@ -276,7 +276,7 @@ public class CakeService {
         try {
             cakeInfoDtos = cakeFacade.findPopularCakesLikedByUser(userId, cakeIdCursor, cakeLikesCursor, size);
         } catch (final NotFoundBaseException e) {
-            throw new CakeNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
         ///전체 케이크 개수
         final int totalCakeCount = cakeFacade.countAllDesignsLikedByUser(userId);

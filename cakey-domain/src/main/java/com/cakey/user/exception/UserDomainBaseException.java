@@ -1,6 +1,6 @@
 package com.cakey.user.exception;
 
-import com.cakey.exception.CakeBaseException;
+import com.cakey.exception.CakeyBaseException;
 
-public class UserDomainBaseException extends CakeBaseException {
+public class UserDomainBaseException extends CakeyBaseException {
 }

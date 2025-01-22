@@ -49,9 +49,14 @@ subprojects {
 
 	// 모든 서브 모듈에서 사용될 공통 의존성들을 추가함
 	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter'
+
 		implementation 'org.springframework.boot:spring-boot-starter-web:3.2.1'
 		annotationProcessor "org.projectlombok:lombok:1.18.22"
 		compileOnly "org.projectlombok:lombok:1.18.22"
+
+		implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 
 		//Test
 		testImplementation 'org.springframework.boot:spring-boot-starter-test:3.2.1'
