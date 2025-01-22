@@ -54,7 +54,7 @@ public class CakeFacade {
         return cakeRetriever.findCakesByStation(userId, station, cakeIdCursor, size);
     }
 
-    public List<Cake> findAllByStoreId(final Long storeId) {
+    public List<Cake> findAllByStoreId(final long storeId) {
         return cakeRetriever.findAllByStoreId(storeId);
     }
 

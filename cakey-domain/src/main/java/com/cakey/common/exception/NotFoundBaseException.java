@@ -1,4 +1,4 @@
 package com.cakey.common.exception;
 
-public class NotFoundBaseException extends CakeDomainBaseException {
+public class NotFoundBaseException extends CakeyDomainBaseException {
 }

@@ -83,7 +83,7 @@ public class StoreFacade {
     }
 
     //카카오 링크
-    public StoreKakaoLinkDto findById(final Long storeId) {
+    public StoreKakaoLinkDto findById(final long storeId) {
         Store store = storeRetriever.findById(storeId);
         return new StoreKakaoLinkDto(store.getOpenKakaoUrl());
     }
@@ -95,7 +95,7 @@ public class StoreFacade {
     }
 
     //스토어 상세정보
-    public StoreDetailInfoDto findStoreDetailInfo(final Long storeId) {
+    public StoreDetailInfoDto findStoreDetailInfo(final long storeId) {
         Store store = storeRetriever.findById(storeId);
         return new StoreDetailInfoDto(store.getAddress(), store.getPhone());
     }
@@ -114,7 +114,7 @@ public class StoreFacade {
         return storeRetriever.findStoreListByLank();
     }
 
-    public Store findStoreById(final Long storeId) {
+    public Store findStoreById(final long storeId) {
         return storeRetriever.findById(storeId);
     }
 }

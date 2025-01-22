@@ -1,8 +1,6 @@
 package com.cakey.storelikes.service;
 
 import com.cakey.cake.dto.CakeMainImageDto;
-import com.cakey.cake.exception.CakeErrorCode;
-import com.cakey.cake.exception.CakeNotFoundException;
 import com.cakey.cake.facade.CakeFacade;
 import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.Station;

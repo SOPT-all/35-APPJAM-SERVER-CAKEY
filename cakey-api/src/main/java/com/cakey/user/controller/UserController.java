@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,7 +32,7 @@ public class UserController {
             @RequestBody @Valid final LoginReq loginReq,
             HttpServletResponse response
             ) {
-        final LoginSuccessRes loginSuccessRes = userService.login(authorization, loginReq, response);
+        final LoginSuccessRes loginSuccessRes = userService.login(authorization, loginReq.socialType(), loginReq.redirectUri(), response);
 
        return ApiResponseUtil.success(SuccessCode.OK, loginSuccessRes);
    }
@@ -41,14 +40,14 @@ public class UserController {
     //유저 정보 조회(이름, 이메일)
     @GetMapping("/name-email")
     public ResponseEntity<BaseResponse<?>> getUserInfo(
-            @UserId @Min(value = 1, message = "userId는 1이상이여야합니다.") final Long userId) {
+            @UserId @Min(value = 1, message = "userId는 1이상이여야합니다.") final long userId) {
         return ApiResponseUtil.success(SuccessCode.OK, userService.getUserInfo(userId));
     }
 
     //로그아웃
     @DeleteMapping("/logout")
     public ResponseEntity<BaseResponse<?>> logout(
-        @UserId @Min(value = 1, message = "userId는 1이상이여야합니다.") final Long userId,
+        @UserId @Min(value = 1, message = "userId는 1이상이여야합니다.") final long userId,
         HttpServletResponse response
     ) {
         userService.logout(userId, response);
