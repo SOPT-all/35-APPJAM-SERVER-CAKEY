@@ -6,6 +6,7 @@ import com.cakey.cake.dto.*;
 import com.cakey.cakelike.domain.QCakeLikes;
 import com.cakey.caketheme.domain.QCakeTheme;
 import com.cakey.caketheme.domain.ThemeName;
+import com.cakey.common.exception.BadRequestBaseException;
 import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.QStore;
 import com.cakey.store.domain.Station;
@@ -183,21 +184,21 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             /// 1. 아이디커서와 좋아요커서 둘 다 없을 때
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
             );
         } else if (likesCursor != null && likesCursor == 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 2. 좋아요커서가 0이고, 아이디커서가 0보다 클 때
             query.having(cakeLikesOrderExpression.eq(0).and(cakeIdCursorCondition));
-            query.orderBy(store.id.asc()); /// 아이디 오름차순
+            query.orderBy(cake.id.asc()); /// 아이디 오름차순
         } else if (likesCursor != null && likesCursor == 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
             /// 3. 좋아요커서가 0이고, 아이디커서가 없거나 0일 때 (예외 처리)
-            throw new IllegalArgumentException("Invalid cursor combination: likesCursor=0 and storeIdCursor=0 or null");
+            throw new BadRequestBaseException();
         } else if (likesCursor != null && likesCursor > 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
             /// 4. 좋아요커서가 0보다 크고, 아이디커서가 없을 때
-            query.having(cakeLikesOrderExpression.lt(likesCursor)); /// 좋아요 수가 likesCursor보다 작은 스토어 조회
+            query.having(cakeLikesOrderExpression.lt(likesCursor)); /// 좋아요 수가 likesCursor보다 작은 cake 조회
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 cake 오름차순
             );
         } else if (likesCursor != null && likesCursor > 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 5. 좋아요커서가 0보다 크고, 아이디커서가 0보다 클 때
@@ -207,7 +208,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             );
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 cake 오름차순
             );
         }
 
@@ -343,21 +344,21 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             /// 1. 아이디커서와 좋아요커서 둘 다 없을 때
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 cake 오름차순
             );
         } else if (cakeLikesCursor != null && cakeLikesCursor == 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 2. 좋아요커서가 0이고, 아이디커서가 0보다 클 때
             query.having(cakeLikesOrderExpression.eq(0).and(cakeIdCursorCondition));
-            query.orderBy(store.id.asc()); /// 아이디 오름차순
+            query.orderBy(cake.id.asc()); /// 아이디 오름차순
         } else if (cakeLikesCursor != null && cakeLikesCursor == 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
             /// 3. 좋아요커서가 0이고, 아이디커서가 없거나 0일 때 (예외 처리)
-            throw new IllegalArgumentException("Invalid cursor combination: likesCursor=0 and storeIdCursor=0 or null");
+            throw new BadRequestBaseException();
         } else if (cakeLikesCursor != null && cakeLikesCursor > 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
             /// 4. 좋아요커서가 0보다 크고, 아이디커서가 없을 때
             query.having(cakeLikesOrderExpression.lt(cakeLikesCursor)); /// 좋아요 수가 likesCursor보다 작은 스토어 조회
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 cake 오름차순
             );
         } else if (cakeLikesCursor != null && cakeLikesCursor > 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 5. 좋아요커서가 0보다 크고, 아이디커서가 0보다 클 때
@@ -367,7 +368,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             );
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
             );
         }
 
@@ -586,21 +587,21 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             /// 1. 아이디커서와 좋아요커서 둘 다 없을 때
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
             );
         } else if (cakeLikesCursor != null && cakeLikesCursor == 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 2. 좋아요커서가 0이고, 아이디커서가 0보다 클 때
             query.having(cakeLikesOrderExpression.eq(0).and(cakeIdCursorCondition));
-            query.orderBy(store.id.asc()); /// 아이디 오름차순
+            query.orderBy(cake.id.asc()); /// 아이디 오름차순
         } else if (cakeLikesCursor != null && cakeLikesCursor == 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
             /// 3. 좋아요커서가 0이고, 아이디커서가 없거나 0일 때 (예외 처리)
-            throw new IllegalArgumentException("Invalid cursor combination: likesCursor=0 and storeIdCursor=0 or null");
+            throw new BadRequestBaseException();
         } else if (cakeLikesCursor != null && cakeLikesCursor > 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
             /// 4. 좋아요커서가 0보다 크고, 아이디커서가 없을 때
             query.having(cakeLikesOrderExpression.lt(cakeLikesCursor)); /// 좋아요 수가 likesCursor보다 작은 스토어 조회
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
             );
         } else if (cakeLikesCursor != null && cakeLikesCursor > 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 5. 좋아요커서가 0보다 크고, 아이디커서가 0보다 클 때
@@ -610,7 +611,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             );
             query.orderBy(
                     cakeLikesOrderExpression.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
             );
         }
 
@@ -669,10 +670,6 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         final BooleanExpression cakeIdCursorCondition = (cakeIdCursor != null && cakeIdCursor > 0)
                 ? cake.id.gt(cakeIdCursor) : null;
 
-        /// 케이크 좋아요 커서 조건
-        final BooleanExpression cakeLikesCursorCondition = (cakeLikesCursor != null && cakeLikesCursor > 0)
-                ? cakeLikesOrderExpression.lt(cakeLikesCursor) : null;
-
         /// 메인 쿼리 작성
         JPQLQuery<CakeInfoDto> query = queryFactory.selectDistinct(
                         new QCakeInfoDto(
@@ -696,21 +693,21 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             /// 1. 아이디커서와 좋아요커서 둘 다 없을 때
             query.orderBy(
                     cakeLikesCountSubQuery.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
             );
         } else if (cakeLikesCursor != null && cakeLikesCursor == 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 2. 좋아요커서가 0이고, 아이디커서가 0보다 클 때
             query.having(cakeLikesCountSubQuery.eq(0).and(cakeIdCursorCondition));
-            query.orderBy(store.id.asc()); /// 아이디 오름차순
+            query.orderBy(cake.id.asc()); /// 아이디 오름차순
         } else if (cakeLikesCursor != null && cakeLikesCursor == 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
             /// 3. 좋아요커서가 0이고, 아이디커서가 없거나 0일 때 (예외 처리)
-            throw new IllegalArgumentException("Invalid cursor combination: likesCursor=0 and storeIdCursor=0 or null");
+            throw new BadRequestBaseException();
         } else if (cakeLikesCursor != null && cakeLikesCursor > 0 && (cakeIdCursor == null || cakeIdCursor == 0)) {
             /// 4. 좋아요커서가 0보다 크고, 아이디커서가 없을 때
-            query.having(cakeLikesCountSubQuery.lt(cakeLikesCursor)); /// 좋아요 수가 likesCursor보다 작은 스토어 조회
+            query.having(cakeLikesCountSubQuery.lt(cakeLikesCursor)); /// 좋아요 수가 likesCursor보다 작은 케이크 조회
             query.orderBy(
                     cakeLikesCountSubQuery.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
             );
         } else if (cakeLikesCursor != null && cakeLikesCursor > 0 && cakeIdCursor != null && cakeIdCursor > 0) {
             /// 5. 좋아요커서가 0보다 크고, 아이디커서가 0보다 클 때
@@ -720,7 +717,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             );
             query.orderBy(
                     cakeLikesCountSubQuery.desc(), /// 좋아요 개수 내림차순
-                    store.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
+                    cake.id.asc() /// 같은 좋아요 개수일 경우 storeId 오름차순
             );
         }
 
