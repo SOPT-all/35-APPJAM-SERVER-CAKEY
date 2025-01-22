@@ -206,7 +206,13 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<?>> handleAllExceptions(final Exception e) {
-        log.error("e.getMessage() + e.getCause().getMessage()");
+        if (e.getCause() == null) {
+            log.error(e.getMessage());
+        } else {
+            log.error("------------------------------------------------------------------------------------------");
+            log.error(e.getMessage() + "\n" + e.getCause().getMessage());
+            log.error("------------------------------------------------------------------------------------------");
+        }
         return ApiResponseUtil.failure(ErrorBaseCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }

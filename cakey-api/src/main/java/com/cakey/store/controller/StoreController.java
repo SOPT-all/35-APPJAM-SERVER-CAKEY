@@ -8,13 +8,14 @@ import com.cakey.rescode.SuccessCode;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreCoordinateListRes;
 import com.cakey.store.service.StoreService;
-import com.cakey.validate.EnumValue;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/store")
 public class StoreController {
@@ -24,7 +25,7 @@ public class StoreController {
     //스토어 좌표 리스트 조회
     @GetMapping("/coordinate-list")
     public ResponseEntity<BaseResponse<?>> getStoreCoordinateList(
-            @RequestParam(value = "station", required = true) @EnumValue(enumClass = Station.class, message = "유효하지 않는 station입니다.") final Station station
+            @RequestParam(value = "station", required = true) final Station station
             ) {
         return ApiResponseUtil.success(
                 SuccessCode.OK,
@@ -35,7 +36,7 @@ public class StoreController {
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLikes(
             @UserId final Long userId,
-            @RequestParam(value = "station", required = true)  @EnumValue(enumClass = Station.class, message = "유효하지 않는 Station입니다.")final Station station,
+            @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "likesCursor", required = false) final Integer likesCursor,
             @RequestParam(value = "storeIdCursor", required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
@@ -54,7 +55,7 @@ public class StoreController {
     @GetMapping("/latest")
     public ResponseEntity<BaseResponse<?>> getStoreInfoListByStationAndLatest(
             @UserId final Long userId,
-            @RequestParam(value = "station", required = true) @EnumValue(enumClass = Station.class, message = "유효하지 않는 Station입니다.")final Station station,
+            @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "storeIdCursor", required = false) final Long storeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
@@ -121,7 +122,7 @@ public class StoreController {
     //선택 스토어 조회
     @GetMapping("/select/{storeId}")
     public ResponseEntity<BaseResponse<?>> getStoreSelected(
-            @UserId @Min(value = 1, message = "userId는 1이상이어야합니다.")final Long userId,
+            @UserId final Long userId,
             @PathVariable @Min(value = 1, message = "storeId는 1이상이어야합니다.")final long storeId) {
         return ApiResponseUtil.success(
                 SuccessCode.OK,

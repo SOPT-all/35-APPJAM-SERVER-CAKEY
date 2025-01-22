@@ -8,7 +8,6 @@ import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.rescode.SuccessCode;
 import com.cakey.store.domain.Station;
-import com.cakey.validate.EnumValue;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class CakeController {
     @GetMapping("/station/latest")
     public ResponseEntity<BaseResponse<?>> getLatestCakesByStationStore(
         @UserId final Long userId,
-        @RequestParam(value = "station", required = true) @EnumValue(enumClass = Station.class, message = "유효하지 않는 station입니다.") final Station station,
+        @RequestParam(value = "station", required = true) final Station station,
         @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
         @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
@@ -38,7 +37,7 @@ public class CakeController {
     @GetMapping("/station/popularity")
     public ResponseEntity<BaseResponse<?>> getPopularCakesByStationStore(
             @UserId final Long userId,
-            @RequestParam(value = "station", required = true) @EnumValue(enumClass = Station.class, message = "유효하지 않는 station입니다.") final Station station,
+            @RequestParam(value = "station", required = true) final Station station,
             @RequestParam(value = "cakeLikesCursor", required = false) final Integer cakeLikesCursor,
             @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
@@ -62,8 +61,8 @@ public class CakeController {
     public ResponseEntity<BaseResponse<?>> getCakeSelect(
             @UserId final Long userId,
             @PathVariable(value = "cakeId") @Min(1) final long cakeId,
-            @RequestParam(value = "dayCategory") @EnumValue(enumClass = DayCategory.class, message = "유효하지 않는 DayCategory입니다.") final DayCategory dayCategory,
-            @RequestParam(value = "themeName") @EnumValue(enumClass = ThemeName.class, message = "유효하지 않는 ThemeName입니다.") final ThemeName themeName
+            @RequestParam(value = "dayCategory") final DayCategory dayCategory,
+            @RequestParam(value = "themeName") final ThemeName themeName
             ) {
         return ApiResponseUtil.success(
                 SuccessCode.OK,
@@ -75,8 +74,8 @@ public class CakeController {
     @GetMapping("/latest")
     public ResponseEntity<BaseResponse<?>> getLatestCakes(
             @UserId final Long userId,
-            @RequestParam(value = "dayCategory") @EnumValue(enumClass = DayCategory.class, message = "유효하지 않는 DayCategory입니다.") final DayCategory dayCategory,
-            @RequestParam(value = "themeName") @EnumValue(enumClass = ThemeName.class, message = "유효하지 않는 ThemeName입니다.") final ThemeName themeName,
+            @RequestParam(value = "dayCategory") final DayCategory dayCategory,
+            @RequestParam(value = "themeName") final ThemeName themeName,
             @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
             @RequestParam(value = "size", required = false, defaultValue = "10") final int size
             ) {
@@ -90,8 +89,8 @@ public class CakeController {
     @GetMapping("/popularity")
     public ResponseEntity<BaseResponse<?>> getPopularCakes(
             @UserId final Long userId,
-            @RequestParam(value = "dayCategory") @EnumValue(enumClass = DayCategory.class, message = "유효하지 않는 DayCategory입니다.") final DayCategory dayCategory,
-            @RequestParam(value = "themeName") @EnumValue(enumClass = ThemeName.class, message = "유효하지 않는 ThemeName입니다.") final ThemeName themeName,
+            @RequestParam(value = "dayCategory") final DayCategory dayCategory,
+            @RequestParam(value = "themeName") final ThemeName themeName,
             @RequestParam(value = "cakeIdCursor", required = false) final Long cakeIdCursor,
             @RequestParam(value = "cakeLikesCursor", required = false) final Integer cakeLikesCursor,
             @RequestParam(value = "size", required = false, defaultValue = "10") final int size
