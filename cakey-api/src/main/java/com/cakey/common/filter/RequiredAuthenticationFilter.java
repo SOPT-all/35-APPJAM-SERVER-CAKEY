@@ -67,6 +67,7 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             final Long userId = jwtProvider.getUserIdFromSubject(token);
             SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userId, null, null));
         } catch (Exception e) {
+            throw new UserBadRequestException(ErrorBaseCode.UNAUTHORIZED);
         }
         filterChain.doFilter(request, response);
     }
@@ -80,6 +81,6 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }
-        throw new UserBadRequestException(ErrorBaseCode.BAD_REQUEST_REQUEST_BODY_VALID);
+        throw new UserBadRequestException(ErrorBaseCode.UNAUTHORIZED);
     }
 }

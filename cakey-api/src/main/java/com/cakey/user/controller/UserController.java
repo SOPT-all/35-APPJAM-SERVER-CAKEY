@@ -28,8 +28,8 @@ public class UserController {
     //로그인
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<?>> login(
-            @RequestHeader(value = "Authorization") @NotBlank(message = "authorization이 잘못되었습니다.") final String authorization,
-            @RequestBody @Valid final LoginReq loginReq,
+            @RequestHeader(value = "Authorization") final String authorization,
+            @RequestBody final LoginReq loginReq,
             HttpServletResponse response
             ) {
         final LoginSuccessRes loginSuccessRes = userService.login(authorization, loginReq.socialType(), loginReq.redirectUri(), response);
