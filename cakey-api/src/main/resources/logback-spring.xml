@@ -2,20 +2,20 @@
 <configuration>
 <!--    로컬 - console-->
     <springProfile name="local">
-        <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="LOCALCONSOLE">
+        <appender name="LOCALCONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %cyan(%logger{0}) - %msg%n
                 </pattern>
             </encoder>
         </appender>
-        <root level="DEBUG">
-            <appender-ref ref="LOCALCONSOLE" />
+        <root level="INFO">
+            <appender-ref ref="LOCALCONSOLE"/>
         </root>
     </springProfile>
 
 <!--    ec2 - rollingFile-->
     <springProfile name="dev">
-        <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="DEVROLLFILE">
+        <appender name="DEVROLLFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %logger{0} - %msg%n</pattern>
             </encoder>
@@ -28,8 +28,8 @@
                 <totalSizeCap>3GB</totalSizeCap>
             </rollingPolicy>
         </appender>
-        <root level="WARN">
-            <appender-ref ref="DEVROLLFILE" />
+        <root level="ERROR">
+            <appender-ref ref="DEVROLLFILE"/>
         </root>
     </springProfile>
 
