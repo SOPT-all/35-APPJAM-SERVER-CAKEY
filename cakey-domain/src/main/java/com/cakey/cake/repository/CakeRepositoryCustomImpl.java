@@ -41,7 +41,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     //가게 메인이미지 조회
     @Override
     public List<CakeMainImageDto> findMainImageByStoreIds(List<Long> storeIds) {
-        List<CakeMainImageDto> cakeMainImageDtos = queryFactory.select(Projections.constructor(CakeMainImageDto.class,
+        List<CakeMainImageDto> cakeMainImageDtos = queryFactory.selectDistinct(Projections.constructor(CakeMainImageDto.class,
                         cake.storeId,
                         cake.id,
                         cake.imageUrl))
@@ -163,7 +163,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
 
         /// 쿼리 실행
         JPQLQuery<CakeInfoDto> query = queryFactory
-                .select(new QCakeInfoDto(
+                .selectDistinct(new QCakeInfoDto(
                         cake.id,
                         store.id,
                         store.name,
@@ -413,7 +413,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         QCakeTheme cakeTheme = QCakeTheme.cakeTheme;
 
         ///첫 번째 케이크: 들어온 cakeId 정보 가져오기
-        CakeSelectedInfoDto mainCake = queryFactory.select(new QCakeSelectedInfoDto(
+        CakeSelectedInfoDto mainCake = queryFactory.selectDistinct(new QCakeSelectedInfoDto(
                         cake.id,
                         isLikedByUser(cake.id, userId), /// 좋아요 여부 확인
                         cake.imageUrl
@@ -437,7 +437,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         }
 
         /// 나머지 케이크 가져오기
-        List<CakeSelectedInfoDto> otherCakes = queryFactory.select(new QCakeSelectedInfoDto(
+        List<CakeSelectedInfoDto> otherCakes = queryFactory.selectDistinct(new QCakeSelectedInfoDto(
                         cake.id,
                         isLikedByUser(cake.id, userId), /// 좋아요 여부 확인
                         cake.imageUrl
@@ -493,7 +493,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         }
 
         /// QueryDSL 쿼리 작성
-        List<CakeInfoDto> cakes = queryFactory.select(new QCakeInfoDto(
+        List<CakeInfoDto> cakes = queryFactory.selectDistinct(new QCakeInfoDto(
                         cake.id,
                         cake.storeId,
                         store.name,
@@ -826,7 +826,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         }
 
         /// 케이크 개수 조회 쿼리
-        Long count = queryFactory.select(cake.count())
+        Long count = queryFactory.selectDistinct(cake.count())
                 .from(cake)
                 .leftJoin(cakeTheme).on(cake.id.eq(cakeTheme.cakeId))
                 .where(whereCondition)
