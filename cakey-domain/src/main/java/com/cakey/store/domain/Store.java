@@ -22,7 +22,7 @@ public class Store extends BaseTimeEntity {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "phone", nullable = false)
+    @Column(name = "phone", nullable = true)
     private String phone;
 
     @Column(name = "latitude", nullable = false)
