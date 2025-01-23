@@ -1,12 +1,10 @@
 package com.cakey.common.filter;
 
-import com.cakey.common.Constant;
+import com.cakey.Constants;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.jwt.auth.JwtProvider;
 import com.cakey.jwt.auth.UserAuthentication;
-import com.cakey.jwt.auth.JwtValidationType;
 import com.cakey.rescode.ErrorBaseCode;
-import com.cakey.rescode.ErrorCode;
 import com.cakey.user.exception.UserBadRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -20,7 +18,6 @@ import java.util.List;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -78,7 +75,7 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             final ErrorBaseCode errorCode = ErrorBaseCode.UNAUTHORIZED;
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding(Constant.CHARACTER_TYPE);
+            response.setCharacterEncoding(Constants.CHARACTER_TYPE);
             response.setStatus(errorCode.getHttpStatus().value()); // HTTP 상태 코드 401 설정
 
             // `ApiResponseUtil.failure`를 이용해 응답 작성

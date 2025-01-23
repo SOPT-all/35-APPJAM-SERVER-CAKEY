@@ -12,9 +12,13 @@ import com.cakey.cakelike.facade.CakeLikesRemover;
 import com.cakey.cakelikes.dto.CakeLikedLatestRes;
 import com.cakey.cakelikes.dto.CakeLikedPopularRes;
 import com.cakey.common.exception.NotFoundBaseException;
-import jakarta.transaction.Transactional;
+import com.cakey.store.exception.StoreConflictBaseException;
+import com.cakey.store.exception.StoreErrorCode;
+import com.cakey.user.facade.UserFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,9 +29,11 @@ public class CakeLikesService {
 
     private final CakeFacade cakeFacade;
     private final CakeLikesFacade cakeLikesFacade;
+    private final UserFacade userFacade;
     private final CakeLikesRemover cakeLikesRemover;
 
     //찜한 디자인(케이크) 조회(최신순)
+    @Transactional(readOnly = true)
     public CakeLikedLatestRes getLatestCakeLikedByUser(final long userId,
                                                        final Long cakeIdCursor,
                                                        final Integer size) {
@@ -65,6 +71,7 @@ public class CakeLikesService {
     }
 
     //찜한 디자인(케이크) 조회(인기순)
+    @Transactional(readOnly = true)
     public CakeLikedPopularRes getPopularLikedCakesByUser(final long userId,
                                                           final Long cakeIdCursor,
                                                           final Integer cakeLikesCursor,
@@ -103,21 +110,21 @@ public class CakeLikesService {
     }
 
 
-
+    //케이크 좋아요 등록
     @Transactional
     public void postCakeLike(final long cakeId, final long userId) {
         try {
-            final Cake cake = cakeFacade.findById(cakeId);
+            cakeFacade.isExistCake(cakeId);
         } catch (NotFoundBaseException e) {
             throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
-
-        if (!cakeLikesFacade.existsCakeLikesByCakeIdAndUserId(cakeId, userId)) {
+        try {
             final CakeLikes cakeLikes = CakeLikes.createCakeLikes(cakeId, userId);
             cakeLikesFacade.saveCakeLikes(cakeLikes);
-        } else {
-            throw new CakeyNotFoundException(CakeErrorCode.CAKE_LIKES_CONFLICT);
+        } catch (DataIntegrityViolationException e) {
+            throw new StoreConflictBaseException(StoreErrorCode.STORE_LIKES_CONFLICT);
         }
+
     }
 
     //케이크 좋아요 취소

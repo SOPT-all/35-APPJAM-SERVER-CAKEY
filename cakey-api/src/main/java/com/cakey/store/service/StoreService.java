@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,6 +61,7 @@ public class StoreService {
     }
 
     //지하철역 스토어 리스트 조회(인기순)
+    @Transactional(readOnly = true)
     public StoreInfoListBylikesRes getStoreInfoListByStationAndLikes(final Long userId,
                                                                      final Station station,
                                                                      final Integer likesCursor,
@@ -101,6 +103,7 @@ public class StoreService {
     }
 
     //지하철역 스토어 리스트 조회(최신순)
+    @Transactional(readOnly = true)
     public StoreInfoListByLatestRes getStoreInfoListByStationAndLatest(final Long userId,
                                                                        final Station station,
                                                                        final Long storeIdCursor,
@@ -186,6 +189,7 @@ public class StoreService {
         return new StoreKakaoLinkRes(storeKakaoLinkDto.kakaoLink());
     }
 
+    @Transactional(readOnly = true)
     public StoreDetailAllDesignRes getStoreAllDesign(final long storeId, final Long userId) {
 
         final List<Cake> cakes;
@@ -216,6 +220,7 @@ public class StoreService {
         return new StoreDetailAllDesignRes(designs);
     }
 
+    @Transactional(readOnly = true)
     public StoreAllSizeAndTasteRes getStoreSizeAndTaste(final long storeId) {
         final List<SizeDto> sizeList;
         try {
@@ -226,6 +231,7 @@ public class StoreService {
         return StoreAllSizeAndTasteRes.of(sizeList, storeFacade.findTaste(storeId).taste());
     }
 
+    @Transactional(readOnly = true)
     public StoreDetailInfoRes getStoreDetailInfo(final long storeId) {
         final StoreDetailInfoDto storeDetailInfoDto;
         final StoreOperationTimeDto storeOperationTimeDto;
