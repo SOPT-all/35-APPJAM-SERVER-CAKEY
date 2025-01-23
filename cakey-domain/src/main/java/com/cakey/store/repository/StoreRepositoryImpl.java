@@ -31,7 +31,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     public List<StoreCoordinatesDto> findStoreCoordinatesByStation(final Station station) {
         final List<StoreCoordinatesDto> dtos =
                 queryFactory
-                        .select(new QStoreCoordinatesDto(
+                        .selectDistinct(new QStoreCoordinatesDto(
                                 store.id,
                                 store.latitude,
                                 store.longitude
@@ -81,7 +81,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         /// 쿼리 실행
         JPQLQuery<StoreInfoDto> query =
-                queryFactory.select(new QStoreInfoDto(
+                queryFactory.selectDistinct(new QStoreInfoDto(
                                 store.id,
                                 store.name,
                                 store.station,
@@ -171,7 +171,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         List<StoreInfoDto> storeInfoDtos =
                 queryFactory
-                        .select(new QStoreInfoDto(
+                        .selectDistinct(new QStoreInfoDto(
                                 store.id,
                                 store.name,
                                 store.station,
@@ -218,7 +218,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         /// 메인 쿼리
         List<StoreInfoDto> storeInfoDtos = queryFactory
-                .select(new QStoreInfoDto(
+                .selectDistinct(new QStoreInfoDto(
                         store.id,
                         store.name,
                         store.station,
@@ -278,7 +278,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         /// 기본 쿼리 생성
         final JPQLQuery<StoreInfoDto> query = queryFactory
-                .select(new QStoreInfoDto(
+                .selectDistinct(new QStoreInfoDto(
                         store.id,
                         store.name,
                         store.station,
@@ -360,7 +360,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     @Override
     public List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId) {
         final List<StoreCoordinatesDto> storeCoordinatesDtos = queryFactory
-                .select(new QStoreCoordinatesDto(
+                .selectDistinct(new QStoreCoordinatesDto(
                         store.id,
                         store.latitude,
                         store.longitude
@@ -381,7 +381,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     public Optional<StoreBySelectedCakeDto> findStoreBySelectedCakeId(final long cakeId) {
         QCake cake = QCake.cake;
         QStore store = QStore.store;
-        return Optional.ofNullable(queryFactory.select(new QStoreBySelectedCakeDto(
+        return Optional.ofNullable(queryFactory.selectDistinct(new QStoreBySelectedCakeDto(
                         store.id,
                         store.name,
                         store.station
@@ -407,7 +407,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         /// 메인 케이크 이미지 URL 가져오기
         String fetchedImageUrl = queryFactory
-                .select(cake.imageUrl)
+                .selectDistinct(cake.imageUrl)
                 .from(cake)
                 .where(cake.storeId.eq(storeId).and(cake.isMainImage.isTrue()))
                 .orderBy(cake.id.desc())
@@ -418,7 +418,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 : Expressions.nullExpression(String.class);
 
         /// 메인 쿼리
-        return Optional.ofNullable(queryFactory.select(new QStoreSelectedDto(
+        return Optional.ofNullable(queryFactory.selectDistinct(new QStoreSelectedDto(
                         store.id,
                         store.name,
                         store.address,
