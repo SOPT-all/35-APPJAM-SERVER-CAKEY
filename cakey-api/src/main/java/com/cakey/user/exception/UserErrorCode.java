@@ -8,10 +8,6 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {
 
-    /**
-     * 404 Not Found
-     */
-
 
     /**
      * 404 Not Found

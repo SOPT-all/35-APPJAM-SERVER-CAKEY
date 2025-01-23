@@ -17,7 +17,6 @@ public enum ErrorBaseCode implements ErrorCode {
     BAD_REQUEST_MISSING_PARAM(HttpStatus.BAD_REQUEST, 40003, "필수 param이 없습니다."),
     BAD_REQUEST_METHOD_ARGUMENT_TYPE(HttpStatus.BAD_REQUEST, 40004, "메서드 인자타입이 잘못되었습니다."),
     BAD_REQUEST_NOT_READABLE(HttpStatus.BAD_REQUEST, 40005, "json 오류 혹은 reqeust body 필드 오류 입니다."),
-    BAD_REQUEST_ENUM_VALUE(HttpStatus.BAD_REQUEST, 40006, "잘못된 enum 값입니다."),
 
     /**
      * 401 Unauthorized

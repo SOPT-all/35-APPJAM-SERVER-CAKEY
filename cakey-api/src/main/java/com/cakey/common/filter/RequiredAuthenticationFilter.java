@@ -1,21 +1,27 @@
 package com.cakey.common.filter;
 
+import com.cakey.common.Constant;
+import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.jwt.auth.JwtProvider;
 import com.cakey.jwt.auth.UserAuthentication;
 import com.cakey.jwt.auth.JwtValidationType;
 import com.cakey.rescode.ErrorBaseCode;
 import com.cakey.rescode.ErrorCode;
 import com.cakey.user.exception.UserBadRequestException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,6 +30,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class RequiredAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider; //로그인 필수
+    private final ObjectMapper objectMapper;
 
     // 필터를 건너뛸 API 경로 목록
     private static final List<String> EXCLUDED_PATHS = List.of(
@@ -63,13 +70,25 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         try {
             final String token = getAccessTokenFromCookie(request);
-
             final Long userId = jwtProvider.getUserIdFromSubject(token);
             SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userId, null, null));
+            filterChain.doFilter(request, response); // 다음 필터로 요청 전달
         } catch (Exception e) {
-            throw new UserBadRequestException(ErrorBaseCode.UNAUTHORIZED);
+            // 예외 발생 시 JSON 응답 생성
+            final ErrorBaseCode errorCode = ErrorBaseCode.UNAUTHORIZED;
+
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding(Constant.CHARACTER_TYPE);
+            response.setStatus(errorCode.getHttpStatus().value()); // HTTP 상태 코드 401 설정
+
+            // `ApiResponseUtil.failure`를 이용해 응답 작성
+            final PrintWriter writer = response.getWriter();
+            writer.write(objectMapper.writeValueAsString(
+                    ApiResponseUtil.failure(errorCode).getBody()
+            ));
+            writer.flush();
+            return; // 체인 호출 중단
         }
-        filterChain.doFilter(request, response);
     }
 
     private String getAccessTokenFromCookie(final HttpServletRequest request) throws Exception {
