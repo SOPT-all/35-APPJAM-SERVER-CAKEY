@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class StoreLikesSaver {
     private final StoreLikeRepository storeLikeRepository;
 
-    @Transactional
     public void saveStoreLikes(final StoreLike storeLike) {
         storeLikeRepository.save(storeLike);
     }

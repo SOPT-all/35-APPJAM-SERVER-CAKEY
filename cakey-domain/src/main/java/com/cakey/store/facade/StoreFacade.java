@@ -117,4 +117,9 @@ public class StoreFacade {
     public Store findStoreById(final long storeId) {
         return storeRetriever.findById(storeId);
     }
+
+    //스토어 존재 여부
+    public void isExistStore(final long storeId) {
+        storeRetriever.isExistStore(storeId);
+    }
 }

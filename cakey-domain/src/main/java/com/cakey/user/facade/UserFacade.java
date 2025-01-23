@@ -25,9 +25,4 @@ public class UserFacade {
     public long createUser(final UserCreateDto userCreateDto) {
         return userCreator.createUser(userCreateDto);
     }
-
-    //유저 있는지 확인
-    public boolean isExistById(final long userId) {
-        return userRetriever.isExistById(userId);
-    }
 }

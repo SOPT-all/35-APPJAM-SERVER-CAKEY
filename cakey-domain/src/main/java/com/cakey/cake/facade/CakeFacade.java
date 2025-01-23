@@ -134,5 +134,10 @@ public class CakeFacade {
         return cakeRetriever.countAllDesignsLikedByUser(userId);
     }
 
+    //케이크 존재여부
+    public void isExistCake(final long cakeId) {
+        cakeRetriever.isExistCake(cakeId);
+    }
+
 
 }

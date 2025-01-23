@@ -9,21 +9,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CakeLikesFacade {
     private final CakeLikesRetriever cakeLikesRetriever;
+    private final CakeLikesSaver cakeLikesSaver;
     private final CakeLikesRemover cakeLikesRemover;
 
     public boolean existsCakeLikesByCakeIdAndUserId(final long cakeId, final long userId) {
         return cakeLikesRetriever.existsCakeLikesByCakeIdAndUserId(cakeId, userId);
     }
 
-    public void saveCakeLikes(CakeLikes cakeLikes) {
-        cakeLikesRetriever.saveCakeLikes(cakeLikes);
+    public void saveCakeLikes(final CakeLikes cakeLikes) {
+        cakeLikesSaver.saveCakeLikes(cakeLikes);
     }
-  
+
     public int countByUserId(final Long userId) {
         return cakeLikesRetriever.countByUserId(userId);
     }
 
-    @Transactional
     public void removeCakeLikes(CakeLikes cakeLikes) {
         cakeLikesRemover.removeCakeLikes(cakeLikes);
     }

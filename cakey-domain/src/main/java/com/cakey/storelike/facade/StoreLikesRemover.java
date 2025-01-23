@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class StoreLikesRemover {
     private final StoreLikeRepository storeLikeRepository;
 
-    public void deleteByUserIdAndStoreId(final StoreLike storeLike) {
+    public void deleteByStoreLike(final StoreLike storeLike) {
         storeLikeRepository.delete(storeLike);
     }
 }
