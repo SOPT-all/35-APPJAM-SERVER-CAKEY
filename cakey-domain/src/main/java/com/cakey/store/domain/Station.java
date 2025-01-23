@@ -25,11 +25,6 @@ public enum Station {
     EWHA("이대역", "EWHA", 37.556733, 126.946013),
     JUNGGOK("중곡역", "JUNGGOK", 37.565923, 127.084350),
     HANSEONGBAEKJE("한성백제역", "HANSEONGBAEKJE", 37.516078, 127.115655),
-
-
-    TEST("TEST", "테스트", 37.511078, 127.133443),
-
-    HONGDAE("홍대입구역", "HONGDAE", 37.526402, 126.864342),
     
     ;
 
