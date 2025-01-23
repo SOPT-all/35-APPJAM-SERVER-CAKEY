@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //JPA에서만 사용가능하도록
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // 외부에서 직접 모든 필드 받는 생성자 호출X
@@ -21,63 +22,63 @@ public class StoreOperationTime {
     private long storeId;
 
     @Column(name = "mon_open", nullable = true)
-    private LocalDateTime monOpen;
+    private String monOpen;
 
     @Column(name = "mon_close", nullable = true)
-    private LocalDateTime monClose;
+    private String monClose;
 
     @Column(name = "tue_open", nullable = true)
-    private LocalDateTime tueOpen;
+    private String tueOpen;
 
     @Column(name = "tue_close", nullable = true)
-    private LocalDateTime tueClose;
+    private String tueClose;
 
     @Column(name = "wed_open", nullable = true)
-    private LocalDateTime wedOpen;
+    private String wedOpen;
 
     @Column(name = "wed_close", nullable = true)
-    private LocalDateTime wedClose;
+    private String wedClose;
 
     @Column(name = "thu_open", nullable = true)
-    private LocalDateTime thuOpen;
+    private String thuOpen;
 
     @Column(name = "thu_close", nullable = true)
-    private LocalDateTime thuClose;
+    private String thuClose;
 
     @Column(name = "fri_open", nullable = true)
-    private LocalDateTime friOpen;
+    private String friOpen;
 
     @Column(name = "fri_close", nullable = true)
-    private LocalDateTime friClose;
+    private String friClose;
 
     @Column(name = "sat_open", nullable = true)
-    private LocalDateTime satOpen;
+    private String satOpen;
 
     @Column(name = "sat_close", nullable = true)
-    private LocalDateTime satClose;
+    private String satClose;
 
     @Column(name = "sun_open", nullable = true)
-    private LocalDateTime sunOpen;
+    private String sunOpen;
 
     @Column(name = "sun_close", nullable = true)
-    private LocalDateTime sunClose;
+    private String sunClose;
 
     public static StoreOperationTime createStoreOperationTime(
             final long storeId,
-            final LocalDateTime monOpen,
-            final LocalDateTime monClose,
-            final LocalDateTime tueOpen,
-            final LocalDateTime tueClose,
-            final LocalDateTime wedOpen,
-            final LocalDateTime wedClose,
-            final LocalDateTime thuOpen,
-            final LocalDateTime thuClose,
-            final LocalDateTime friOpen,
-            final LocalDateTime friClose,
-            final LocalDateTime satOpen,
-            final LocalDateTime satClose,
-            final LocalDateTime sunOpen,
-            final LocalDateTime sunClose
+            final String monOpen,
+            final String monClose,
+            final String tueOpen,
+            final String tueClose,
+            final String wedOpen,
+            final String wedClose,
+            final String thuOpen,
+            final String thuClose,
+            final String friOpen,
+            final String friClose,
+            final String satOpen,
+            final String satClose,
+            final String sunOpen,
+            final String sunClose
             ) {
         return StoreOperationTime.builder()
                 .storeId(storeId)
