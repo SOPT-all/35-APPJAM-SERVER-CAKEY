@@ -826,7 +826,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         }
 
         /// 케이크 개수 조회 쿼리
-        Long count = queryFactory.selectDistinct(cake.count())
+        Long count = queryFactory.selectDistinct(cake.id.countDistinct())
                 .from(cake)
                 .leftJoin(cakeTheme).on(cake.id.eq(cakeTheme.cakeId))
                 .where(whereCondition)
