@@ -25,4 +25,8 @@ public class UserFacade {
     public long createUser(final UserCreateDto userCreateDto) {
         return userCreator.createUser(userCreateDto);
     }
+
+    public void isExistById(final long userId) {
+        userRetriever.isExistById(userId);
+    }
 }

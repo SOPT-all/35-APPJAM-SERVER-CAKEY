@@ -7,6 +7,7 @@ import com.cakey.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,5 +23,13 @@ public class UserRetriever {
 
     public Long findUserIdFromSocialTypeAndPlatformId(final SocialType socialType, final long platformId) {
         return userRepository.findIdBySocialTypeAndSocialId(socialType, platformId).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public void isExistById(final Long userId) {
+        final boolean exist = userRepository.existsById(userId);
+        if (!exist) {
+            throw new NotFoundBaseException();
+        }
     }
 }

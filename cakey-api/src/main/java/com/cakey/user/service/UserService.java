@@ -109,13 +109,14 @@ public class UserService {
 
     //로그아웃
     public void logout(final long userId, final HttpServletResponse response) {
-        if(userRetriever.isExistById(userId)) {
-            deleteAccessCookie(response);
-            deleteRefreshCookie(response);
-            deleteRefreshToken(userId);
-        } else {
+        try {
+            userFacade.isExistById(userId);
+        } catch (NotFoundBaseException e) {
             throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
         }
+        deleteAccessCookie(response);
+        deleteRefreshCookie(response);
+        deleteRefreshToken(userId);
     }
 
     @CacheEvict(value = "refresh")
