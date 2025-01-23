@@ -6,35 +6,35 @@ import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record StoreOperationTimeDto(
-        LocalDateTime monOpen,
-        LocalDateTime monClose,
-        LocalDateTime tueOpen,
-        LocalDateTime tueClose,
-        LocalDateTime wedOpen,
-        LocalDateTime wedClose,
-        LocalDateTime thuOpen,
-        LocalDateTime thuClose,
-        LocalDateTime friOpen,
-        LocalDateTime friClose,
-        LocalDateTime satOpen,
-        LocalDateTime satClose,
-        LocalDateTime sunOpen,
-        LocalDateTime sunClose
+        String monOpen,
+        String monClose,
+        String tueOpen,
+        String tueClose,
+        String wedOpen,
+        String wedClose,
+        String thuOpen,
+        String thuClose,
+        String friOpen,
+        String friClose,
+        String satOpen,
+        String satClose,
+        String sunOpen,
+        String sunClose
 ) {
-    public static StoreOperationTimeDto of(final LocalDateTime monOpen,
-                                           final LocalDateTime monClose,
-                                           final LocalDateTime tueOpen,
-                                           final LocalDateTime tueClose,
-                                           final LocalDateTime wedOpen,
-                                           final LocalDateTime wedClose,
-                                           final LocalDateTime thuOpen,
-                                           final LocalDateTime thuClose,
-                                           final LocalDateTime friOpen,
-                                           final LocalDateTime friClose,
-                                           final LocalDateTime satOpen,
-                                           final LocalDateTime satClose,
-                                           final LocalDateTime sunOpen,
-                                           final LocalDateTime sunClose) {
+    public static StoreOperationTimeDto of(final String monOpen,
+                                           final String monClose,
+                                           final String tueOpen,
+                                           final String tueClose,
+                                           final String wedOpen,
+                                           final String wedClose,
+                                           final String thuOpen,
+                                           final String thuClose,
+                                           final String friOpen,
+                                           final String friClose,
+                                           final String satOpen,
+                                           final String satClose,
+                                           final String sunOpen,
+                                           final String sunClose) {
         return StoreOperationTimeDto.builder()
                 .monOpen(monOpen)
                 .monClose(monClose)
