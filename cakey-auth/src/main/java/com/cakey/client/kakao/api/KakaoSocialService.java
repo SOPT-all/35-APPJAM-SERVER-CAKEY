@@ -1,5 +1,6 @@
 package com.cakey.client.kakao.api;
 
+import com.cakey.Constants;
 import com.cakey.client.dto.KakaoUserInfoDto;
 import com.cakey.client.kakao.api.dto.KakaoAccessTokenRes;
 import com.cakey.client.kakao.api.dto.KakaoUserDto;
@@ -21,7 +22,6 @@ public class KakaoSocialService {
     private final KakaoApiClient kakaoApiClient;
     private final KakaoAuthApiClient kakaoAuthApiClient;
 
-    private static final String AUTH_CODE = "authorization_code";
 
     @Value("${kakao.clientId}")
     private String clientId;
@@ -46,7 +46,7 @@ public class KakaoSocialService {
             final String redirectUri
     ) {
         final KakaoAccessTokenRes response = kakaoAuthApiClient.getOAuth2AccessToken(
-                AUTH_CODE,
+                Constants.AUTHCODE,
                 clientId,
                 redirectUri,
                 authorizationCode
@@ -59,7 +59,7 @@ public class KakaoSocialService {
             final String accessToken,
             final String contentType
     ) {
-        return kakaoApiClient.getUserInformation("Bearer " + accessToken, contentType);
+        return kakaoApiClient.getUserInformation(Constants.BEARER + accessToken, contentType);
     }
 
     private KakaoUserInfoDto getLoginDto(
