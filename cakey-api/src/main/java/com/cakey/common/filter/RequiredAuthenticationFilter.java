@@ -73,6 +73,9 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userId, null, null));
             filterChain.doFilter(request, response); // 다음 필터로 요청 전달
         } catch (Exception e) {
+            log.error("--------------------쿠키 에러------------------------");
+            log.error(e.getMessage());
+
             // 예외 발생 시 JSON 응답 생성
             final ErrorBaseCode errorCode = ErrorBaseCode.UNAUTHORIZED;
 
@@ -80,7 +83,6 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             response.setCharacterEncoding(Constants.CHARACTER_TYPE);
             response.setStatus(errorCode.getHttpStatus().value()); // HTTP 상태 코드 401 설정
 
-            log.error("--------------------쿠키 없음------------------------"); //todo: 추후 삭제(테스트용)
             // `ApiResponseUtil.failure`를 이용해 응답 작성
             final PrintWriter writer = response.getWriter();
             writer.write(objectMapper.writeValueAsString(

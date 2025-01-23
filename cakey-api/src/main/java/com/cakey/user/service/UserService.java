@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cloud.openfeign.aot.FeignChildContextInitializer;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,7 @@ public class UserService {
     private final static String REFRESH_TOKEN = "refreshToken";
     private final JwtProvider jwtProvider;
     private final UserRetriever userRetriever;
+    private final FeignChildContextInitializer feignChildContextInitializer;
 
 
     public LoginSuccessRes login(
@@ -87,7 +89,7 @@ public class UserService {
         } else { //전에 이미 우리 유저
 
             //리프레시 토큰 캐시 삭제
-            deleteRefreshToken(userId);
+            jwtProvider.deleteRefreshToken(userId);
 
             final Token newToken = jwtProvider.issueToken(userId);
 
@@ -116,11 +118,8 @@ public class UserService {
         }
         deleteAccessCookie(response);
         deleteRefreshCookie(response);
-        deleteRefreshToken(userId);
+        jwtProvider.deleteRefreshToken(userId);
     }
-
-    @CacheEvict(value = "refresh")
-    public void deleteRefreshToken(final long userId) { }
 
     //accessToken 쿠키 삭제
     public void deleteAccessCookie(HttpServletResponse response) {

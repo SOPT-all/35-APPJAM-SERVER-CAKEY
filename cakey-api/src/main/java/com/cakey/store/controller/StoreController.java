@@ -10,6 +10,7 @@ import com.cakey.store.dto.StoreCoordinateListRes;
 import com.cakey.store.service.StoreService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Validated
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/v1/store")
 public class StoreController {
-
     private final StoreService storeService;
 
     //스토어 좌표 리스트 조회
@@ -71,6 +72,7 @@ public class StoreController {
     //전체 지하철역 조회
     @GetMapping("/station")
     public ResponseEntity<BaseResponse<?>> getAllStation() {
+        log.error("----------------------testtestsetset---------------"); // todo: 추후 삭제( 로그 테스트용)
         return ApiResponseUtil.success(
                 SuccessCode.OK,
                 storeService.getAllStation());
