@@ -18,6 +18,7 @@ import java.util.List;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RequiredAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider; //로그인 필수
     private final ObjectMapper objectMapper;
@@ -78,6 +80,7 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             response.setCharacterEncoding(Constants.CHARACTER_TYPE);
             response.setStatus(errorCode.getHttpStatus().value()); // HTTP 상태 코드 401 설정
 
+            log.error("--------------------쿠키 없음------------------------"); //todo: 추후 삭제(테스트용)
             // `ApiResponseUtil.failure`를 이용해 응답 작성
             final PrintWriter writer = response.getWriter();
             writer.write(objectMapper.writeValueAsString(
