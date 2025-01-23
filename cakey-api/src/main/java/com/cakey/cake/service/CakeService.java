@@ -39,6 +39,7 @@ public class CakeService {
         } catch (NotFoundBaseException e) {
             throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
+
         ///해당역 케이크 개수
         final int cakeCountByStation = cakeFacade.countCakesByStation(station);
 

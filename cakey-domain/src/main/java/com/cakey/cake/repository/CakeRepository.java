@@ -15,7 +15,7 @@ public interface CakeRepository extends JpaRepository<Cake, Long>, CakeRepositor
     List<Cake> findAllByStoreId(@Param("storeId") final long storeId);
 
     //해당 지하철역 스토어의 케이크들 개수
-    @Query("SELECT COUNT(c) FROM Cake c JOIN Store s ON c.storeId = s.id WHERE s.station = :station")
+    @Query("SELECT COUNT(DISTINCT c.id) FROM Cake c JOIN Store s ON c.storeId = s.id WHERE s.station = :station")
     int countCakesByStation(@Param("station") final Station station);
 
     @Query("SELECT new com.cakey.cake.dto.CakeByPopularityDto(c.id, c.storeId, c.imageUrl, s.name, COUNT(cl.id), s.station, " +
@@ -28,6 +28,7 @@ public interface CakeRepository extends JpaRepository<Cake, Long>, CakeRepositor
     List<CakeByPopularityDto> findCakesByRank(@Param("userId") final Long userId);
 
     //찜한 스토어들의 전체 디자인 개수
-    @Query("SELECT COUNT(c) FROM Cake c JOIN StoreLike sl ON c.storeId = sl.storeId WHERE sl.userId = :userId")
+    @Query("SELECT COUNT(DISTINCT c.id) FROM Cake c JOIN StoreLike sl ON c.storeId = sl.storeId WHERE sl.userId = :userId")
     int countAllDesignsLikedByUser(@Param("userId") final Long userId);
+
 }
