@@ -14,6 +14,7 @@ import com.cakey.store.exception.StoreNotfoundException;
 import com.cakey.store.facade.StoreFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class CakeService {
     private final StoreFacade storeFacade;
 
     //해당역 스토어의 케이크들 조회(최신순)
+    @Transactional(readOnly = true)
     public CakesLatestListRes getLatestCakesByStationStore(final Long userId,
                                                            final Station station,
                                                            final Long cakeIdCursor,
@@ -61,6 +63,7 @@ public class CakeService {
     }
 
     //해당역 디자인(케이크) 조회(인기순)
+    @Transactional(readOnly = true)
     public CakesPopularListRes getPopularCakesByStationStore(final Long userId,
                                                              final Station station,
                                                              final Integer cakeLikesCursor,
@@ -110,6 +113,7 @@ public class CakeService {
 
 
     //선택한 디자인(케이크) 조회
+    @Transactional(readOnly = true)
     public CakeSelectedRes getSelectedCakes(final Long cakeId,
                                             final DayCategory dayCategory,
                                             final ThemeName theme,
@@ -155,6 +159,7 @@ public class CakeService {
     }
 
     //디자인 둘러보기 조회(최신순)
+    @Transactional(readOnly = true)
     public CakesLatestListRes findCakesByCategoryAndTheme(final DayCategory dayCategory,
                                                           final ThemeName theme,
                                                           final Long userId,
@@ -193,6 +198,7 @@ public class CakeService {
     }
 
     //디자인 둘러보기 조회(인기순)
+    @Transactional(readOnly = true)
     public CakesPopularListRes getPopularCakesByCategoryAndTheme(final DayCategory dayCategory,
                                                                  final ThemeName themeName,
                                                                  final Long userId,
@@ -233,6 +239,7 @@ public class CakeService {
     }
 
     //찜한 스토어들 디자인 조회(최신순)
+    @Transactional(readOnly = true)
     public CakesLatestListRes getLatestCakeByStoreLiked(final long userId,
                                                         final Long cakeIdCursor,
                                                         final int size) {
@@ -267,6 +274,7 @@ public class CakeService {
     }
 
     //찜한 스토어들 디자인 조회(인기순)
+    @Transactional(readOnly = true)
     public CakesPopularListRes getPopularCakeByStoreLiked(final long userId,
                                                           final Long cakeIdCursor,
                                                           final Integer cakeLikesCursor,

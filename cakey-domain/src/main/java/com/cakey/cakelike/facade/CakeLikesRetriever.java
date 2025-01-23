@@ -5,6 +5,7 @@ import com.cakey.cakelike.repository.CakeLikesRepository;
 import com.cakey.common.exception.NotFoundBaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -13,10 +14,6 @@ public class CakeLikesRetriever {
 
     public boolean existsCakeLikesByCakeIdAndUserId(final long cakeId, final long userId) {
         return cakeLikesRepository.existsByCakeIdAndUserId(cakeId, userId);
-    }
-
-    public void saveCakeLikes(final CakeLikes cakeLikes) {
-        cakeLikesRepository.save(cakeLikes);
     }
 
     public int countByUserId(final Long userId) {

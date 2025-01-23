@@ -84,19 +84,19 @@ public class StoreFacade {
 
     //카카오 링크
     public StoreKakaoLinkDto findById(final long storeId) {
-        Store store = storeRetriever.findById(storeId);
+        final Store store = storeRetriever.findById(storeId);
         return new StoreKakaoLinkDto(store.getOpenKakaoUrl());
     }
 
     //스토어 맛
     public StoreTasteDto findTaste(final Long storeId) {
-        Store store = storeRetriever.findById(storeId);
+        final Store store = storeRetriever.findById(storeId);
         return new StoreTasteDto(store.getTaste());
     }
 
     //스토어 상세정보
     public StoreDetailInfoDto findStoreDetailInfo(final long storeId) {
-        Store store = storeRetriever.findById(storeId);
+        final Store store = storeRetriever.findById(storeId);
         return new StoreDetailInfoDto(store.getAddress(), store.getPhone());
     }
 
@@ -116,5 +116,10 @@ public class StoreFacade {
 
     public Store findStoreById(final long storeId) {
         return storeRetriever.findById(storeId);
+    }
+
+    //스토어 존재 여부
+    public void isExistStore(final long storeId) {
+        storeRetriever.isExistStore(storeId);
     }
 }

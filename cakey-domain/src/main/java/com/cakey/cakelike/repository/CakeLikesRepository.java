@@ -11,5 +11,4 @@ public interface CakeLikesRepository extends JpaRepository<CakeLikes, Long> {
     int countByUserId(final Long userId);
 
     Optional<CakeLikes> findByCakeIdAndUserId(final long cakeId, final long userId);
-
 }

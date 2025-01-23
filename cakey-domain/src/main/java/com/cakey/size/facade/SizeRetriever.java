@@ -14,7 +14,7 @@ public class SizeRetriever {
     private final SizeRepository sizeRepository;
 
     public List<Size> findSizeAllByStoreIdAndOrderByPriceAsc(final Long storeId) {
-        List<Size> response = sizeRepository.findSizeNameAndPriceByStoreIdOrderByPriceAsc(storeId);
+        final List<Size> response = sizeRepository.findSizeNameAndPriceByStoreIdOrderByPriceAsc(storeId);
         if (response.isEmpty()) {
             throw new NotFoundBaseException();
         }

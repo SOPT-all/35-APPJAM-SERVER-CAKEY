@@ -7,6 +7,7 @@ import com.cakey.store.dto.*;
 import com.cakey.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,7 +51,9 @@ public class StoreRetriever {
                                                               final int size) {
         return storeRepository.findPopularityStoresLikedByUser(userId, likesCursor, storeIdCursor, size);
     }
+
     //찜한 스토어 좌표 조회
+    @Transactional(readOnly = true)
     public List<StoreCoordinatesDto> findLikedStoreCoordinatesByUserId(final Long userId) {
         return storeRepository.findLikedStoreCoordinatesByUserId(userId);
     }
@@ -63,6 +66,7 @@ public class StoreRetriever {
     }
 
     //선택한 스토어 조회
+    @Transactional(readOnly = true)
     public StoreSelectedDto findStoreInfoById(long storeId, Long userId) {
         return storeRepository.findStoreInfoById(storeId, userId).orElseThrow(NotFoundBaseException::new);
     }
@@ -76,15 +80,25 @@ public class StoreRetriever {
         return storeRepository.countStoresByStation(station);
     }
 
+    @Transactional(readOnly = true)
     public Store findById(final Long storeId) {
         return storeRepository.findById(storeId)
                 .orElseThrow(NotFoundBaseException::new);
     }
 
+    @Transactional(readOnly = true)
     public List<StoreByPopularityDto> findStoreListByLank(){
         if (storeRepository.findStoresByLikeCount().isEmpty()) {
             throw new NotFoundBaseException();
         }
         return storeRepository.findStoresByLikeCount();
+    }
+
+    //스토어 존재 여부
+    public void isExistStore(final long storeId) {
+        final boolean isExistStore = storeRepository.existsById(storeId);
+        if (!isExistStore) {
+            throw new NotFoundBaseException();
+        }
     }
 }

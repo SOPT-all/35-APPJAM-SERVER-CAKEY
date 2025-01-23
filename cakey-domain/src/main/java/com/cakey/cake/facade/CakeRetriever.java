@@ -12,6 +12,7 @@ import com.cakey.common.exception.NotFoundBaseException;
 import com.cakey.store.domain.Station;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class CakeRetriever {
         return cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
     }
 
+    @Transactional(readOnly = true)
     public List<CakeByPopularityDto> findCakesByRank(final Long userId) {
         final List<CakeByPopularityDto> cakeByPopularityDtos = cakeRepository.findCakesByRank(userId);
         if (cakeByPopularityDtos.isEmpty()) {
@@ -139,6 +141,11 @@ public class CakeRetriever {
         return cakeRepository.countAllDesignsLikedByUser(userId);
     }
 
-
-
+    //케이크 존재여부
+    public void isExistCake(final long cakeId) {
+        boolean isCakeExist = cakeRepository.existsById(cakeId);
+        if (!isCakeExist) {
+            throw new NotFoundBaseException();
+        }
+    }
 }

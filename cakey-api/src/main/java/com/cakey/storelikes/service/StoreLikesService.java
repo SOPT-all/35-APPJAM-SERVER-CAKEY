@@ -12,12 +12,14 @@ import com.cakey.store.exception.StoreConflictBaseException;
 import com.cakey.store.exception.StoreErrorCode;
 import com.cakey.store.exception.StoreNotfoundException;
 import com.cakey.store.facade.StoreFacade;
+import com.cakey.storelike.domain.StoreLike;
 import com.cakey.storelike.facade.StoreLikeFacade;
 import com.cakey.storelikes.dto.StoreLatestLikedByUserRes;
 import com.cakey.storelikes.dto.StorePopularityLikedByUserRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,7 @@ public class StoreLikesService {
     private final StoreLikeFacade storeLikeFacade;
 
     //찜한 스토어 조회(최신순)
+    @Transactional(readOnly = true)
     public StoreLatestLikedByUserRes getLatestStoreLikesByUser(final long userId,
                                                                final Long storeIdCursor,
                                                                final int size) {
@@ -71,6 +74,7 @@ public class StoreLikesService {
     }
 
     //찜한 스토어 조회(인기순)
+    @Transactional(readOnly = true)
     public StorePopularityLikedByUserRes getPopularityStoreByUserLikes(final long userId,
                                                                        final Integer likesCursor,
                                                                        final Long storeIdCursor,
@@ -158,20 +162,31 @@ public class StoreLikesService {
     }
 
     //스토어 좋아요 등록
+    @Transactional
     public void postStoreLikes(final long userId, final long storeId) {
+        final StoreLike newStoreLikes;
         try {
-            storeLikeFacade.saveStoreLikes(userId, storeId);
+            storeFacade.isExistStore(storeId);
+        } catch (NotFoundBaseException e) {
+            throw new StoreNotfoundException(StoreErrorCode.STORE_NOT_FOUND_ENTITY);
+        }
+        try {
+            newStoreLikes = StoreLike.createStoreLike(storeId, userId);
+            storeLikeFacade.saveStoreLikes(newStoreLikes);
         } catch (DataIntegrityViolationException e) {
             throw new StoreConflictBaseException(StoreErrorCode.STORE_LIKES_CONFLICT);
         }
     }
 
     //스토어 좋아요 취소
+    @Transactional
     public void deleteStoreLikes(final long userId, final long storeId) {
+        final StoreLike storeLike;
         try {
-            storeLikeFacade.deleteStoreLikes(userId, storeId);
+            storeLike = storeLikeFacade.findStoreLikesByUserIdAndStoreId(userId, storeId);
         } catch (NotFoundBaseException e) {
             throw new StoreNotfoundException(StoreErrorCode.STORE_LIKES_NOT_FOUND_ENTITY);
         }
+        storeLikeFacade.deleteStoreLikes(storeLike);
     }
 }

@@ -16,14 +16,17 @@ public class StoreLikeFacade {
     }
 
     //스토어 좋아요 등록
-    public void saveStoreLikes(final long userId, final long storeId) {
-        final StoreLike newStoreLikes = StoreLike.createStoreLike(storeId, userId);
-        storeLikeCreator.saveStoreLikes(newStoreLikes);
+    public void saveStoreLikes(final StoreLike storeLike) {
+        storeLikeCreator.saveStoreLikes(storeLike);
     }
 
     //스토어 좋아요 취소
-    public void deleteStoreLikes(final long userId, final long storeId) {
-        final StoreLike foundStoreLike = storeLikeRetriever.findByUserIdAndStoreId(userId, storeId);
-        storeLikesRemover.deleteByUserIdAndStoreId(foundStoreLike);
+    public void deleteStoreLikes(final StoreLike storeLike) {
+        storeLikesRemover.deleteByStoreLike(storeLike);
+    }
+
+    //스토어 좋아요 가져오기
+    public StoreLike findStoreLikesByUserIdAndStoreId(final long userId, final long storeId) {
+        return storeLikeRetriever.findByUserIdAndStoreId(userId, storeId);
     }
 }

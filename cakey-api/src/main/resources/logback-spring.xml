@@ -28,7 +28,7 @@
                 <totalSizeCap>3GB</totalSizeCap>
             </rollingPolicy>
         </appender>
-        <root level="DEBUG">
+        <root level="ERROR">
             <appender-ref ref="DEVROLLFILE"/>
         </root>
     </springProfile>
