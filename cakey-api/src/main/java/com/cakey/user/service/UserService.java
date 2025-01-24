@@ -1,6 +1,7 @@
 package com.cakey.user.service;
 
 
+import com.cakey.Constants;
 import com.cakey.client.SocialType;
 import com.cakey.client.dto.LoginReq;
 import com.cakey.client.kakao.api.KakaoSocialService;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -37,12 +39,9 @@ public class UserService {
     private final UserFacade userFacade;
     private final KakaoSocialService kakaoSocialService;
 
-    private final static String ACCESS_TOKEN = "accessToken";
-    private final static String REFRESH_TOKEN = "refreshToken";
     private final JwtProvider jwtProvider;
-    private final UserRetriever userRetriever;
 
-
+    @Transactional
     public LoginSuccessRes login(
             final String authorizationCode,
             final SocialType socialType,
@@ -62,7 +61,6 @@ public class UserService {
             throw new UserBadRequestException(UserErrorCode.KAKAO_LOGIN_FAILED);
         }
 
-
         //플랫폼 아이디
         final long platformId = kakaoUserInfo.id();
 
@@ -78,12 +76,12 @@ public class UserService {
             final Token newToken = jwtProvider.issueToken(savedUserId);
 
             //쿠키설정
-            setAccessCookie(newToken.getAccessToken(), response);
             setRefreshCookie(newToken.getRefreshToken(), response);
 
             return LoginSuccessRes.of(
                     savedUserId,
-                    kakaoUserInfo.kakaoAccount().profile().nickname());
+                    kakaoUserInfo.kakaoAccount().profile().nickname(),
+                    newToken.getAccessToken());
         } else { //전에 이미 우리 유저
 
             //리프레시 토큰 캐시 삭제
@@ -92,12 +90,12 @@ public class UserService {
             final Token newToken = jwtProvider.issueToken(userId);
 
             //쿠키 설정
-            setAccessCookie(newToken.getAccessToken(), response);
             setRefreshCookie(newToken.getRefreshToken(), response);
 
             return LoginSuccessRes.of(
                     userId,
-                    kakaoUserInfo.kakaoAccount().profile().nickname());
+                    kakaoUserInfo.kakaoAccount().profile().nickname(),
+                    newToken.getAccessToken());
         }
     }
 
@@ -114,7 +112,6 @@ public class UserService {
         } catch (NotFoundBaseException e) {
             throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
         }
-        deleteAccessCookie(response);
         deleteRefreshCookie(response);
         deleteRefreshToken(userId);
     }
@@ -122,21 +119,9 @@ public class UserService {
     @CacheEvict(value = "refresh")
     public void deleteRefreshToken(final long userId) { }
 
-    //accessToken 쿠키 삭제
-    public void deleteAccessCookie(HttpServletResponse response) {
-        ResponseCookie accessCookie = ResponseCookie.from(ACCESS_TOKEN, "")
-                .maxAge(0) // 쿠키 즉시 삭제
-                .path("/")
-                .secure(true)
-                .sameSite("None")
-                .httpOnly(true)
-                .build();
-        response.addHeader("Set-Cookie", accessCookie.toString());
-    }
-
     //refreshToken 쿠키 삭제
     public void deleteRefreshCookie(HttpServletResponse response) {
-        ResponseCookie refreshCookie = ResponseCookie.from(REFRESH_TOKEN, "")
+        ResponseCookie refreshCookie = ResponseCookie.from(Constants.REFRESH_TOKEN, "")
                 .maxAge(0) // 쿠키 즉시 삭제
                 .path("/")
                 .secure(true)
@@ -146,19 +131,8 @@ public class UserService {
         response.addHeader("Set-Cookie", refreshCookie.toString());
     }
 
-    public void setAccessCookie(final String accessToken, final HttpServletResponse response) {
-        ResponseCookie accessCookie = ResponseCookie.from(ACCESS_TOKEN, accessToken)
-                .maxAge(30 * 24 * 60 * 60 * 1000L) /// 1달
-                .path("/")
-                .secure(true)
-                .sameSite("None")
-                .httpOnly(true)
-                .build();
-        response.setHeader("Set-Cookie", accessCookie.toString());
-    }
-
     public void setRefreshCookie(final String refreshToken, final HttpServletResponse response) {
-        ResponseCookie refreshCookie = ResponseCookie.from(REFRESH_TOKEN, refreshToken)
+        ResponseCookie refreshCookie = ResponseCookie.from(Constants.REFRESH_TOKEN, refreshToken)
                 .maxAge(30 * 24 * 60 * 60 * 1000L) /// 1달
                 .path("/")
                 .secure(true)
