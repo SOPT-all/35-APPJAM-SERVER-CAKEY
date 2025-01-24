@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
@@ -61,7 +62,23 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //로�
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        final String accessToken = request.getHeader(Constants.AUTHORIZATION);
+        String accessToken = request.getHeader(Constants.AUTHORIZATION);
+
+        if ("Bearer: ".equals(accessToken)) {
+            accessToken = null;
+
+        } else if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
+            /// "Bearer: "로 시작하는 경우
+            accessToken = accessToken.substring(Constants.BEARER.length()).trim();
+
+            /// 접두사 제거 후 내용이 없으면 null 처리
+            if (accessToken.isEmpty()) {
+                accessToken = null;
+            }
+        } else {
+            // 유효하지 않은 경우 null 처리
+            accessToken = null;
+        }
 
         if (accessToken != null) {
             final long userId = jwtProvider.getUserIdFromSubject(accessToken);
@@ -76,4 +93,6 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //로�
 
         filterChain.doFilter(request, response);
     }
+
+
 }
