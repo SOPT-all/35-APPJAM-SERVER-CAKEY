@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
@@ -61,7 +62,13 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //ë¡œê·
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        final String accessToken = request.getHeader(Constants.AUTHORIZATION);
+        String accessToken = request.getHeader(Constants.AUTHORIZATION);
+
+        if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
+            accessToken = accessToken.substring(Constants.BEARER.length());
+        } else {
+            accessToken = null;
+        }
 
         if (accessToken != null) {
             final long userId = jwtProvider.getUserIdFromSubject(accessToken);
@@ -76,4 +83,6 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //ë¡œê·
 
         filterChain.doFilter(request, response);
     }
+
+
 }
