@@ -1,5 +1,6 @@
 package com.cakey.jwt.auth;
 
+import com.cakey.TestConfiguration;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,20 +10,22 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
-@SpringBootTest(properties = {
+@SpringBootTest(classes = TestConfiguration.class, properties = {
         "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"
 })
-@TestPropertySource(properties = {
-        "jwt.secret=testasdfasdfasddfsecretfdadfsdfasdfasdfasdfasdf",
-        "jwt.accessTokenExpirationTime=3600",
-        "jwt.refreshTokenExpirationTime=604800"
-})
+//@TestPropertySource(properties = {
+//        "jwt.secret=testasdfasdfasddfsecretfdadfsdfasdfasdfasdfasdf",
+//        "jwt.accessTokenExpirationTime=3600",
+//        "jwt.refreshTokenExpirationTime=604800"
+//})
+@ActiveProfiles("test") // 테스트 전용 프로파일 활성화
 @ComponentScan(basePackages = "com.cakey.jwt.auth")
 class JwtGeneratorTest {
 
