@@ -64,9 +64,19 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //로�
 
         String accessToken = request.getHeader(Constants.AUTHORIZATION);
 
-        if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
-            accessToken = accessToken.substring(Constants.BEARER.length());
+        if ("Bearer: ".equals(accessToken)) {
+            accessToken = null;
+
+        } else if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
+            /// "Bearer: "로 시작하는 경우
+            accessToken = accessToken.substring(Constants.BEARER.length()).trim();
+
+            /// 접두사 제거 후 내용이 없으면 null 처리
+            if (accessToken.isEmpty()) {
+                accessToken = null;
+            }
         } else {
+            // 유효하지 않은 경우 null 처리
             accessToken = null;
         }
 
