@@ -17,16 +17,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
-@SpringBootTest(classes = TestConfiguration.class, properties = {
-        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"
+@SpringBootTest(classes = TestConfiguration.class)
+@TestPropertySource(properties = {
+        "jwt.secret=testasdfasdfasddfsecretfdadfsdfasdfasdfasdfasdf",
+        "jwt.accessTokenExpirationTime=3600",
+        "jwt.refreshTokenExpirationTime=604800"
 })
-//@TestPropertySource(properties = {
-//        "jwt.secret=testasdfasdfasddfsecretfdadfsdfasdfasdfasdfasdf",
-//        "jwt.accessTokenExpirationTime=3600",
-//        "jwt.refreshTokenExpirationTime=604800"
-//})
-@ActiveProfiles("test") // 테스트 전용 프로파일 활성화
-@ComponentScan(basePackages = "com.cakey.jwt.auth")
+@ComponentScan(basePackages = "com.cakey")
 class JwtGeneratorTest {
 
     @Autowired
