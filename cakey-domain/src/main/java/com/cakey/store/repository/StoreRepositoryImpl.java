@@ -455,6 +455,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
             return Expressions.asBoolean(false);
         }
     }
+    
 
     //좋아요 개수 서브쿼리
     private Expression<Integer> getStoreLikesCountSubQuery() {
