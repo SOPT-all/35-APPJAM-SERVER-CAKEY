@@ -19,10 +19,10 @@
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %logger{0} - %msg%n</pattern>
             </encoder>
-            <file>*/home/ubuntu/CAKEY-ERROR-LOG.log</file>
+            <file>/home/ubuntu/CAKEY-ERROR-LOG.log</file>
 
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>*/home/ubuntu/CAKEY-ERROR-LOG-%d{yyyy-MM-dd}-%i-log.zip</fileNamePattern>
+                <fileNamePattern>/home/ubuntu/CAKEY-ERROR-LOG-%d{yyyy-MM-dd}-%i-log.zip</fileNamePattern>
                 <maxFileSize>50MB</maxFileSize>
                 <maxHistory>30</maxHistory>
                 <totalSizeCap>3GB</totalSizeCap>
