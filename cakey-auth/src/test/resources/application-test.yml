@@ -1,5 +1,6 @@
 spring:
-  profiles: test
+  profiles:
+    active: test
   cache:
     type: simple
     cache-names: refresh
