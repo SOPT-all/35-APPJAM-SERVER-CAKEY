@@ -12,11 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserCreator {
     private final UserRepository userRepository;
 
-    @Transactional
     public long createUser(final UserCreateDto userCreateDto) {
         final User user = User.createUser(userCreateDto.userName(), userCreateDto.userRole(),
                 userCreateDto.socialType(), userCreateDto.socialId(), userCreateDto.socialEmail());
-        System.out.println();
         final User savedUser = userRepository.save(user);
         return savedUser.getId();
     }

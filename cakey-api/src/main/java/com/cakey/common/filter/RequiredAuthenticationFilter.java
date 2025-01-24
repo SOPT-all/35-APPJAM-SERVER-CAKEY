@@ -50,7 +50,8 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             "/api/v1/store/*/select/coordinate",
             "/api/v1/store/*/size",
             "/api/v1/store/*/information",
-            "/api/v1/store/*/kakaoLink"
+            "/api/v1/store/*/kakaoLink",
+            "api/v1/user/login"
 
     );
 
@@ -68,9 +69,13 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
-            final String token = getAccessTokenFromCookie(request);
-            final Long userId = jwtProvider.getUserIdFromSubject(token);
-            SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userId, null, null));
+            final String accessToken = request.getHeader(Constants.AUTHORIZATION);
+            final long userId = jwtProvider.getUserIdFromSubject(accessToken);
+
+            SecurityContextHolder
+                    .getContext()
+                    .setAuthentication(new UserAuthentication(userId, null, null));
+
             filterChain.doFilter(request, response); // 다음 필터로 요청 전달
         } catch (Exception e) {
             // 예외 발생 시 JSON 응답 생성
@@ -80,7 +85,7 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             response.setCharacterEncoding(Constants.CHARACTER_TYPE);
             response.setStatus(errorCode.getHttpStatus().value()); // HTTP 상태 코드 401 설정
 
-            log.error("--------------------쿠키 없음------------------------"); //todo: 추후 삭제(테스트용)
+            log.error("--------------------토큰 없음------------------------"); //todo: 추후 삭제(테스트용)
             // `ApiResponseUtil.failure`를 이용해 응답 작성
             final PrintWriter writer = response.getWriter();
             writer.write(objectMapper.writeValueAsString(
@@ -89,17 +94,5 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             writer.flush();
             return; // 체인 호출 중단
         }
-    }
-
-    private String getAccessTokenFromCookie(final HttpServletRequest request) throws Exception {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for(Cookie cookie : cookies) {
-                if (cookie.getName().equals("accessToken")) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        throw new UserBadRequestException(ErrorBaseCode.UNAUTHORIZED);
     }
 }

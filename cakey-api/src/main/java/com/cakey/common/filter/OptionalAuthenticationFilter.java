@@ -1,5 +1,6 @@
 package com.cakey.common.filter;
 
+import com.cakey.Constants;
 import com.cakey.jwt.auth.JwtProvider;
 import com.cakey.jwt.auth.UserAuthentication;
 import jakarta.servlet.FilterChain;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,8 +22,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class OptionalAuthenticationFilter extends OncePerRequestFilter { //로그인 상관 X
     private final JwtProvider jwtProvider;
-
-    private static final String ACCESS_TOKEN = "accessToken";
 
     // 필터를 건너뛸 API 경로 목록
     private static final List<String> EXCLUDED_PATHS = List.of(
@@ -43,7 +43,8 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //로�
             "/api/v1/store/*/select/coordinate",
             "/api/v1/store/*/size",
             "/api/v1/store/*/information",
-            "/api/v1/store/*/kakaoLink"
+            "/api/v1/store/*/kakaoLink",
+            "api/v1/user/login"
     );
 
     @Override
@@ -60,26 +61,19 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //로�
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        final String accessToken = getAccessTokenFromCookie(request);
+        final String accessToken = request.getHeader(Constants.AUTHORIZATION);
+
         if (accessToken != null) {
-            final Long userId = jwtProvider.getUserIdFromSubject(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(userId, null, null));
+            final long userId = jwtProvider.getUserIdFromSubject(accessToken);
+            SecurityContextHolder
+                    .getContext()
+                    .setAuthentication(new UserAuthentication(userId, null, null));
         } else {
-            SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(null, null, null));
+            SecurityContextHolder
+                    .getContext()
+                    .setAuthentication(new UserAuthentication(null, null, null));
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    public String getAccessTokenFromCookie(@NonNull HttpServletRequest request) {
-        final Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (ACCESS_TOKEN.equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
     }
 }
