@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
         "jwt.accessTokenExpirationTime=3600",
         "jwt.refreshTokenExpirationTime=604800"
 })
-//@ComponentScan(basePackages = "com.cakey.jwt.auth")
+@ComponentScan(basePackages = "com.cakey.jwt.auth")
 class JwtGeneratorTest {
 
     @Autowired
