@@ -1,33 +1,29 @@
 package com.cakey.jwt.auth;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(properties = {
         "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"
 })
 @TestPropertySource(properties = {
-        "jwt.secret=testasdfasdfasdfsecretfdadfsdfasdfasdfasdfasdf",
+        "jwt.secret=testasdfasdfasddfsecretfdadfsdfasdfasdfasdfasdf",
         "jwt.accessTokenExpirationTime=3600",
         "jwt.refreshTokenExpirationTime=604800"
 })
-@ComponentScan(basePackages = "com.cakey.jwt.auth")
+//@ComponentScan(basePackages = "com.cakey.jwt.auth")
 class JwtGeneratorTest {
-
-    @Autowired
-    private JwtProperties jwtProperties;
 
     @Autowired
     private JwtGenerator jwtGenerator;
@@ -43,7 +39,12 @@ class JwtGeneratorTest {
     void generateRefreshToken() {
         // Given
         // 캐시 초기화
-        cacheManager.getCache("refresh").clear();
+        cacheManager.getCacheNames().forEach(cacheName -> {
+            Cache cache = cacheManager.getCache(cacheName);
+            if (cache != null) {
+                cache.clear();
+            }
+        });
 
         long firstId = 123L;
         long secondId = 456L;
@@ -64,35 +65,36 @@ class JwtGeneratorTest {
         System.out.println("token 1: " + firstCachedToken);
         assertThat(firstCachedToken).isEqualTo(token1); // 캐시된 값이 첫 번째 토큰과 동일해야 함
 
-        final String secondCachedToken = cache.get(firstId, String.class);
+        final String secondCachedToken = cache.get(secondId, String.class);
         assertThat(secondCachedToken).isNotNull();
         System.out.println("token 2: " + secondCachedToken);
-        assertThat(secondCachedToken).isEqualTo(token1); // 캐시된 값이 두 번째 토큰과 동일해야 함
+        assertThat(secondCachedToken).isEqualTo(token2); // 캐시된 값이 두 번째 토큰과 동일해야 함
     }
 
     @Test
     @DisplayName("리프레시 토큰 캐시 삭제")
     void deleteRefreshToken() {
         //Given
-        long userId = 123L;
+        final long userId = 123L;
+
+        Cache cache = cacheManager.getCache("refresh");
+        System.out.println(cache);
+        assertThat(cache).isNotNull();
+
+        String cachedValue = cache.get(userId, String.class);
+        System.out.println(cachedValue);
+        assertThat(cachedValue).isNotNull();
 
         //When
         jwtProvider.deleteRefreshToken(userId);
 
         //Then
-        Cache cache = cacheManager.getCache("refresh");
-        String cachedValue = cache.get(userId, String.class);
-        assertThat(cachedValue).isNull(); // 키에 해당하는 값이 삭제되었는지 확인
-    }
+        cache = cacheManager.getCache("refresh");
+        System.out.println(cache);
 
-    @Test
-    @DisplayName("초기화 테스트")
-    void reset() {
-        // 캐시 초기화
-        cacheManager.getCache("refresh").clear();
+        cachedValue = cache.get(userId, String.class);
+        System.out.println(cachedValue);
 
-        Cache cache = cacheManager.getCache("refresh");
-
-        assertThat(cache).isNull();
+        Assertions.assertThat(cachedValue).isNull(); // 키에 해당하는 값이 삭제되었는지 확인
     }
 }

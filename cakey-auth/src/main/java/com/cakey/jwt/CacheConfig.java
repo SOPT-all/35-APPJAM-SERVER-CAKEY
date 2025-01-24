@@ -20,15 +20,14 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        // CaffeineCacheManager를 사용해 동적으로 캐시 이름을 생성
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-
-        // 모든 캐시에 동일한 기본 설정을 적용
-        cacheManager.setCaffeine(Caffeine.newBuilder()
-                .initialCapacity(100)                  // 초기 용량
-                .maximumSize(500)                      // 최대 캐시 크기
-                .recordStats());                       // 캐시 통계 활성화
-
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        List<Cache> caches = new ArrayList<>();
+        caches.add(new CaffeineCache("refresh", Caffeine.newBuilder()
+                .initialCapacity(100)
+                .maximumSize(500)
+                .recordStats()
+                .build()));
+        cacheManager.setCaches(caches);
         return cacheManager;
     }
 }
