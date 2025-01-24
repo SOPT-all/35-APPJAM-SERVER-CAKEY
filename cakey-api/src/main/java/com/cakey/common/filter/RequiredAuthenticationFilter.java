@@ -86,6 +86,9 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response); // 다음 필터로 요청 전달
         } catch (Exception e) {
+            log.error("--------------------쿠키 에러------------------------");
+            log.error(e.getMessage());
+
             // 예외 발생 시 JSON 응답 생성
             final ErrorBaseCode errorCode = ErrorBaseCode.UNAUTHORIZED;
 

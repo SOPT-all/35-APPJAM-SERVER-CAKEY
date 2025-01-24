@@ -26,6 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cloud.openfeign.aot.FeignChildContextInitializer;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +86,7 @@ public class UserService {
         } else { //전에 이미 우리 유저
 
             //리프레시 토큰 캐시 삭제
-            deleteRefreshToken(userId);
+            jwtProvider.deleteRefreshToken(userId);
 
             final Token newToken = jwtProvider.issueToken(userId);
 
@@ -113,7 +114,7 @@ public class UserService {
             throw new UserNotFoundException(UserErrorCode.USER_NOT_FOUND);
         }
         deleteRefreshCookie(response);
-        deleteRefreshToken(userId);
+        jwtProvider.deleteRefreshToken(userId);
     }
 
     @CacheEvict(value = "refresh")

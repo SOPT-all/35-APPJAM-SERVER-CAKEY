@@ -9,7 +9,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.BaseErrorListener;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -32,6 +32,9 @@ public class JwtProvider {
     public String generateRefreshToken(final long userId) {
         return jwtGenerator.generateRefreshToken(userId);
     }
+
+    @CacheEvict(value = "refresh")
+    public void deleteRefreshToken(final long userId) { }
 
     public long getUserIdFromSubject(final String token) {
         Jws<Claims> jws = jwtGenerator.parseToken(token);
