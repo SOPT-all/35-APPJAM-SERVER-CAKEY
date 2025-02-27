@@ -26,6 +26,7 @@ public enum ErrorBaseCode implements ErrorCode {
     UNAUTHORIZED_WRONG_RT(HttpStatus.UNAUTHORIZED, 40102, "잘못된 리프레시 토큰입니다."),
     UNAUTHORIZED_AT_EXPIRED(HttpStatus.UNAUTHORIZED, 40103, "만료된 액세스 토큰입니다."),
     UNAUTHORIZED_RT_EXPIRED(HttpStatus.UNAUTHORIZED, 40104, "만료된 리프레시 토큰입니다."),
+    UNAUTHORIZED_DIFF_USER_ID(HttpStatus.UNAUTHORIZED, 40105, "리프레시 토큰 userId와 다른 userId 입니다"),
 
     /**
      * 403 Forbidden

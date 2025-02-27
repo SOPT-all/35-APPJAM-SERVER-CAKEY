@@ -6,9 +6,11 @@ import com.cakey.common.resolver.user.UserId;
 import com.cakey.common.response.ApiResponseUtil;
 import com.cakey.common.response.BaseResponse;
 import com.cakey.rescode.SuccessCode;
+import com.cakey.user.dto.JwtReissueRes;
 import com.cakey.user.dto.LoginSuccessRes;
 import com.cakey.user.service.UserService;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -53,15 +55,14 @@ public class UserController {
         userService.logout(userId, response);
         return ApiResponseUtil.success(SuccessCode.OK);
     }
-    
 
-//    //jwt 재발급
-//    @GetMapping("/reissue")
-//    public ResponseEntity<BaseResponse<?>> jwtReissue(
-//            @CookieValue(name = "refreshToken") Cookie cookie
-//    ) {
-//        final String refreshToken = cookie.getValue();
-//        final LoginSuccessRes loginSuccessRes = userService.jwtReissue(refreshToken);
-//        return ApiResponseUtil.success(SuccessCode.OK, loginSuccessRes);
-//    }
+    //jwt 재발급
+    @PatchMapping("/reissue")
+    public ResponseEntity<BaseResponse<?>> jwtReissue(
+            @RequestHeader(value = "userId") final long userId,
+            @CookieValue(name = "refreshToken") final Cookie cookie
+    ) {
+        final JwtReissueRes jwtReissueRes = userService.jwtReissue(userId, cookie.getValue());
+        return ApiResponseUtil.success(SuccessCode.OK, jwtReissueRes);
+    }
 }
