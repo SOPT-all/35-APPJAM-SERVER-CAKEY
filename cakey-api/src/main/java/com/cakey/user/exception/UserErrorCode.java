@@ -8,6 +8,10 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {
 
+    /**
+     * 400 Bad Request
+     */
+    JWT_BAD_REQUEST(HttpStatus.BAD_REQUEST, 40030, "잘못된 jwt 토큰입니다."),
 
     /**
      * 404 Not Found

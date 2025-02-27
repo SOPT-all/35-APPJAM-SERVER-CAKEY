@@ -1,13 +1,9 @@
 package com.cakey.jwt.auth;
 
+import com.cakey.exception.AuthExpiredJwtException;
+import com.cakey.exception.AuthWrongJwtException;
 import com.cakey.jwt.domain.Token;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Base64;
@@ -67,23 +63,15 @@ public class JwtGenerator {
 
     public Jws<Claims> parseToken(final String token) {
         try {
-            JwtParser jwtParser = getJwtParser();
+            final JwtParser jwtParser = getJwtParser();
             return jwtParser.parseClaimsJws(token);
-        }
-        //todo: 추후 수정
-//        } catch (ExpiredJwtException e) {
-//            throw new Ex
-//        } catch (UnsupportedJwtException e) {
-//            throw new UnauthorizedException(FailureCode.UNSUPPORTED_TOKEN_TYPE);
-//        } catch (MalformedJwtException e) {
-//            throw new UnauthorizedException(FailureCode.MALFORMED_TOKEN);
-//        } catch (SignatureException e) {
-//            throw new UnauthorizedException(FailureCode.INVALID_SIGNATURE_TOKEN);
-        catch (Exception e) {
-            throw new JwtException(e.getMessage());
+        } catch (ExpiredJwtException e) { ///만료된 jwt 예외처리
+            throw new AuthExpiredJwtException();
+        } catch (UnsupportedJwtException | MalformedJwtException | SecurityException | IllegalArgumentException e) { ///잘못된 jwt 예외처리
+            throw new AuthWrongJwtException();
+
         }
     }
-
     public JwtParser getJwtParser() {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

@@ -1,4 +1,4 @@
-package com.cakey.exception.handler;
+package com.cakey.common.exception.handler;
 
 import com.cakey.cake.exception.CakeyApiBaseException;
 import com.cakey.rescode.ErrorBaseCode;
