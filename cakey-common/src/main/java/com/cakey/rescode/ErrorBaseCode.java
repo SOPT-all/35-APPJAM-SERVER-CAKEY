@@ -22,6 +22,10 @@ public enum ErrorBaseCode implements ErrorCode {
      * 401 Unauthorized
      */
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, 40100, "리소스 접근 인증 권한이 없습니다."),
+    UNAUTHORIZED_WRONG_AT(HttpStatus.UNAUTHORIZED, 40101, "잘못된 액세스 토큰입니다."),
+    UNAUTHORIZED_WRONG_RT(HttpStatus.UNAUTHORIZED, 40102, "잘못된 리프레시 토큰입니다."),
+    UNAUTHORIZED_AT_EXPIRED(HttpStatus.UNAUTHORIZED, 40103, "만료된 액세스 토큰입니다."),
+    UNAUTHORIZED_RT_EXPIRED(HttpStatus.UNAUTHORIZED, 40104, "만료된 리프레시 토큰입니다."),
 
     /**
      * 403 Forbidden
