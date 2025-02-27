@@ -1,8 +1,12 @@
 package com.cakey.common.filter;
 
 import com.cakey.Constants;
+import com.cakey.exception.AuthExpiredJwtException;
+import com.cakey.exception.AuthWrongJwtException;
 import com.cakey.jwt.auth.JwtProvider;
 import com.cakey.jwt.auth.UserAuthentication;
+import com.cakey.rescode.ErrorBaseCode;
+import com.cakey.user.exception.UserUnAuthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +17,7 @@ import java.util.List;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,6 +26,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OptionalAuthenticationFilter extends OncePerRequestFilter { //로그인 상관 X
     private final JwtProvider jwtProvider;
 
@@ -60,39 +66,41 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //로�
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+    ) {
 
         String accessToken = request.getHeader(Constants.AUTHORIZATION);
 
-        if ("Bearer: ".equals(accessToken)) {
-            accessToken = null;
-
-        } else if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
-            /// "Bearer: "로 시작하는 경우
-            accessToken = accessToken.substring(Constants.BEARER.length()).trim();
-
-            /// 접두사 제거 후 내용이 없으면 null 처리
-            if (accessToken.isEmpty()) {
-                accessToken = null;
+        if (accessToken != null) { ///Authorization 헤더 왔을 때
+            if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
+                accessToken = accessToken.substring(Constants.BEARER.length());
+            } else {
+                throw new UserUnAuthorizedException(ErrorBaseCode.UNAUTHORIZED_WRONG_AT); ///액세스토큰 비어있거나 Bearer로 시작안할때
             }
-        } else {
-            // 유효하지 않은 경우 null 처리
-            accessToken = null;
-        }
 
-        if (accessToken != null) {
-            final long userId = jwtProvider.getUserIdFromSubject(accessToken);
-            SecurityContextHolder
-                    .getContext()
-                    .setAuthentication(new UserAuthentication(userId, null, null));
-        } else {
+            try {
+                final long userId = jwtProvider.getUserIdFromSubject(accessToken);
+                SecurityContextHolder
+                        .getContext()
+                        .setAuthentication(new UserAuthentication(userId, null, null));
+                filterChain.doFilter(request, response);
+
+            } catch (AuthExpiredJwtException e) {
+                throw new UserUnAuthorizedException(ErrorBaseCode.UNAUTHORIZED_AT_EXPIRED);
+            } catch (AuthWrongJwtException e) {
+                throw new UserUnAuthorizedException(ErrorBaseCode.UNAUTHORIZED_WRONG_AT);
+            } catch (Exception e) {
+                log.error("-------UNAUTHORIZED ERROR LOG -----------\n" + e.getMessage(), e);
+                throw new UserUnAuthorizedException(ErrorBaseCode.INTERNAL_SERVER_ERROR);
+            }
+        } else { ///Authorization 헤더 안왔을 때
             SecurityContextHolder
                     .getContext()
                     .setAuthentication(new UserAuthentication(null, null, null));
+            try {
+                filterChain.doFilter(request, response);
+            } catch (Exception e) {
+                log.error("-------UNAUTHORIZED ERROR LOG ----------- \n " + e.getMessage(), e);
+                throw new UserUnAuthorizedException(ErrorBaseCode.INTERNAL_SERVER_ERROR);            }
         }
-
-        filterChain.doFilter(request, response);
     }
-
-
 }

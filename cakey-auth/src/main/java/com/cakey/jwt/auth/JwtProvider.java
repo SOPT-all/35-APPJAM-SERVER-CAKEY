@@ -2,6 +2,7 @@ package com.cakey.jwt.auth;
 
 import com.cakey.Constants;
 import com.cakey.exception.AuthExpiredJwtException;
+import com.cakey.exception.AuthWrongJwtException;
 import com.cakey.exception.CakeyBaseException;
 import com.cakey.jwt.domain.Token;
 import com.cakey.rescode.ErrorBaseCode;
@@ -50,7 +51,7 @@ public class JwtProvider {
             return Long.parseLong(subject);
         } catch (NumberFormatException e) {
             log.error("---------JWT NumberFormatException-------------" + e.getMessage() + e.getCause().toString());
-            throw new ;
+            throw new AuthWrongJwtException();
         }
     }
 }
