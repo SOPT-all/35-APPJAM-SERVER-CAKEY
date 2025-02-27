@@ -36,6 +36,7 @@ public class JwtGenerator {
                 .compact();
     }
 
+    //리프레시 토큰 발급
     @CachePut(value = Constants.REFRESH_TOKEN, key = "#userId") ///없으면 추가하고, 이미 있으면 업데이트
     public String generateRefreshToken(final long userId) {
         final Date now = new Date();
@@ -80,6 +81,7 @@ public class JwtGenerator {
             throw new AuthWrongJwtException();
         }
     }
+
     private JwtParser getJwtParser() {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

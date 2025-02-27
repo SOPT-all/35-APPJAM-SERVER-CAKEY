@@ -18,7 +18,6 @@ import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -51,7 +50,7 @@ public class OptionalAuthenticationFilter extends OncePerRequestFilter { //ë¡œê·
             "/api/v1/store/*/size",
             "/api/v1/store/*/information",
             "/api/v1/store/*/kakaoLink",
-            "api/v1/user/login"
+            "/api/v1/user/login"
     );
 
     @Override

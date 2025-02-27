@@ -60,9 +60,11 @@ public class UserController {
     @PatchMapping("/reissue")
     public ResponseEntity<BaseResponse<?>> jwtReissue(
             @RequestHeader(value = "userId") final long userId,
-            @CookieValue(name = "refreshToken") final Cookie cookie
+            @CookieValue(name = "refreshToken") final Cookie cookie,
+            final HttpServletResponse response
+
     ) {
-        final JwtReissueRes jwtReissueRes = userService.jwtReissue(userId, cookie.getValue());
+        final JwtReissueRes jwtReissueRes = userService.jwtReissue(userId, cookie.getValue(), response);
         return ApiResponseUtil.success(SuccessCode.OK, jwtReissueRes);
     }
 }

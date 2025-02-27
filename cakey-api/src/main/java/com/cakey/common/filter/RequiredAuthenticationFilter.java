@@ -35,7 +35,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class RequiredAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider; //로그인 필수
-    private final ObjectMapper objectMapper;
 
     // 필터를 건너뛸 API 경로 목록
     private static final List<String> EXCLUDED_PATHS = List.of(
@@ -57,8 +56,7 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             "/api/v1/store/*/size",
             "/api/v1/store/*/information",
             "/api/v1/store/*/kakaoLink",
-            "api/v1/user/login"
-
+            "/api/v1/user/login"
     );
 
     @Override

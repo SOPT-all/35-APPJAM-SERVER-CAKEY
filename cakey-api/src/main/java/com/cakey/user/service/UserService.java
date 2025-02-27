@@ -38,7 +38,6 @@ public class UserService {
     private final UserFacade userFacade;
     private final KakaoSocialProvider kakaoSocialProvider;
     private final JwtProvider jwtProvider;
-    private final FilterRegistrationBean requiredAuthenticationFilterRegistration;
 
     @Transactional
     public LoginSuccessRes login(
@@ -47,7 +46,7 @@ public class UserService {
             final String redirectUri,
             final HttpServletResponse response
     ) {
-        //카카오 유저정보
+        ///카카오 유저정보
         final KakaoUserDto kakaoUserInfo;
 
         if (socialType.equals(SocialType.KAKAO)) {
@@ -60,31 +59,31 @@ public class UserService {
             throw new UserBadRequestException(UserErrorCode.KAKAO_LOGIN_FAILED);
         }
 
-        //플랫폼 아이디
+        ///플랫폼 아이디
         final long platformId = kakaoUserInfo.id();
 
-        //이미 우리 유저인지 확인해서 userId 뽑기
+        ///이미 우리 유저인지 확인해서 userId 뽑기
         final Long userId = userFacade.findUserIdFromSocialTypeAndPlatformId(socialType, platformId);
 
-        if (userId == null) { //유저 처음 가입
-            //유저생성
+        if (userId == null) { ///유저 처음 가입
+            ///유저생성
             final UserCreateDto userCreateDto = UserCreateDto.of(kakaoUserInfo.kakaoAccount().profile().nickname(),
                     UserRole.USER, socialType, kakaoUserInfo.id(), kakaoUserInfo.kakaoAccount().email());
             final long savedUserId = userFacade.createUser(userCreateDto);
 
             final Token newToken = jwtProvider.issueToken(savedUserId);
 
-            //쿠키설정
+            ///쿠키설정
             setRefreshCookie(newToken.getRefreshToken(), response);
 
             return LoginSuccessRes.of(
                     savedUserId,
                     kakaoUserInfo.kakaoAccount().profile().nickname(),
                     newToken.getAccessToken());
-        } else { //전에 이미 우리 유저
+        } else { ///전에 이미 우리 유저
             final Token newToken = jwtProvider.issueToken(userId);
 
-            //쿠키 설정
+            ///쿠키 설정
             setRefreshCookie(newToken.getRefreshToken(), response);
 
             return LoginSuccessRes.of(
@@ -95,7 +94,7 @@ public class UserService {
     }
 
     //jwt 재발급
-    public JwtReissueRes jwtReissue(final long userId, final String refreshToken) {
+    public JwtReissueRes jwtReissue(final long userId, final String refreshToken, final HttpServletResponse response) {
 
         final long userIdFromRT;
         final String newRefreshToken;
@@ -128,12 +127,13 @@ public class UserService {
 
         /// 새로운 AT, RT 생성
         final Token newToken = jwtProvider.issueToken(userId);
+        setRefreshCookie(newToken.getRefreshToken(), response);
 
         return JwtReissueRes.of(newToken.getAccessToken());
     }
 
     //로그아웃
-    public void logout(final long userId, final HttpServletResponse response) {
+    public void logout(final long userId, HttpServletResponse response) {
         try {
             userFacade.isExistById(userId);
         } catch (NotFoundBaseException e) {
@@ -146,7 +146,7 @@ public class UserService {
     //refreshToken 쿠키 삭제
     public void deleteRefreshCookie(HttpServletResponse response) {
         ResponseCookie refreshCookie = ResponseCookie.from(Constants.REFRESH_TOKEN, "")
-                .maxAge(0) // 쿠키 즉시 삭제
+                .maxAge(0) /// 쿠키 즉시 삭제
                 .path("/")
                 .secure(true)
                 .sameSite("None")
@@ -155,9 +155,10 @@ public class UserService {
         response.addHeader("Set-Cookie", refreshCookie.toString());
     }
 
+    //refreshToken 쿠키 세팅
     public void setRefreshCookie(final String refreshToken, final HttpServletResponse response) {
         ResponseCookie refreshCookie = ResponseCookie.from(Constants.REFRESH_TOKEN, refreshToken)
-                .maxAge(30 * 24 * 60 * 60 * 1000L) /// 1달
+                .maxAge(14 * 24 * 60 * 60 * 1000) /// 리프레시 만료기간 (14일)
                 .path("/")
                 .secure(true)
                 .sameSite("None")
