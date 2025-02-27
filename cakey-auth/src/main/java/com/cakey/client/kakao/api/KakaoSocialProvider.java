@@ -7,18 +7,18 @@ import com.cakey.client.kakao.api.dto.KakaoUserDto;
 import com.cakey.client.SocialType;
 import com.cakey.exception.AuthKakaoException;
 import com.cakey.jwt.domain.UserRole;
-import com.cakey.rescode.ErrorBaseCode;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
-public class KakaoSocialService {
+public class KakaoSocialProvider {
     private final KakaoApiClient kakaoApiClient;
     private final KakaoAuthApiClient kakaoAuthApiClient;
 
