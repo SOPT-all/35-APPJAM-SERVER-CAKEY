@@ -2,11 +2,16 @@ package com.cakey.common.filter;
 
 import com.cakey.Constants;
 import com.cakey.common.response.ApiResponseUtil;
+import com.cakey.exception.AuthExpiredJwtException;
+import com.cakey.exception.AuthWrongJwtException;
 import com.cakey.jwt.auth.JwtProvider;
 import com.cakey.jwt.auth.UserAuthentication;
 import com.cakey.rescode.ErrorBaseCode;
 import com.cakey.user.exception.UserBadRequestException;
+import com.cakey.user.exception.UserErrorCode;
+import com.cakey.user.exception.UserUnAuthorizedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -30,7 +35,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class RequiredAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider; //로그인 필수
-    private final ObjectMapper objectMapper;
 
     // 필터를 건너뛸 API 경로 목록
     private static final List<String> EXCLUDED_PATHS = List.of(
@@ -52,8 +56,7 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             "/api/v1/store/*/size",
             "/api/v1/store/*/information",
             "/api/v1/store/*/kakaoLink",
-            "api/v1/user/login"
-
+            "/api/v1/user/login"
     );
 
     @Override
@@ -68,42 +71,28 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+    ) {
+        String accessToken = request.getHeader(Constants.AUTHORIZATION);
+
+        if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
+            accessToken = accessToken.substring(Constants.BEARER.length());
+        } else {
+            throw new UserUnAuthorizedException(ErrorBaseCode.UNAUTHORIZED_WRONG_AT); ///액세스토큰 비어있거나 Bearer로 시작안할때
+        }
+
         try {
-             String accessToken = request.getHeader(Constants.AUTHORIZATION);
-
-            if (StringUtils.hasText(accessToken) && accessToken.startsWith(Constants.BEARER)) {
-                accessToken = accessToken.substring(Constants.BEARER.length());
-            } else {
-                throw new Exception();
-            }
-
             final long userId = jwtProvider.getUserIdFromSubject(accessToken);
-
             SecurityContextHolder
                     .getContext()
                     .setAuthentication(new UserAuthentication(userId, null, null));
-
-            filterChain.doFilter(request, response); // 다음 필터로 요청 전달
+            filterChain.doFilter(request, response);
+        } catch (AuthExpiredJwtException e) {
+            throw new UserUnAuthorizedException(ErrorBaseCode.UNAUTHORIZED_AT_EXPIRED);
+        } catch (AuthWrongJwtException e) {
+            throw new UserUnAuthorizedException(ErrorBaseCode.UNAUTHORIZED_WRONG_AT);
         } catch (Exception e) {
-            log.error("--------------------쿠키 에러------------------------");
-            log.error(e.getMessage());
-
-            // 예외 발생 시 JSON 응답 생성
-            final ErrorBaseCode errorCode = ErrorBaseCode.UNAUTHORIZED;
-
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding(Constants.CHARACTER_TYPE);
-            response.setStatus(errorCode.getHttpStatus().value()); // HTTP 상태 코드 401 설정
-
-            log.error("--------------------토큰 없음------------------------"); //todo: 추후 삭제(테스트용)
-            // `ApiResponseUtil.failure`를 이용해 응답 작성
-            final PrintWriter writer = response.getWriter();
-            writer.write(objectMapper.writeValueAsString(
-                    ApiResponseUtil.failure(errorCode).getBody()
-            ));
-            writer.flush();
-            return; // 체인 호출 중단
+            log.error("-------UNAUTHORIZED ERROR LOG -----------\n" + e.getMessage(), e);
+            throw new UserUnAuthorizedException(ErrorBaseCode.INTERNAL_SERVER_ERROR);
         }
     }
 }

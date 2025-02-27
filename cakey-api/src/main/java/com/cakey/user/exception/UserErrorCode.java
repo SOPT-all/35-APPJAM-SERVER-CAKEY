@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {
 
+    /**
+     * 400 Bad Request
+     */
 
     /**
      * 404 Not Found
@@ -18,7 +21,8 @@ public enum UserErrorCode implements ErrorCode {
     /**
      * 500 Server Internal Error
      */
-    KAKAO_LOGIN_FAILED(HttpStatus.BAD_REQUEST, 50030, "카카오 로그인에 실패하였습니다"),
+    KAKAO_LOGIN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 50030, "카카오 로그인에 실패하였습니다"),
+    USER_RT_CACHE_NOT_FOUNT(HttpStatus.INTERNAL_SERVER_ERROR, 50031, "서버 내부 캐시에 저장된 리프레시 토큰이 없습니다."),
     ;
 
     private final HttpStatus httpStatus;

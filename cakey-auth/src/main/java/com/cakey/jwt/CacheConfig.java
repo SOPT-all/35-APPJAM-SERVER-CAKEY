@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.cakey.Constants;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -22,7 +23,8 @@ public class CacheConfig {
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         List<Cache> caches = new ArrayList<>();
-        caches.add(new CaffeineCache("refresh", Caffeine.newBuilder()
+        caches.add(new CaffeineCache(Constants.REFRESH_TOKEN, Caffeine.newBuilder()
+                .expireAfterWrite(14, TimeUnit.DAYS) /// refresToken 만료기간인 14일과 같도록 설정
                 .initialCapacity(100)
                 .maximumSize(500)
                 .recordStats()

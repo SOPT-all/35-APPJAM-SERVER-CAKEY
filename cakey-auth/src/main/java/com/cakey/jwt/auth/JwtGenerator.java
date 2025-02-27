@@ -1,30 +1,31 @@
 package com.cakey.jwt.auth;
 
-import com.cakey.jwt.domain.Token;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.cakey.Constants;
+import com.cakey.exception.AuthExpiredJwtException;
+import com.cakey.exception.AuthWrongJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
 public class JwtGenerator {
+
     private final JwtProperties jwtProperties;
 
     //액세스 토큰 발급
     public String generateAccessToken(final long userId) {
         final Date now = new Date();
         final Date expireDate = generateExpirationDate(now, true);
+
+        /// 추후에 사장님어드민 추가시
+        /// final Claims claims = Jwts.claims();
+        /// claims.put(USER_ROLE, role);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -35,10 +36,15 @@ public class JwtGenerator {
                 .compact();
     }
 
-    @Cacheable(value = "refresh")
+    //리프레시 토큰 발급
+    @CachePut(value = Constants.REFRESH_TOKEN, key = "#userId") ///없으면 추가하고, 이미 있으면 업데이트
     public String generateRefreshToken(final long userId) {
         final Date now = new Date();
         final Date expireDate = generateExpirationDate(now, false);
+
+        /// 추후에 사장님어드민 추가시
+        /// final Claims claims = Jwts.claims();
+        /// claims.put(USER_ROLE, role);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -57,7 +63,7 @@ public class JwtGenerator {
         }
     }
 
-    public Key getSigningKey() {
+    private Key getSigningKey() {
         return Keys.hmacShaKeyFor(encodeSecretKeyToBase64().getBytes());
     }
 
@@ -67,24 +73,16 @@ public class JwtGenerator {
 
     public Jws<Claims> parseToken(final String token) {
         try {
-            JwtParser jwtParser = getJwtParser();
+            final JwtParser jwtParser = getJwtParser();
             return jwtParser.parseClaimsJws(token);
-        }
-        //todo: 추후 수정
-//        } catch (ExpiredJwtException e) {
-//            throw new Ex
-//        } catch (UnsupportedJwtException e) {
-//            throw new UnauthorizedException(FailureCode.UNSUPPORTED_TOKEN_TYPE);
-//        } catch (MalformedJwtException e) {
-//            throw new UnauthorizedException(FailureCode.MALFORMED_TOKEN);
-//        } catch (SignatureException e) {
-//            throw new UnauthorizedException(FailureCode.INVALID_SIGNATURE_TOKEN);
-        catch (Exception e) {
-            throw new JwtException(e.getMessage());
+        } catch (ExpiredJwtException e) { ///만료된 jwt 예외처리
+            throw new AuthExpiredJwtException();
+        } catch (UnsupportedJwtException | MalformedJwtException | SecurityException | IllegalArgumentException e) { ///잘못된 jwt 예외처리
+            throw new AuthWrongJwtException();
         }
     }
 
-    public JwtParser getJwtParser() {
+    private JwtParser getJwtParser() {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build();
