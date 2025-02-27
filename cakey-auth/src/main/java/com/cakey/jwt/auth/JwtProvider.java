@@ -1,20 +1,14 @@
 package com.cakey.jwt.auth;
 
 import com.cakey.Constants;
-import com.cakey.exception.AuthExpiredJwtException;
+import com.cakey.exception.AuthRTCacheException;
 import com.cakey.exception.AuthWrongJwtException;
-import com.cakey.exception.CakeyBaseException;
 import com.cakey.jwt.domain.Token;
-import com.cakey.rescode.ErrorBaseCode;
-import com.cakey.rescode.ErrorCode;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
 @Component
@@ -37,12 +31,22 @@ public class JwtProvider {
         return jwtGenerator.generateRefreshToken(userId);
     }
 
-    @CacheEvict(value = "refresh")
+    //RT 캐시에서 삭제
+    @CacheEvict(value = Constants.REFRESH_TOKEN, key = "#userId")
     public void deleteRefreshToken(final long userId) { }
 
+    //RT 캐시에서 조회
+    @Cacheable(value = Constants.REFRESH_TOKEN, key = "#userId")
+    public String findRTFromCache(final long userId) {
+        log.error("--------No RT In Cache --------");
+        log.error("userId = {}", userId);
+        log.error("------------------------------");
+        throw new AuthRTCacheException(); ///아무 값이 없으면 예외 던지기
+    }
+
+    //jwtSubject에서 userId추출
     public long getUserIdFromSubject(final String token) {
-        final String subject = jwtGenerator
-                .parseToken(token)
+        final String subject = jwtGenerator.parseToken(token)
                 .getBody()
                 .getSubject();
 

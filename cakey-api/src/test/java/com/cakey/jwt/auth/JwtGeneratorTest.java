@@ -1,6 +1,7 @@
 package com.cakey.jwt.auth;
 
 import com.cakey.TestConfiguration;
+import com.cakey.user.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,8 @@ class JwtGeneratorTest {
 
     @Autowired
     private JwtProvider jwtProvider;
+    @Autowired
+    private UserService userService;
 
     @Test
     @DisplayName("리프레시 토큰 캐시에 등록")
