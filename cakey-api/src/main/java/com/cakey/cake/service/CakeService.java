@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class CakeService {
     private final CakeFacade cakeFacade;
     private final StoreFacade storeFacade;
-    private final CachesEndpoint cachesEndpoint;
 
     //해당역 스토어의 케이크들 조회(최신순)
     @Transactional(readOnly = true)

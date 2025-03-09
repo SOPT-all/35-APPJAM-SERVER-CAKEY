@@ -47,6 +47,7 @@ public class RequiredAuthenticationFilter extends OncePerRequestFilter {
             "/api/v1/cake/latest/*",
             "/api/v1/cake/popularity/*",
             "/api/v1/cake/select/*",
+            "/api/v1/cake/select/map/*",
             "/api/v1/store/design/*",
 
             "/api/v1/store/rank",
