@@ -1,16 +1,14 @@
 package com.cakey.cake.repository;
 
 import com.cakey.cake.domain.DayCategory;
-import com.cakey.cake.dto.CakeInfoDto;
-import com.cakey.cake.dto.CakeMainImageDto;
-import com.cakey.cake.dto.CakeSelectedDto;
-import com.cakey.cake.dto.CakeSelectedInfoDto;
+import com.cakey.cake.dto.*;
 import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreBySelectedCakeDto;
 import com.cakey.store.dto.StoreInfoDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CakeRepositoryCustom {
     List<CakeMainImageDto> findMainImageByStoreIds(final List<Long> storeIds);
@@ -78,5 +76,7 @@ public interface CakeRepositoryCustom {
     int countCakesByCategoryAndTheme(final DayCategory dayCategory,
                                      final ThemeName theme);
 
-
+    //지도뷰 조회된 디자인 조회
+    Optional<CakeSelectedMapDto> getCakeSelectedMap(final Long userId,
+                                                   final long cakeId);
 }

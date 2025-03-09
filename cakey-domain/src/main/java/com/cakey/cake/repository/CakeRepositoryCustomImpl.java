@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
@@ -37,6 +38,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     QCake cake = QCake.cake;
     QStore store = QStore.store;
     QCakeLikes cakeLikes = QCakeLikes.cakeLikes;
+    QStoreLike storeLike = QStoreLike.storeLike;
 
     //가게 메인이미지 조회
     @Override
@@ -136,7 +138,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                         .where(cakeLikes.cakeId.eq(cake.id));
 
         /// 좋아요 여부 서브쿼리
-        final BooleanExpression isLikedExpression = getIsLikedExpression(userId);
+        final BooleanExpression isLikedExpression = getCakeIsLikedExpression(userId);
 
         /// 역 조건
         final BooleanExpression stationCondition = station != Station.ALL
@@ -498,7 +500,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                         cake.storeId,
                         store.name,
                         store.station,
-                        getIsLikedExpression(userId), // isLiked 조건
+                        getCakeIsLikedExpression(userId), // isLiked 조건
                         cake.imageUrl,
                         likeCountSubQuery, /// 좋아요 개수
                         cake.id, /// 현재 케이크 ID를 커서로 반환
@@ -559,7 +561,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                                 store.id,
                                 store.name,
                                 store.station,
-                                getIsLikedExpression(userId), // isLiked 조건
+                                getCakeIsLikedExpression(userId), // isLiked 조건
                                 cake.imageUrl,
                                 cakeLikesOrderExpression, // 좋아요 개수
                                 cake.id,
@@ -672,7 +674,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                                 store.id,
                                 store.name,
                                 store.station,
-                                getIsLikedExpression(userId), /// isLiked 조건
+                                getCakeIsLikedExpression(userId), /// isLiked 조건
                                 cake.imageUrl,
                                 cakeLikesCountSubQuery, /// 좋아요 개수
                                 cake.id,
@@ -771,7 +773,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
                                 store.id,
                                 store.name,
                                 store.station,
-                                getIsLikedExpression(userId), // isLiked 조건
+                                getCakeIsLikedExpression(userId), // isLiked 조건
                                 cake.imageUrl,
                                 likeCountSubQuery, // 좋아요 개수
                                 cake.id, // 현재 케이크 ID를 반환
@@ -836,6 +838,24 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
         return count != null ? Math.toIntExact(count) : 0;
     }
 
+    //지도뷰 선택 디자인 조회
+    @Override
+    public Optional<CakeSelectedMapDto> getCakeSelectedMap(final Long userId, final long cakeId) {
+        return Optional.ofNullable(queryFactory
+                .select(new QCakeSelectedMapDto(
+                        store.id,
+                        store.name,
+                        store.address,
+                        store.station,
+                        getStoreIsLikedExpression(userId),
+                        cake.imageUrl
+                ))
+                .from(cake)
+                .join(store).on(cake.storeId.eq(store.id))
+                .where(cake.id.eq(cakeId))
+                .fetchOne());
+    }
+
     private BooleanExpression isLikedByUser(NumberExpression<Long> cakeId, Long userId) {
         QCakeLikes cakeLikes = QCakeLikes.cakeLikes;
 
@@ -853,7 +873,7 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     }
 
     // 유저의 케이크 좋아요 여부 서브쿼리
-    private BooleanExpression getIsLikedExpression(final Long userId) {
+    private BooleanExpression getCakeIsLikedExpression(final Long userId) {
         if (userId != null) {
             return JPAExpressions.selectOne()
                     .from(cakeLikes)
@@ -869,6 +889,19 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
             return JPAExpressions.selectOne()
                     .from(cakeLikes)
                     .where(cakeLikes.cakeId.eq(cakeIdPath).and(cakeLikes.userId.eq(userId)))
+                    .exists();
+        } else {
+            return Expressions.asBoolean(false);
+        }
+    }
+
+
+    //스토어 좋아요 여부 서브쿼리
+    private BooleanExpression getStoreIsLikedExpression(final Long userId) {
+        if (userId != null) {
+            return JPAExpressions.selectOne()
+                    .from(storeLike)
+                    .where(storeLike.storeId.eq(store.id).and(storeLike.userId.eq(userId)))
                     .exists();
         } else {
             return Expressions.asBoolean(false);

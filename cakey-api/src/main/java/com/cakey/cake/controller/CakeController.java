@@ -10,7 +10,6 @@ import com.cakey.rescode.SuccessCode;
 import com.cakey.store.domain.Station;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -57,9 +56,9 @@ public class CakeController {
 
 
 
-    //선택 디자인 조회
+    //디자인 둘러보기 선택 디자인 조회
     @GetMapping("/select/{cakeId}")
-    public ResponseEntity<BaseResponse<?>> getCakeSelect(
+    public ResponseEntity<BaseResponse<?>> getSearchDesignCakeSelect(
             @UserId final Long userId,
             @PathVariable(value = "cakeId") @Min(1) final long cakeId,
             @RequestParam(value = "dayCategory") final DayCategory dayCategory,
@@ -129,4 +128,15 @@ public class CakeController {
         );
     }
 
+    //지도뷰 선택 디자인 조회
+    @GetMapping("/select/map/{cakeId}")
+    public ResponseEntity<BaseResponse<?>> getMapSelectCake(
+        @UserId final Long userId,
+        @PathVariable(value = "cakeId") final long cakeId
+    ) {
+        return ApiResponseUtil.success(
+                SuccessCode.OK,
+                cakeService.getMapSelectCake(userId, cakeId)
+        );
+    }
 }

@@ -2,10 +2,7 @@ package com.cakey.cake.facade;
 
 import com.cakey.cake.domain.Cake;
 import com.cakey.cake.domain.DayCategory;
-import com.cakey.cake.dto.CakeByPopularityDto;
-import com.cakey.cake.dto.CakeInfoDto;
-import com.cakey.cake.dto.CakeMainImageDto;
-import com.cakey.cake.dto.CakeSelectedInfoDto;
+import com.cakey.cake.dto.*;
 import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.store.domain.Station;
 import com.cakey.store.dto.StoreBySelectedCakeDto;
@@ -74,9 +71,9 @@ public class CakeFacade {
 
     //찜한 디자인(케이크) 조회(인기순)
     public List<CakeInfoDto> findPopularLikedCakesByUser(final long userId,
-                                                  final Long cakeIdCursor,
-                                                  final Integer cakeLikesCursor,
-                                                  final int size) {
+                                                         final Long cakeIdCursor,
+                                                         final Integer cakeLikesCursor,
+                                                         final int size) {
         return cakeRetriever.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
     }
 
@@ -139,5 +136,8 @@ public class CakeFacade {
         cakeRetriever.isExistCake(cakeId);
     }
 
-
+    //지도뷰 조회된 디자인 조회
+    public CakeSelectedMapDto getCakeSelectedMap(final Long userId, final long cakeId) {
+        return cakeRetriever.getCakeSelectedMap(userId, cakeId);
+    }
 }
