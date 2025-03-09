@@ -13,6 +13,7 @@ import com.cakey.store.exception.StoreErrorCode;
 import com.cakey.store.exception.StoreNotfoundException;
 import com.cakey.store.facade.StoreFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.actuate.cache.CachesEndpoint;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class CakeService {
     private final CakeFacade cakeFacade;
     private final StoreFacade storeFacade;
+    private final CachesEndpoint cachesEndpoint;
 
     //해당역 스토어의 케이크들 조회(최신순)
     @Transactional(readOnly = true)
@@ -284,7 +286,7 @@ public class CakeService {
         ///페이지네이션
         try {
             cakeInfoDtos = cakeFacade.findPopularCakesLikedByUser(userId, cakeIdCursor, cakeLikesCursor, size);
-        } catch (final NotFoundBaseException e) {
+        } catch (NotFoundBaseException e) {
             throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
         }
         ///전체 케이크 개수
@@ -309,5 +311,23 @@ public class CakeService {
                 .toList();
 
         return CakesPopularListRes.from(nextLikesCursor, nextCakeIdCursor, totalCakeCount, isLastData, cakes);
+    }
+
+    //지도뷰 선택 디자인 조회
+    public CakeSelectedMapRes getMapSelectCake(final Long userId, final long cakeId) {
+        final CakeSelectedMapDto cakeSelectedMapDto;
+        try {
+            cakeSelectedMapDto = cakeFacade.getCakeSelectedMap(userId, cakeId);
+        } catch (final NotFoundBaseException e) {
+            throw new CakeyNotFoundException(CakeErrorCode.CAKE_NOT_FOUND_ENTITY);
+        }
+
+        return CakeSelectedMapRes.from(
+                cakeSelectedMapDto.getStoreId(),
+                cakeSelectedMapDto.getStoreName(),
+                cakeSelectedMapDto.getAddress(),
+                cakeSelectedMapDto.getStation(),
+                cakeSelectedMapDto.getIsLiked(),
+                cakeSelectedMapDto.getImageUrl());
     }
 }

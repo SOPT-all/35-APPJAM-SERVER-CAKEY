@@ -129,7 +129,7 @@ public class CakeController {
     }
 
     //지도뷰 선택 디자인 조회
-    @GetMapping("/select/{cakeId}")
+    @GetMapping("/select/map/{cakeId}")
     public ResponseEntity<BaseResponse<?>> getMapSelectCake(
         @UserId final Long userId,
         @PathVariable(value = "cakeId") final long cakeId

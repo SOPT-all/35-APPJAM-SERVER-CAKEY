@@ -2,10 +2,7 @@ package com.cakey.cake.facade;
 
 import com.cakey.cake.domain.Cake;
 import com.cakey.cake.domain.DayCategory;
-import com.cakey.cake.dto.CakeByPopularityDto;
-import com.cakey.cake.dto.CakeInfoDto;
-import com.cakey.cake.dto.CakeMainImageDto;
-import com.cakey.cake.dto.CakeSelectedInfoDto;
+import com.cakey.cake.dto.*;
 import com.cakey.cake.repository.CakeRepository;
 import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.common.exception.NotFoundBaseException;
@@ -148,4 +145,10 @@ public class CakeRetriever {
             throw new NotFoundBaseException();
         }
     }
+
+    //지도뷰 선택 케이크 조회
+    public CakeSelectedMapDto getCakeSelectedMap(final Long userId, final long cakeId) {
+        return cakeRepository.getCakeSelectedMap(userId, cakeId).orElseThrow(NotFoundBaseException::new);
+    }
+
 }
