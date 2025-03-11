@@ -3,12 +3,9 @@ package com.cakey.cake.repository;
 import com.cakey.cake.domain.DayCategory;
 import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakeMainImageDto;
-import com.cakey.cake.dto.CakeSelectedDto;
 import com.cakey.cake.dto.CakeSelectedInfoDto;
 import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.store.domain.Station;
-import com.cakey.store.dto.StoreBySelectedCakeDto;
-import com.cakey.store.dto.StoreInfoDto;
 
 import java.util.List;
 

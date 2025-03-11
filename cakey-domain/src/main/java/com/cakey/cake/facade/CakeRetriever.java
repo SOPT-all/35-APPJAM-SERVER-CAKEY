@@ -22,6 +22,9 @@ public class CakeRetriever {
     private final CakeRepository cakeRepository;
 
     public List<CakeMainImageDto> findMainImageByStoreIds(final List<Long> storeIds) {
+        if (cakeRepository.findMainImageByStoreIds(storeIds).isEmpty()) {
+            throw new NotFoundBaseException();
+        }
         return cakeRepository.findMainImageByStoreIds(storeIds);
     }
 
