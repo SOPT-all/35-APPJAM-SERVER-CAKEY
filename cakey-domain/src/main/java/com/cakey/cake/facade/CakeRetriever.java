@@ -53,7 +53,11 @@ public class CakeRetriever {
                                                        final Integer likesCursor,
                                                        final Long cakeIdCursor,
                                                        final int size) {
-        return cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
+        final List<CakeInfoDto> cakes = cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
+        if(cakes.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return cakes;
     }
 
     @Transactional(readOnly = true)
