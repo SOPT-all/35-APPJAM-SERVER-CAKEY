@@ -37,7 +37,11 @@ public class CakeRetriever {
     }
 
     public List<CakeInfoDto> findCakesByStation(final Long userId, final Station station, final Long cakeIdCursor, final int size) {
-        return cakeRepository.findLatestCakesByStation(userId, station, cakeIdCursor, size);
+        final List<CakeInfoDto> cakes = cakeRepository.findLatestCakesByStation(userId, station, cakeIdCursor, size);
+        if(cakes.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return cakes;
     }
 
     public int countCakesByStation(final Station station) {
