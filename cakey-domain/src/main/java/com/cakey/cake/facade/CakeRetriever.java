@@ -73,11 +73,16 @@ public class CakeRetriever {
         return cakeRepository.findById(cakeId)
                 .orElseThrow(NotFoundBaseException::new);
     }
+
     //찜한 디자인(케이크) 조회(최신순)
     public List<CakeInfoDto> findLatestLikedCakesByUser (final Long userId,
                                                          final Long cakeIdCursor,
                                                          final int size) {
-        return cakeRepository.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
+        final List<CakeInfoDto> cakes = cakeRepository.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
+        if(cakes.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+        return cakes;
     }
 
     //찜한 디자인(케이크) 조회(인기순)
@@ -85,7 +90,11 @@ public class CakeRetriever {
                                                          final Long cakeIdCursor,
                                                          final Integer cakeLikesCursor,
                                                          final int size) {
-        return cakeRepository.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
+        final List<CakeInfoDto> cakes = cakeRepository.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
+        if (cakes.isEmpty()) {
+            throw new NotFoundBaseException();
+        }
+         return cakes;
     }
 
     //같은 스토어, 카테고리, 테마 케이크 조회

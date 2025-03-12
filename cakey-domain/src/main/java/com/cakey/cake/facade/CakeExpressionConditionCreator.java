@@ -9,17 +9,17 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 public class CakeExpressionConditionCreator {
 
     //최신순 조회 - cakeId 커서 조건
-    public static BooleanExpression LatestCakeIdCursorCondition(final Long cakeIdCursor,
+    public static BooleanExpression latestCakeIdCursorCondition(final Long cakeIdCursor,
                                                                 final QCake qCake) {
-        return (cakeIdCursor > 0)
+        return (cakeIdCursor != null && cakeIdCursor > 0)
                 ? qCake.id.lt(cakeIdCursor) /// 아이디커서보다 작은 아이디인 케이크 조회
                 : null;
     }
 
     //인기순 조회 - cakeId 커서 조건
-    public static BooleanExpression FamousCakeIdCursorCondition(final Long cakeIdCursor,
+    public static BooleanExpression famousCakeIdCursorCondition(final Long cakeIdCursor,
                                                                 final QCake qCake) {
-        return (cakeIdCursor > 0)
+        return (cakeIdCursor != null && cakeIdCursor > 0)
                 ? qCake.id.gt(cakeIdCursor)
                 : null;
     }
