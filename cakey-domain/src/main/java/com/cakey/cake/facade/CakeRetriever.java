@@ -37,11 +37,7 @@ public class CakeRetriever {
     }
 
     public List<CakeInfoDto> findCakesByStation(final Long userId, final Station station, final Long cakeIdCursor, final int size) {
-        final List<CakeInfoDto> cakes = cakeRepository.findLatestCakesByStation(userId, station, cakeIdCursor, size);
-        if(cakes.isEmpty()) {
-            throw new NotFoundBaseException();
-        }
-        return cakes;
+        return cakeRepository.findLatestCakesByStation(userId, station, cakeIdCursor, size);
     }
 
     public int countCakesByStation(final Station station) {
@@ -53,11 +49,7 @@ public class CakeRetriever {
                                                        final Integer likesCursor,
                                                        final Long cakeIdCursor,
                                                        final int size) {
-        final List<CakeInfoDto> cakes = cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
-        if(cakes.isEmpty()) {
-            throw new NotFoundBaseException();
-        }
-        return cakes;
+        return cakeRepository.findPopularCakesByStation(userId, station, likesCursor, cakeIdCursor, size);
     }
 
     @Transactional(readOnly = true)
@@ -78,11 +70,7 @@ public class CakeRetriever {
     public List<CakeInfoDto> findLatestLikedCakesByUser (final Long userId,
                                                          final Long cakeIdCursor,
                                                          final int size) {
-        final List<CakeInfoDto> cakes = cakeRepository.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
-        if(cakes.isEmpty()) {
-            throw new NotFoundBaseException();
-        }
-        return cakes;
+        return cakeRepository.findLatestLikedCakesByUser(userId, cakeIdCursor, size);
     }
 
     //찜한 디자인(케이크) 조회(인기순)
@@ -90,11 +78,7 @@ public class CakeRetriever {
                                                          final Long cakeIdCursor,
                                                          final Integer cakeLikesCursor,
                                                          final int size) {
-        final List<CakeInfoDto> cakes = cakeRepository.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
-        if (cakes.isEmpty()) {
-            throw new NotFoundBaseException();
-        }
-         return cakes;
+        return cakeRepository.findPopularLikedCakesByUser(userId, cakeIdCursor, cakeLikesCursor, size);
     }
 
     //같은 스토어, 카테고리, 테마 케이크 조회
