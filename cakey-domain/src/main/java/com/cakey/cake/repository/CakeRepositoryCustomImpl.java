@@ -19,6 +19,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -602,8 +603,8 @@ public class CakeRepositoryCustomImpl implements CakeRepositoryCustom {
     private BooleanExpression getStoreIsLikedExpression(final Long userId) {
         if (userId != null) {
             return JPAExpressions.selectOne()
-                    .from(storeLike)
-                    .where(storeLike.storeId.eq(store.id).and(storeLike.userId.eq(userId)))
+                    .from(storeLikes)
+                    .where(storeLikes.storeId.eq(store.id).and(storeLikes.userId.eq(userId)))
                     .exists();
         } else {
             return Expressions.asBoolean(false);

@@ -4,6 +4,7 @@ import com.cakey.cake.domain.DayCategory;
 import com.cakey.cake.dto.CakeInfoDto;
 import com.cakey.cake.dto.CakeMainImageDto;
 import com.cakey.cake.dto.CakeSelectedInfoDto;
+import com.cakey.cake.dto.CakeSelectedMapDto;
 import com.cakey.caketheme.domain.ThemeName;
 import com.cakey.store.domain.Station;
 
@@ -78,5 +79,5 @@ public interface CakeRepositoryCustom {
 
     //지도뷰 조회된 디자인 조회
     Optional<CakeSelectedMapDto> getCakeSelectedMap(final Long userId,
-                                                   final long cakeId);
+                                                    final long cakeId);
 }
