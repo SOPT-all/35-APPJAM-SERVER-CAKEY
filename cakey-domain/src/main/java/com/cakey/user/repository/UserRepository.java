@@ -17,6 +17,9 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     //유저 있는지 확인
     @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.id = :userId")
     boolean isExistById(@Param("userId") long userId);
+
+    @Query("SELECT COUNT(u) FROM User u")
+    long countUsers();
 }
 
 

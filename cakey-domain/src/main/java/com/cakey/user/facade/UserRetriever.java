@@ -32,4 +32,8 @@ public class UserRetriever {
             throw new NotFoundBaseException();
         }
     }
+
+    public long getUserCount() {
+        return userRepository.countUsers();
+    }
 }
