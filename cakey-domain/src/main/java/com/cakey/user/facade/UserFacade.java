@@ -29,4 +29,8 @@ public class UserFacade {
     public void isExistById(final long userId) {
         userRetriever.isExistById(userId);
     }
+
+    public long getUserCount() {
+        return userRetriever.getUserCount();
+    }
 }

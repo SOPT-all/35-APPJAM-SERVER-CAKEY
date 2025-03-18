@@ -3,4 +3,5 @@ jar { enabled = true }
 
 dependencies {
     implementation project(":cakey-common")
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0' //feign
 }

@@ -10,6 +10,8 @@ import com.cakey.exception.AuthExpiredJwtException;
 import com.cakey.exception.AuthKakaoException;
 import com.cakey.exception.AuthRTCacheException;
 import com.cakey.exception.AuthWrongJwtException;
+import com.cakey.feign.discord.DiscordFeignProvider;
+import com.cakey.feign.discord.exception.CakeyFeignException;
 import com.cakey.jwt.auth.JwtProvider;
 import com.cakey.jwt.domain.Token;
 import com.cakey.jwt.domain.UserRole;
@@ -21,6 +23,7 @@ import com.cakey.user.dto.UserInfoDto;
 import com.cakey.user.dto.UserInfoRes;
 import com.cakey.user.exception.*;
 import com.cakey.user.facade.UserFacade;
+import com.cakey.user.facade.UserRetriever;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +41,7 @@ public class UserService {
     private final UserFacade userFacade;
     private final KakaoSocialProvider kakaoSocialProvider;
     private final JwtProvider jwtProvider;
+    private final DiscordFeignProvider discordFeignProvider;
 
     @Transactional
     public LoginSuccessRes login(
@@ -65,6 +69,7 @@ public class UserService {
         ///이미 우리 유저인지 확인해서 userId 뽑기
         final Long userId = userFacade.findUserIdFromSocialTypeAndPlatformId(socialType, platformId);
 
+        final LoginSuccessRes loginSuccessRes;
         if (userId == null) { ///유저 처음 가입
             ///유저생성
             final UserCreateDto userCreateDto = UserCreateDto.of(kakaoUserInfo.kakaoAccount().profile().nickname(),
@@ -76,7 +81,7 @@ public class UserService {
             ///쿠키설정
             setRefreshCookie(newToken.getRefreshToken(), response);
 
-            return LoginSuccessRes.of(
+            loginSuccessRes = LoginSuccessRes.of(
                     savedUserId,
                     kakaoUserInfo.kakaoAccount().profile().nickname(),
                     newToken.getAccessToken());
@@ -86,11 +91,21 @@ public class UserService {
             ///쿠키 설정
             setRefreshCookie(newToken.getRefreshToken(), response);
 
-            return LoginSuccessRes.of(
+            loginSuccessRes = LoginSuccessRes.of(
                     userId,
                     kakaoUserInfo.kakaoAccount().profile().nickname(),
                     newToken.getAccessToken());
         }
+
+        ///디스코드 웹훅
+        ///todo: 추후에 비동기로 리팩
+        final long userCount = userFacade.getUserCount();
+        try {
+            discordFeignProvider.sendSignUpInfo(loginSuccessRes.userName(), userCount);
+        } catch (CakeyFeignException e) {
+            throw new UserDiscordFeignException(UserErrorCode.DISCORD_FEIGN_FAILED);
+        }
+        return loginSuccessRes;
     }
 
     //jwt 재발급
