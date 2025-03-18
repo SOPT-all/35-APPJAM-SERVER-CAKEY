@@ -19,6 +19,9 @@ public class CakeRetriever {
     private final CakeRepository cakeRepository;
 
     public List<CakeMainImageDto> findMainImageByStoreIds(final List<Long> storeIds) {
+        if (cakeRepository.findMainImageByStoreIds(storeIds).isEmpty()) {
+            throw new NotFoundBaseException();
+        }
         return cakeRepository.findMainImageByStoreIds(storeIds);
     }
 
@@ -59,6 +62,7 @@ public class CakeRetriever {
         return cakeRepository.findById(cakeId)
                 .orElseThrow(NotFoundBaseException::new);
     }
+
     //찜한 디자인(케이크) 조회(최신순)
     public List<CakeInfoDto> findLatestLikedCakesByUser (final Long userId,
                                                          final Long cakeIdCursor,
