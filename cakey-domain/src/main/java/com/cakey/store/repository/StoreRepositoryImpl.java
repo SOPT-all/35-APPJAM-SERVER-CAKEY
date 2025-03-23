@@ -410,7 +410,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .selectDistinct(cake.imageUrl)
                 .from(cake)
                 .where(cake.storeId.eq(storeId).and(cake.isMainImage.isTrue()))
-                .orderBy(cake.id.desc())
+                .orderBy(cake.id.asc())
                 .fetchFirst();
 
         Expression<String> mainImageUrl = fetchedImageUrl != null
