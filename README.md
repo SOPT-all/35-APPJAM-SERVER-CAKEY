@@ -126,9 +126,4 @@ dev 브랜치 Push
 - `CI.yml`: PR → dev 브랜치 빌드 검증
 - `DOCKER-CD.yml`: dev 브랜치 Push 시 Docker 빌드 및 EC2 배포
 ---
-## 📄 라이선스
-이 프로젝트는 **SOPT 35기 앱잼** 프로젝트로 제작되었습니다.
----
-<p align="center">
-  Made with ❤️ by Team CAKEY
-</p>
+
